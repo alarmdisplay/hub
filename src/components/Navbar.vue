@@ -10,9 +10,9 @@
 
         <div ref="navbarmenu" class="navbar-menu">
             <div class="navbar-start">
-                <a class="navbar-item">
+                <router-link tag="a" class="navbar-item" to="/">
                     Home
-                </a>
+                </router-link>
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
@@ -20,9 +20,21 @@
                     </a>
 
                     <div class="navbar-dropdown">
-                        <a class="navbar-item">
+                        <router-link tag="a" class="navbar-item" to="/admin/users">
                             Konten
-                        </a>
+                        </router-link>
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        Hilfe
+                    </a>
+
+                    <div class="navbar-dropdown">
+                        <router-link tag="a" class="navbar-item" to="/about">
+                            &Uuml;ber
+                        </router-link>
                     </div>
                 </div>
             </div>
