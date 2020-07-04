@@ -27,6 +27,15 @@ const actions = {
         console.log('Logout successful')
         commit('setCurrentUser', null)
       })
+  },
+  reauthenticate ({ commit }) {
+    console.log('Reauthenticating...')
+    api.reauthenticate()
+      .then(async () => {
+        // set the current user, so the login is skipped
+        let currentUser = await api.getCurrentUser()
+        commit('setCurrentUser', currentUser)
+      });
   }
 }
 

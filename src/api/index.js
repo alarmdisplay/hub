@@ -35,5 +35,8 @@ export default {
   },
   logout () {
     return app.logout()
+  },
+  reauthenticate () {
+    return app.reAuthenticate()
   }
 }

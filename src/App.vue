@@ -10,6 +10,7 @@
 import 'bulma/css/bulma.css'
 import Navbar from './components/Navbar'
 import Login from './views/Login'
+
 export default {
   name: 'App',
   components: {
@@ -20,6 +21,10 @@ export default {
     loggedIn: function () {
       return this.$store.state.user.currentUser !== null
     }
+  },
+  created () {
+    // Check if we have a valid authentication token
+    this.$store.dispatch('user/reauthenticate')
   }
 }
 </script>
