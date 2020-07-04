@@ -9,19 +9,34 @@
             </p>
             <form @submit.prevent="login">
                 <div class="field">
-                    <label class="label" for="email">E-Mail</label>
-                    <div class="control">
-                        <input class="input" type="email" id="email" placeholder="E-Mail" v-model="email">
-                    </div>
-                    <p class="help">This is a help text</p>
+                    <label class="label" for="email">
+                        E-Mail
+                    </label>
+                    <p class="control has-icons-left">
+                        <input class="input" type="email" id="email" v-model="email">
+                        <span class="icon is-small is-left">
+                            <font-awesome-icon icon="envelope"/>
+                        </span>
+                    </p>
                 </div>
-
-                <label for="password">
-                    Password
-                </label>
-                <input type="password" id="password" v-model="password">
-
-                <button type="submit">Login</button>
+                <div class="field">
+                    <label class="label" for="password">
+                        Passwort
+                    </label>
+                    <p class="control has-icons-left">
+                        <input class="input" type="password" id="password" v-model="password">
+                        <span class="icon is-small is-left">
+                          <font-awesome-icon icon="lock"/>
+                        </span>
+                    </p>
+                </div>
+                <div class="field">
+                    <p class="control">
+                        <button class="button is-success">
+                            Login
+                        </button>
+                    </p>
+                </div>
             </form>
         </div>
     </section>
