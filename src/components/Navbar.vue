@@ -42,11 +42,11 @@
             <div class="navbar-end">
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
-                        Vorname Nachname
+                        {{ displayName }}
                     </a>
 
                     <div class="navbar-dropdown">
-                        <a class="navbar-item">
+                        <a class="navbar-item" @click="$store.dispatch('user/logout')">
                             Logout
                         </a>
                     </div>
@@ -59,6 +59,16 @@
 <script>
   export default {
     name: 'Navbar',
+    computed: {
+      displayName: function () {
+        const currentUser = this.$store.state.user.currentUser
+        if (!currentUser) {
+          return 'Nicht eingeloggt'
+        }
+
+        return currentUser.email || '???'
+      }
+    },
     methods: {
       toggleMenu: function () {
         this.$refs.hamburger.classList.toggle('is-active')
