@@ -25,9 +25,6 @@ export class WatchedFolders extends Service<WatchedFolderData> {
         }
 
         Promise.all(folders.map(startWatching))
-          .then(() => {
-            logger.info('Started watching %d folder(s)', folders.length)
-          })
           .catch(reason => {
             logger.error('Could not start to watch folders', reason)
           })
@@ -44,15 +41,16 @@ async function startWatching(folderToWatch: WatchedFolderData) {
     normalizedPath = path.join(normalizedPath, path.sep)
   }
 
-  // Check if the given path is a directory
-  let stats = await fs.promises.stat(normalizedPath);
-  if (!stats.isDirectory()) {
-    throw new Error(`Path ${normalizedPath} is not a directory, will not watch`)
+  let watcher
+  try {
+    watcher = fs.watch(normalizedPath);
+  } catch (e) {
+    logger.error('Not watching folder %s: %s', normalizedPath, e.message)
+    return
   }
 
-  let watcher = fs.watch(normalizedPath);
   watcher.addListener('change', changeListener(normalizedPath))
-  watcher.addListener('error', error => console.error)
+  watcher.addListener('error', error => logger.error(error))
   watcher.addListener('close', () => {
     logger.debug('watcher closed')
   })
