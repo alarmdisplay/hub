@@ -5,11 +5,11 @@ import store from './store'
 
 // Import Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faEnvelope, faLock } from '@fortawesome/free-solid-svg-icons'
+import { faEnvelope, faLock, faUserMinus, faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // Configure Font Awesome
-library.add(faEnvelope, faLock)
+library.add(faEnvelope, faLock, faUserMinus, faUserPlus)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
