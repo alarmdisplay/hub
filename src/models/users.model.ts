@@ -6,9 +6,11 @@ import { Application } from '../declarations';
 export default function (app: Application) {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
   const users = sequelizeClient.define('users', {
-  
     email: {
       type: DataTypes.STRING,
+      validate: {
+        isEmail: true
+      },
       allowNull: false,
       unique: true
     },
@@ -16,8 +18,6 @@ export default function (app: Application) {
       type: DataTypes.STRING,
       allowNull: false
     },
-  
-  
   }, {
     hooks: {
       beforeCount(options: any) {
