@@ -43,8 +43,6 @@ export class WatchedFolders extends Service<WatchedFolderData> {
       }).catch(reason => {
         logger.error('Could not query folders to watch', reason)
       })
-
-    // React to changes
   }
 
   /**
