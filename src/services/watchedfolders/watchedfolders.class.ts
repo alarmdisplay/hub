@@ -14,8 +14,11 @@ const filePattern = /\.pdf$/i;
 const knownFiles = new Map<Number, Set<String>>()
 
 export class WatchedFolders extends Service<WatchedFolderData> {
+  private app: Application
+
   constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
-    super(options);
+    super(options)
+    this.app = app
   }
 
   setup (app: Application) {
@@ -85,17 +88,24 @@ export class WatchedFolders extends Service<WatchedFolderData> {
               return
             }
 
-            // @ts-ignore TypeScript claims .emit() would not exist here
-            this.emit('file_added', filePath)
+            // Upload the new file to the blob store
+            return fs.promises.readFile(filePath)
+              .then(buffer => {
+                const uploadsService = this.app.service('uploads')
+                return uploadsService.create({ buffer: buffer, contentType: 'application/pdf' })
+              })
+              .then(() => logger.info('Forwarded file %s to uploads service', filePath))
           }
-        })
-        .catch(err => {
+        }, err => {
           // If the file cannot be found, it just got deleted
           if (err.code === 'ENOENT') {
             knownFiles.get(watcherId)?.delete(filename)
           } else {
             logger.error(err)
           }
+        })
+        .catch(err => {
+          logger.error(err)
         })
     }
   }
