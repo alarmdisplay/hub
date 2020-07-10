@@ -50,8 +50,17 @@ export class TextAnalysis implements SetupMethod {
       endMark: /\n.*ENDE FAX.*\n/,
       sections: [
         {
+          beginningMark: /Alarmfax der ILS Augsburg/,
+          regexps: [
+            /Absender : (?<sender>.*) Tel/,
+            /Einsatznummer (?:.*): (?<ref>.*)/
+          ]
+        },
+        {
           beginningMark: /MITTEILER/,
-          regexps: []
+          regexps: [
+            /Name\s*[:;=](?<caller_name>.*)Rückrufnummer[:;=](?<caller_number>.*)/
+          ]
         },
         {
           beginningMark: /EINSATZORT/,
@@ -216,7 +225,7 @@ export class TextAnalysis implements SetupMethod {
 
       logger.debug(match)
       if (!match.groups) {
-        logger.warn('No match groups')
+        logger.warn('RegExp %s has no match groups', regex)
         continue
       }
 
