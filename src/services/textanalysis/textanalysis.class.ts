@@ -14,24 +14,6 @@ interface SectionDefinition {
   regexps: RegExp[]
 }
 
-interface AlertInfo {
-  title?: string,
-  keyword?: string,
-  location?: Location,
-  description?: string,
-  time: Date
-}
-
-interface Location {
-  raw: string,
-  gk?: GaussKrueger
-}
-
-interface GaussKrueger {
-  x: Number,
-  y: Number
-}
-
 export class TextAnalysis implements SetupMethod {
   app: Application;
   multiValueKeys: string[]
@@ -44,7 +26,7 @@ export class TextAnalysis implements SetupMethod {
   setup(app: Application, path: string): void {
   }
 
-  analyse(text: string) {
+  analyse(text: string): Map<string, string | string[]> {
     const config: Config = {
       beginningMark: /Alarmfax der ILS Augsburg/,
       endMark: /\n.*ENDE FAX.*\n/,
@@ -97,15 +79,11 @@ export class TextAnalysis implements SetupMethod {
       triggerWords: ['Alarmfax']
     }
 
-    logger.debug('Got input:', text);
-
     // Check for certain trigger words to make sure we try to apply the correct config
     if (config.triggerWords.length > 0) {
       let foundWords = this.checkForTriggerWords(text, config.triggerWords)
-      logger.debug('Found %d of %d trigger words', foundWords, config.triggerWords.length)
       if (foundWords === 0) {
-        logger.warn('Did not find a single trigger word, aborting analysis')
-        return
+        throw new Error('Did not find a single trigger word, aborting analysis')
       }
     }
 
@@ -117,15 +95,11 @@ export class TextAnalysis implements SetupMethod {
     for (const [sectionDefinition, sectionText] of sections.entries()) {
       let data = this.processSection(sectionText, sectionDefinition)
       if (data.size > 0) {
-        logger.debug('Section reported matches:', data.entries())
         matches = this.mergeMatches(matches, data)
       }
     }
 
-    let alarm: AlertInfo = { time: new Date() }
-
-    logger.debug(matches.entries())
-    logger.debug(alarm);
+    return matches
   }
 
   private checkForTriggerWords (text: string, triggerWords: string[]) {
@@ -161,7 +135,6 @@ export class TextAnalysis implements SetupMethod {
 
     if (config.sections.length !== sections.length) {
       logger.warn('Found %d sections, but expected to find %d sections', sections.length, config.sections.length)
-      logger.debug(sections)
     }
 
     config.sections.forEach((section, index) => {
@@ -180,7 +153,6 @@ export class TextAnalysis implements SetupMethod {
     // If we have regular expressions that work over multiple lines, process the entire text
     const multiLineRegExps = sectionDefinition.regexps.filter(regexp => regexp.multiline)
     if (multiLineRegExps.length > 0) {
-      logger.debug('Multiline:', multiLineRegExps)
       let multiLineMatches = this.processText(text, multiLineRegExps)
       matches = this.mergeMatches(matches, multiLineMatches)
     }
@@ -223,7 +195,6 @@ export class TextAnalysis implements SetupMethod {
         continue
       }
 
-      logger.debug(match)
       if (!match.groups) {
         logger.warn('RegExp %s has no match groups', regex)
         continue
@@ -251,7 +222,6 @@ export class TextAnalysis implements SetupMethod {
         let array = (matches.get(key) || []) as string[]
         Array.isArray(value) ? array = array.concat(value) : array.push(value)
         matches.set(key, array)
-        logger.debug('%s matches is now', key, matches.get(key))
         return
       }
 
