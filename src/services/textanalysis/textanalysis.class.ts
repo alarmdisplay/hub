@@ -1,18 +1,7 @@
 import {SetupMethod} from '@feathersjs/feathers'
-import {Application} from '../../declarations'
+import {Application, Config, SectionDefinition} from '../../declarations'
+import config from './configs/ILS_Augsburg'
 import logger from '../../logger'
-
-interface Config {
-  beginningMark: RegExp,
-  endMark: RegExp,
-  sections: SectionDefinition[],
-  triggerWords: string[]
-}
-
-interface SectionDefinition {
-  beginningMark: RegExp,
-  regexps: RegExp[]
-}
 
 export class TextAnalysis implements SetupMethod {
   app: Application;
@@ -27,58 +16,6 @@ export class TextAnalysis implements SetupMethod {
   }
 
   analyse(text: string): Map<string, string | string[]> {
-    const config: Config = {
-      beginningMark: /Alarmfax der ILS Augsburg/,
-      endMark: /\n.*ENDE FAX.*\n/,
-      sections: [
-        {
-          beginningMark: /Alarmfax der ILS Augsburg/,
-          regexps: [
-            /Absender : (?<sender>.*) Tel/,
-            /Einsatznummer (?:.*): (?<ref>.*)/
-          ]
-        },
-        {
-          beginningMark: /MITTEILER/,
-          regexps: [
-            /Name\s*[:;=](?<caller_name>.*)Rückrufnummer[:;=](?<caller_number>.*)/
-          ]
-        },
-        {
-          beginningMark: /EINSATZORT/,
-          regexps: [
-            /Straße\s*[:|=](?<loc_street>.*)Haus-Nr\.[:|=](?<loc_streetnumber>.*)$/,
-            /Ort\s*[:|=]\s*(?<loc_zip>\d{5}) (?<loc_city>\w+)/,
-            /Koordinate\s*[:|=]\s(?<loc_gk_x>\d+[,.]\d+) \/ (?<loc_gk_y>\d+[,.]\d+)$/
-          ]
-        },
-        {
-          beginningMark: /ZIELORT/,
-          regexps: []
-        },
-        {
-          beginningMark: /EINSATZGRUND/,
-          regexps: [
-            /Schlagw\.[:|=]\s(?<title>.*)$/,
-            /Stichwort[:|=]\s(?<keyword>.*)$/
-          ]
-        },
-        {
-          beginningMark: /EINSATZMITTEL/,
-          regexps: [
-            /(?<resources>.*) \(Ausger/
-          ]
-        },
-        {
-          beginningMark: /BEMERKUNG/,
-          regexps: [
-            /Einsatzplan[:|=](?<description>(?:.|\n)*)/m
-          ]
-        }
-      ],
-      triggerWords: ['Alarmfax']
-    }
-
     // Check for certain trigger words to make sure we try to apply the correct config
     if (config.triggerWords.length > 0) {
       let foundWords = this.checkForTriggerWords(text, config.triggerWords)

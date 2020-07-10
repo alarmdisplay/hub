@@ -9,6 +9,18 @@ declare module '../../declarations' {
   interface ServiceTypes {
     'textanalysis': TextAnalysis & ServiceAddons<any>;
   }
+
+  interface Config {
+    beginningMark: RegExp,
+    endMark: RegExp,
+    sections: SectionDefinition[],
+    triggerWords: string[]
+  }
+
+  interface SectionDefinition {
+    beginningMark: RegExp,
+    regexps: RegExp[]
+  }
 }
 
 export default function (app: Application) {
