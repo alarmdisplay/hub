@@ -77,7 +77,7 @@ export class TextAnalysis implements SetupMethod {
         {
           beginningMark: /BEMERKUNG/,
           regexps: [
-            /Einsatzplan[:|=](?<description>.*)/
+            /Einsatzplan[:|=](?<description>(?:.|\n)*)/m
           ]
         }
       ],
@@ -99,21 +99,13 @@ export class TextAnalysis implements SetupMethod {
     // Break the text into sections
     let sections = this.splitIntoSections(text, config);
 
-
     // Analyse each section
     let matches = new Map<string, string>()
     for (const [sectionDefinition, sectionText] of sections.entries()) {
       let data = this.processSection(sectionText, sectionDefinition)
       if (data.size > 0) {
         logger.debug('Section reported matches:', data.entries())
-        data.forEach((value, key) => {
-          if (matches.has(key)) {
-            logger.warn('We already have a value for key %s', key)
-            return
-          }
-
-          matches.set(key, value)
-        })
+        matches = this.mergeMatches(matches, data)
       }
     }
 
@@ -169,41 +161,82 @@ export class TextAnalysis implements SetupMethod {
   private processSection (text: string, sectionDefinition: SectionDefinition): Map<string, string> {
     let matches = new Map<string, string>();
 
-    let lines = text.split('\n');
+    // Only use one kind of dash
+    text = text.replace(/[–—]/gi, '-')
 
-    lines.forEach(function (line) {
-      // Remove whitespace from beginning and end of the line
-      line = line.trim();
+    // If we have regular expressions that work over multiple lines, process the entire text
+    const multiLineRegExps = sectionDefinition.regexps.filter(regexp => regexp.multiline)
+    if (multiLineRegExps.length > 0) {
+      logger.debug('Multiline:', multiLineRegExps)
+      let multiLineMatches = this.processText(text, multiLineRegExps)
+      matches = this.mergeMatches(matches, multiLineMatches)
+    }
 
-      // Empty lines can be skipped
-      if (line === '') {
-        return;
+    // If we have regular expressions that work on single lines, process the text line by line
+    const singleLineRegExps = sectionDefinition.regexps.filter(regexp => !regexp.multiline)
+    if (singleLineRegExps.length > 0) {
+      let lines = text.split('\n')
+      lines.forEach(line => {
+        // Remove whitespace from beginning and end of the line
+        line = line.trim()
+
+        // Empty lines can be skipped
+        if (line === '') {
+          return
+        }
+
+        let singleLineMatches = this.processText(line, singleLineRegExps)
+        matches = this.mergeMatches(matches, singleLineMatches)
+      })
+    }
+
+    return matches
+  }
+
+  /**
+   * Executes a list of regular expressions against a piece of text. Regular expressions can be multiline.
+   *
+   * @param text The piece of text to execute the regular expressions on
+   * @param regexps An Array of regular expressions
+   *
+   * @return A Map of named capture groups and their values
+   */
+  private processText (text: string, regexps: RegExp[]): Map<string, string> {
+    let matches = new Map<string, string>()
+
+    for (const regex of regexps) {
+      let match = text.match(regex)
+      if (!match) {
+        continue
       }
 
-      // Only use one kind of dash
-      line = line.replace(/[–—]/gi, '-');
+      logger.debug(match)
+      if (!match.groups) {
+        logger.warn('No match groups')
+        continue
+      }
 
-      for (const regex of sectionDefinition.regexps) {
-        let match = line.match(regex)
-        if (!match) {
+      for (const [key, value] of Object.entries(match.groups)) {
+        if (matches.has(key)) {
+          logger.warn('We already have a match for %s', key)
           continue
         }
 
-        logger.debug(match)
-        if (!match.groups) {
-          logger.warn('No match groups')
-          continue
-        }
-
-        for (const [key, value] of Object.entries(match.groups)) {
-          if (matches.has(key)) {
-            logger.warn('We already have a match for %s', key)
-            continue
-          }
-
-          matches.set(key, value)
-        }
+        matches.set(key, value)
       }
+    }
+
+    return matches
+  }
+
+  private mergeMatches (matches: Map<string, string>, newMatches: Map<string, string>): Map<string, string> {
+    newMatches.forEach((value, key) => {
+      if (matches.has(key)) {
+        logger.warn('We already have a value for key %s', key)
+        return
+      }
+
+      matches.set(key, value)
     })
 
     return matches
