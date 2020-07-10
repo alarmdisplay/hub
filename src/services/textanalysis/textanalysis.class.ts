@@ -34,9 +34,11 @@ interface GaussKrueger {
 
 export class TextAnalysis implements SetupMethod {
   app: Application;
+  multiValueKeys: string[]
 
   constructor (app: Application) {
     this.app = app
+    this.multiValueKeys = ['resources']
   }
 
   setup(app: Application, path: string): void {
@@ -72,7 +74,9 @@ export class TextAnalysis implements SetupMethod {
         },
         {
           beginningMark: /EINSATZMITTEL/,
-          regexps: []
+          regexps: [
+            /(?<resources>.*) \(Ausger/
+          ]
         },
         {
           beginningMark: /BEMERKUNG/,
@@ -100,7 +104,7 @@ export class TextAnalysis implements SetupMethod {
     let sections = this.splitIntoSections(text, config);
 
     // Analyse each section
-    let matches = new Map<string, string>()
+    let matches = new Map<string, string|string[]>()
     for (const [sectionDefinition, sectionText] of sections.entries()) {
       let data = this.processSection(sectionText, sectionDefinition)
       if (data.size > 0) {
@@ -158,8 +162,8 @@ export class TextAnalysis implements SetupMethod {
     return map
   }
 
-  private processSection (text: string, sectionDefinition: SectionDefinition): Map<string, string> {
-    let matches = new Map<string, string>();
+  private processSection (text: string, sectionDefinition: SectionDefinition): Map<string, string|string[]> {
+    let matches = new Map<string, string|string[]>();
 
     // Only use one kind of dash
     text = text.replace(/[–—]/gi, '-')
@@ -232,8 +236,16 @@ export class TextAnalysis implements SetupMethod {
     return matches
   }
 
-  private mergeMatches (matches: Map<string, string>, newMatches: Map<string, string>): Map<string, string> {
+  private mergeMatches (matches: Map<string, string|string[]>, newMatches: Map<string, string|string[]>): Map<string, string|string[]> {
     newMatches.forEach((value, key) => {
+      if (this.multiValueKeys.includes(key)) {
+        let array = (matches.get(key) || []) as string[]
+        Array.isArray(value) ? array = array.concat(value) : array.push(value)
+        matches.set(key, array)
+        logger.debug('%s matches is now', key, matches.get(key))
+        return
+      }
+
       if (matches.has(key)) {
         logger.warn('We already have a value for key %s', key)
         return
