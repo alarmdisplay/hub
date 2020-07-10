@@ -1,5 +1,5 @@
-import { SetupMethod } from '@feathersjs/feathers'
-import { Application } from '../../declarations'
+import {SetupMethod} from '@feathersjs/feathers'
+import {Application} from '../../declarations'
 import logger from '../../logger'
 
 interface AlertInfo {
@@ -34,6 +34,23 @@ export class TextAnalysis implements SetupMethod {
     const config = {
       beginningMark: 'Alarmfax der ILS Augsburg',
       endMark: 'ENDE FAX',
+      sections: new Map<String, RegExp[]>([
+        ['MITTEILER', []],
+        ['EINSATZORT', [
+          /Straße\s*[:|=](?<loc_street>.*)Haus-Nr\.[:|=](?<loc_streetnumber>.*)$/,
+          /Ort\s*[:|=]\s*(?<loc_zip>\d{5}) (?<loc_city>\w+)/,
+          /Koordinate\s*[:|=]\s(?<loc_gk_x>\d+[,.]\d+) \/ (?<loc_gk_y>\d+[,.]\d+)$/
+        ]],
+        ['ZIELORT', []],
+        ['EINSATZGRUND', [
+          /Schlagw\.[:|=]\s(?<title>.*)$/,
+          /Stichwort[:|=]\s(?<keyword>.*)$/
+        ]],
+        ['EINSATZMITTEL', []],
+        ['BEMERKUNG', [
+          /Einsatzplan[:|=](?<description>.*)/
+        ]]
+      ]),
       triggerWords: ['Alarmfax']
     }
 
@@ -52,12 +69,10 @@ export class TextAnalysis implements SetupMethod {
     let lines = text.split('\n');
 
     let currentSection: string;
-    let einsatzort = {
-      strasse: '',
-      plz: '',
-      ort: ''
-    };
-    let bemerkungen: string[] = [];
+    let sectionIndex = -1
+    let sectionRegExps: RegExp[] = []
+    let matches = new Map<string, string>()
+
     let alarm: AlertInfo = { time: new Date() }
 
     let processLines = false
@@ -84,68 +99,38 @@ export class TextAnalysis implements SetupMethod {
         return
       }
 
-      let sectionStart = line.match(/[-\w]+\s+(MITTEILER|EINSATZORT|ZIELORT|EINSATZGRUND|EINSATZMITTEL|BEMERKUNG|ENDE FAX)\s+[-\w]+/i);
-
-      if (sectionStart) {
-        currentSection = sectionStart[1];
-        return;
+      // Determine the current section
+      const nextSection = (Array.from(config.sections.keys()))[sectionIndex + 1]
+      if (nextSection && line.includes(nextSection.toString())) {
+        currentSection = nextSection.toString()
+        sectionRegExps = config.sections.get(currentSection) || []
+        sectionIndex++
+        logger.debug('Current section', currentSection)
       }
 
-      if (currentSection === 'EINSATZORT') {
-        let strasse = line.match(/Straße\s*[:|=](.*)Haus-Nr\.[:|=](.*)$/);
-        if (strasse) {
-          einsatzort.strasse = strasse[1].trim() + " " + strasse[2].trim();
+      for (const regex of sectionRegExps) {
+        let match = line.match(regex)
+        if (!match) {
+          continue
         }
 
-        let ort = line.match(/Ort\s*[:|=]\s*(\d{5}) (\w+)/);
-        if (ort) {
-          einsatzort.plz = ort[1];
-          einsatzort.ort = ort[2];
+        logger.debug(match)
+        if (!match.groups) {
+          logger.warn('No match groups')
+          continue
         }
 
-        alarm.location = {
-          raw: `${einsatzort.strasse}, ${einsatzort.plz} ${einsatzort.ort}`
-        }
-
-        let koordinate = line.match(/Koordinate\s*[:|=]\s(\d+[,.]\d+) \/ (\d+[,.]\d+)$/);
-        if (koordinate) {
-          alarm.location.gk = {
-            x: Number.parseFloat(koordinate[1].replace(',', '.')),
-            y: Number.parseFloat(koordinate[2].replace(',', '.'))
-          };
-        }
-      }
-
-      if (currentSection === 'EINSATZGRUND') {
-        let schlagwort = line.match(/Schlagw\.[:|=]\s(.*)$/);
-        if (schlagwort) {
-          alarm.title = schlagwort[1];
-          let parts = alarm.title.split('#');
-          logger.debug(parts);
-          if (parts.length > 1) {
-            alarm.title = parts.slice(-1)[0];
+        for (const [key, value] of Object.entries(match.groups)) {
+          if (matches.has(key)) {
+            logger.warn('We already have a match for %s', key)
+            continue
           }
-        }
 
-        let stichwort = line.match(/Stichwort[:|=]\s(.*)$/);
-        if (stichwort) {
-          alarm.keyword = stichwort[1].replace(/\//g, '').trim();
-        }
-      }
-
-      if (currentSection === 'EINSATZMITTEL') {
-        // TODO
-      }
-
-      if (currentSection === 'BEMERKUNG') {
-        let leererEinsatzplan = line.match(/Einsatzplan[:|=]/);
-        if (!leererEinsatzplan) {
-          bemerkungen.push(line);
+          matches.set(key, value)
         }
       }
     });
-    alarm.description = bemerkungen.join();
-
+    logger.debug(matches.entries())
     logger.debug(alarm);
   }
 
