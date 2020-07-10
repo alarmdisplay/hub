@@ -3,8 +3,8 @@ import {Application} from '../../declarations'
 import logger from '../../logger'
 
 interface Config {
-  beginningMark: string,
-  endMark: string,
+  beginningMark: RegExp,
+  endMark: RegExp,
   sections: SectionDefinition[],
   triggerWords: string[]
 }
@@ -44,8 +44,8 @@ export class TextAnalysis implements SetupMethod {
 
   analyse(text: string) {
     const config: Config = {
-      beginningMark: 'Alarmfax der ILS Augsburg',
-      endMark: 'ENDE FAX',
+      beginningMark: /Alarmfax der ILS Augsburg/,
+      endMark: /\n.*ENDE FAX.*\n/,
       sections: [
         {
           beginningMark: /MITTEILER/,
