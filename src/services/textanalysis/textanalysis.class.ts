@@ -222,7 +222,10 @@ export class TextAnalysis implements SetupMethod {
           continue
         }
 
-        matches.set(key, value)
+        // Collapse multiple newlines into one and remove whitespace and beginning and end
+        let sanitizedValue = value.replace(/\n{2,}/m, '\n')
+        sanitizedValue = sanitizedValue.trim()
+        matches.set(key, sanitizedValue)
       }
     }
 
