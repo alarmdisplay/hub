@@ -2,6 +2,18 @@ import {SetupMethod} from '@feathersjs/feathers'
 import {Application} from '../../declarations'
 import logger from '../../logger'
 
+interface Config {
+  beginningMark: string,
+  endMark: string,
+  sections: SectionDefinition[],
+  triggerWords: string[]
+}
+
+interface SectionDefinition {
+  beginningMark: RegExp,
+  regexps: RegExp[]
+}
+
 interface AlertInfo {
   title?: string,
   keyword?: string,
@@ -31,26 +43,44 @@ export class TextAnalysis implements SetupMethod {
   }
 
   analyse(text: string) {
-    const config = {
+    const config: Config = {
       beginningMark: 'Alarmfax der ILS Augsburg',
       endMark: 'ENDE FAX',
-      sections: new Map<String, RegExp[]>([
-        ['MITTEILER', []],
-        ['EINSATZORT', [
-          /Straße\s*[:|=](?<loc_street>.*)Haus-Nr\.[:|=](?<loc_streetnumber>.*)$/,
-          /Ort\s*[:|=]\s*(?<loc_zip>\d{5}) (?<loc_city>\w+)/,
-          /Koordinate\s*[:|=]\s(?<loc_gk_x>\d+[,.]\d+) \/ (?<loc_gk_y>\d+[,.]\d+)$/
-        ]],
-        ['ZIELORT', []],
-        ['EINSATZGRUND', [
-          /Schlagw\.[:|=]\s(?<title>.*)$/,
-          /Stichwort[:|=]\s(?<keyword>.*)$/
-        ]],
-        ['EINSATZMITTEL', []],
-        ['BEMERKUNG', [
-          /Einsatzplan[:|=](?<description>.*)/
-        ]]
-      ]),
+      sections: [
+        {
+          beginningMark: /MITTEILER/,
+          regexps: []
+        },
+        {
+          beginningMark: /EINSATZORT/,
+          regexps: [
+            /Straße\s*[:|=](?<loc_street>.*)Haus-Nr\.[:|=](?<loc_streetnumber>.*)$/,
+            /Ort\s*[:|=]\s*(?<loc_zip>\d{5}) (?<loc_city>\w+)/,
+            /Koordinate\s*[:|=]\s(?<loc_gk_x>\d+[,.]\d+) \/ (?<loc_gk_y>\d+[,.]\d+)$/
+          ]
+        },
+        {
+          beginningMark: /ZIELORT/,
+          regexps: []
+        },
+        {
+          beginningMark: /EINSATZGRUND/,
+          regexps: [
+            /Schlagw\.[:|=]\s(?<title>.*)$/,
+            /Stichwort[:|=]\s(?<keyword>.*)$/
+          ]
+        },
+        {
+          beginningMark: /EINSATZMITTEL/,
+          regexps: []
+        },
+        {
+          beginningMark: /BEMERKUNG/,
+          regexps: [
+            /Einsatzplan[:|=](?<description>.*)/
+          ]
+        }
+      ],
       triggerWords: ['Alarmfax']
     }
 
@@ -66,16 +96,81 @@ export class TextAnalysis implements SetupMethod {
       }
     }
 
-    let lines = text.split('\n');
+    // Break the text into sections
+    let sections = this.splitIntoSections(text, config);
 
-    let currentSection: string;
-    let sectionIndex = -1
-    let sectionRegExps: RegExp[] = []
+
+    // Analyse each section
     let matches = new Map<string, string>()
+    for (const [sectionDefinition, sectionText] of sections.entries()) {
+      let data = this.processSection(sectionText, sectionDefinition)
+      if (data.size > 0) {
+        logger.debug('Section reported matches:', data.entries())
+        data.forEach((value, key) => {
+          if (matches.has(key)) {
+            logger.warn('We already have a value for key %s', key)
+            return
+          }
+
+          matches.set(key, value)
+        })
+      }
+    }
 
     let alarm: AlertInfo = { time: new Date() }
 
-    let processLines = false
+    logger.debug(matches.entries())
+    logger.debug(alarm);
+  }
+
+  private checkForTriggerWords (text: string, triggerWords: string[]) {
+    let foundTriggerWords = 0
+    for (const word of triggerWords) {
+      if (text.includes(word)) {
+        foundTriggerWords++
+      }
+    }
+
+    return foundTriggerWords
+  }
+
+  private splitIntoSections (text: string, config: Config) : Map<SectionDefinition, string> {
+    const map = new Map<SectionDefinition, string>()
+    const sections: string[] = []
+    let textToSplit = text
+    config.sections.forEach((section, index) => {
+      const [previousSection, rest] = textToSplit.split(section.beginningMark, 2)
+      textToSplit = rest
+
+      // Skip everything before the first section
+      if (index === 0) {
+        return
+      }
+
+      sections.push(previousSection)
+    })
+
+    // Everything until the end mark is the last section
+    let [lastSection] = textToSplit.split(config.endMark, 1)
+    sections.push(lastSection)
+
+    if (config.sections.length !== sections.length) {
+      logger.warn('Found %d sections, but expected to find %d sections', sections.length, config.sections.length)
+      logger.debug(sections)
+    }
+
+    config.sections.forEach((section, index) => {
+      map.set(section, sections[index])
+    })
+
+    return map
+  }
+
+  private processSection (text: string, sectionDefinition: SectionDefinition): Map<string, string> {
+    let matches = new Map<string, string>();
+
+    let lines = text.split('\n');
+
     lines.forEach(function (line) {
       // Remove whitespace from beginning and end of the line
       line = line.trim();
@@ -88,27 +183,7 @@ export class TextAnalysis implements SetupMethod {
       // Only use one kind of dash
       line = line.replace(/[–—]/gi, '-');
 
-      // Start and stop processing of the lines based on the marks
-      if (!processLines && line.includes(config.beginningMark)) {
-        processLines = true
-      } else if (processLines && line.includes(config.endMark)) {
-        processLines = false
-      }
-
-      if (!processLines) {
-        return
-      }
-
-      // Determine the current section
-      const nextSection = (Array.from(config.sections.keys()))[sectionIndex + 1]
-      if (nextSection && line.includes(nextSection.toString())) {
-        currentSection = nextSection.toString()
-        sectionRegExps = config.sections.get(currentSection) || []
-        sectionIndex++
-        logger.debug('Current section', currentSection)
-      }
-
-      for (const regex of sectionRegExps) {
+      for (const regex of sectionDefinition.regexps) {
         let match = line.match(regex)
         if (!match) {
           continue
@@ -129,19 +204,8 @@ export class TextAnalysis implements SetupMethod {
           matches.set(key, value)
         }
       }
-    });
-    logger.debug(matches.entries())
-    logger.debug(alarm);
-  }
+    })
 
-  checkForTriggerWords (text: string, triggerWords: string[]) {
-    let foundTriggerWords = 0
-    for (const word of triggerWords) {
-      if (text.includes(word)) {
-        foundTriggerWords++
-      }
-    }
-
-    return foundTriggerWords
+    return matches
   }
 }
