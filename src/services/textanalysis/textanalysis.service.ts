@@ -14,17 +14,17 @@ declare module '../../declarations' {
     /**
      * Text before this mark is ignored
      */
-    beginningMark: RegExp,
+    beginningMark: RegExp
 
     /**
      * Text after this mark is ignored
      */
-    endMark: RegExp,
+    endMark: RegExp
 
     /**
      * Definition objects for the different sections of the text
      */
-    sections: SectionDefinition[],
+    sections: SectionDefinition[]
 
     /**
      * List of words that always appear in the text. This is supposed to prevent processing of other texts. If none of
@@ -38,7 +38,7 @@ declare module '../../declarations' {
     /**
      * How to recognize the beginning of this section
      */
-    beginningMark: RegExp,
+    beginningMark: RegExp
 
     /**
      * Regular expressions with named capture groups to extract the information
