@@ -11,14 +11,38 @@ declare module '../../declarations' {
   }
 
   interface Config {
+    /**
+     * Text before this mark is ignored
+     */
     beginningMark: RegExp,
+
+    /**
+     * Text after this mark is ignored
+     */
     endMark: RegExp,
+
+    /**
+     * Definition objects for the different sections of the text
+     */
     sections: SectionDefinition[],
+
+    /**
+     * List of words that always appear in the text. This is supposed to prevent processing of other texts. If none of
+     * the words is found in the text, the processing gets aborted. If the list is empty, the text will always be
+     * processed.
+     */
     triggerWords: string[]
   }
 
   interface SectionDefinition {
+    /**
+     * How to recognize the beginning of this section
+     */
     beginningMark: RegExp,
+
+    /**
+     * Regular expressions with named capture groups to extract the information
+     */
     regexps: RegExp[]
   }
 }
