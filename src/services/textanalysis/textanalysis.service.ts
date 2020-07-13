@@ -45,6 +45,33 @@ declare module '../../declarations' {
      */
     regexps: RegExp[]
   }
+
+  interface TextAnalysisResult {
+    sender: string
+    ref: string
+    caller: {
+      name: string
+      number: string
+    }
+    location: Location
+    reason: string
+    keyword: string
+    resources: string[]
+    description: string
+  }
+
+  interface Location {
+    street: string
+    streetnumber: string
+    zip: string
+    city: string
+    gk?: GaussKrueger
+  }
+
+  interface GaussKrueger {
+    x: string
+    y: string
+  }
 }
 
 export default function (app: Application) {

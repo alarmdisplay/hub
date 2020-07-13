@@ -1,5 +1,5 @@
 import {SetupMethod} from '@feathersjs/feathers'
-import {Application, Config, SectionDefinition} from '../../declarations'
+import {Application, Config, SectionDefinition, TextAnalysisResult} from '../../declarations'
 import config from './configs/ILS_Augsburg'
 import logger from '../../logger'
 
@@ -15,7 +15,7 @@ export class TextAnalysis implements SetupMethod {
   setup(app: Application, path: string): void {
   }
 
-  analyse(text: string): Map<string, string | string[]> {
+  analyse(text: string): TextAnalysisResult {
     // Check for certain trigger words to make sure we try to apply the correct config
     if (config.triggerWords.length > 0) {
       let foundWords = this.checkForTriggerWords(text, config.triggerWords)
@@ -36,7 +36,32 @@ export class TextAnalysis implements SetupMethod {
       }
     }
 
-    return matches
+    // Pass a GaussKrueger object as soon as one of the coordinates has been recognized
+    let gk = matches.has('loc_gk_x') || matches.has('loc_gk_y') ? {
+      x: matches.get('loc_gk_x') as string || '',
+      y: matches.get('loc_gk_y') as string || ''
+    }: undefined
+
+    // There might be a more elegant way, but that's for later
+    return {
+      sender: matches.get('sender') as string || '',
+      ref: matches.get('ref') as string || '',
+      caller: {
+        name: matches.get('caller_name') as string || '',
+        number: matches.get('caller_number') as string || ''
+      },
+      location: {
+        street: matches.get('loc_street') as string || '',
+        streetnumber: matches.get('loc_streetnumber') as string || '',
+        zip: matches.get('loc_zip') as string || '',
+        city: matches.get('loc_city') as string || '',
+        gk: gk
+      },
+      reason: matches.get('reason') as string || '',
+      keyword: matches.get('keyword') as string || '',
+      resources: matches.get('resources') as string[] || [],
+      description: matches.get('description') as string || '',
+    }
   }
 
   private checkForTriggerWords (text: string, triggerWords: string[]) {
