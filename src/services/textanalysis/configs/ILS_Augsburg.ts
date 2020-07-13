@@ -32,7 +32,7 @@ export default {
     {
       beginningMark: /EINSATZGRUND/,
       regexps: [
-        /Schlagw\.[:|=]\s(?<title>.*)$/,
+        /Schlagw\.[:|=]\s(?<reason>.*)$/,
         /Stichwort[:|=]\s(?<keyword>.*)$/
       ]
     },
