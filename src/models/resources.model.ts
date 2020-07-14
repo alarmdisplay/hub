@@ -3,7 +3,7 @@ import { Application } from '../declarations';
 
 export default function (app: Application) {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  const resources = sequelizeClient.define('resources', {
+  const resources = sequelizeClient.define('resource', {
     name: {
       type: DataTypes.STRING,
       allowNull: false
