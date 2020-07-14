@@ -16,10 +16,8 @@ export default function (app: Application) {
     }
   });
 
-  // eslint-disable-next-line no-unused-vars
   (resources as any).associate = function (models: any) {
-    // Define associations here
-    // See http://docs.sequelizejs.com/en/latest/docs/associations/
+    models.resource.hasMany(models.resource_identifier, { foreignKey: { allowNull: false } })
   };
 
   return resources;
