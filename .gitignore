@@ -112,3 +112,4 @@ lib/
 data/
 config/development.json
 uploads/
+inbox/
