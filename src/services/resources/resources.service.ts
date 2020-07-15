@@ -14,13 +14,18 @@ declare module '../../declarations' {
   interface ResourceData {
     id: Number
     name: string
+    type: ResourceType
     createdAt: Date
     updatedAt: Date
     resources: ResourceIdentifierData[]
   }
 
   enum ResourceType {
-    name
+    organization,
+    group,
+    vehicle,
+    role,
+    other
   }
 }
 

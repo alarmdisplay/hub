@@ -7,6 +7,11 @@ export default function (app: Application) {
     name: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    type: {
+      type: DataTypes.ENUM,
+      values: ['organization', 'group', 'vehicle', 'role', 'other'],
+      allowNull: false
     }
   }, {
     hooks: {
