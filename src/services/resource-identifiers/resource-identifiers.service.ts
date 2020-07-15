@@ -10,6 +10,19 @@ declare module '../../declarations' {
   interface ServiceTypes {
     'resource-identifiers': ResourceIdentifiers & ServiceAddons<any>;
   }
+
+  interface ResourceIdentifierData {
+    id: Number
+    type: IdentifierType
+    value: string
+    createdAt: Date
+    updatedAt: Date
+    resourceId: Number
+  }
+
+  enum IdentifierType {
+    name
+  }
 }
 
 export default function (app: Application): void {

@@ -1,6 +1,6 @@
 // Initializes the `resources` service on path `/resources`
 import { ServiceAddons } from '@feathersjs/feathers';
-import { Application } from '../../declarations';
+import { Application, ResourceIdentifierData } from '../../declarations';
 import { Resources } from './resources.class';
 import createModel from '../../models/resources.model';
 import hooks from './resources.hooks';
@@ -9,6 +9,18 @@ import hooks from './resources.hooks';
 declare module '../../declarations' {
   interface ServiceTypes {
     'resources': Resources & ServiceAddons<any>;
+  }
+
+  interface ResourceData {
+    id: Number
+    name: string
+    createdAt: Date
+    updatedAt: Date
+    resources: ResourceIdentifierData[]
+  }
+
+  enum ResourceType {
+    name
   }
 }
 
