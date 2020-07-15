@@ -17,7 +17,10 @@ export default function (app: Application) {
   });
 
   (resources as any).associate = function (models: any) {
-    models.resource.hasMany(models.resource_identifier, { foreignKey: { allowNull: false } })
+    models.resource.hasMany(models.resource_identifier, {
+      foreignKey: { allowNull: false },
+      as: 'identifiers'
+    })
   };
 
   return resources;
