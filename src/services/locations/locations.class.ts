@@ -28,17 +28,18 @@ export class Locations extends Service<LocationData> {
     };
 
     try {
-      location = await this.validateWithNominatim(location)
+      location = await this.validateWithNominatim(location, rawLocation)
     } catch (error) {
       logger.warn('Error while validating the location with Nominatim, using raw values', error.message || error)
 
       // Just use the raw values
       location.street = rawLocation.street
       location.number = rawLocation.streetnumber
-      location.detail = rawLocation.detail
       location.postCode = rawLocation.zip
       location.locality = rawLocation.city
     }
+
+    location.detail = rawLocation.detail
 
     return await this.create(location) as LocationData
   }
@@ -53,9 +54,13 @@ export class Locations extends Service<LocationData> {
     return `${rawLocation.street || ''} ${rawLocation.streetnumber || ''}\n${rawLocation.zip || ''} ${rawLocation.city || ''}`
   }
 
-  async validateWithNominatim(data: LocationData): Promise<LocationData> {
+  async validateWithNominatim(data: LocationData, rawData: RawLocation): Promise<LocationData> {
     const results = await this.nominatim.geocode(data.rawText)
     let bestResult = await this.getBestResult(results)
+
+    if (rawData.streetnumber !== '' && (!bestResult.address.house_number || bestResult.address.house_number === '')) {
+      throw new Error('The result did not contain a house number, although our query had one')
+    }
 
     // Enhance the location data with bits from the Nominatim response
     data.name = bestResult.address.house_name || ''
