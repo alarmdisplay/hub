@@ -53,6 +53,7 @@ export class TextAnalysis implements SetupMethod {
       location: {
         street: matches.get('loc_street') as string || '',
         streetnumber: matches.get('loc_streetnumber') as string || '',
+        detail: matches.get('loc_detail') as string || '',
         zip: matches.get('loc_zip') as string || '',
         city: matches.get('loc_city') as string || '',
         gk: gk

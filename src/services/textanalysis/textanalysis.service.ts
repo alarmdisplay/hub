@@ -63,6 +63,7 @@ declare module '../../declarations' {
   interface RawLocation {
     street: string
     streetnumber: string
+    detail: string
     zip: string
     city: string
     gk?: GaussKruegerText

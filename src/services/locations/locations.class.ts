@@ -35,6 +35,7 @@ export class Locations extends Service<LocationData> {
       // Just use the raw values
       location.street = rawLocation.street
       location.number = rawLocation.streetnumber
+      location.detail = rawLocation.detail
       location.postCode = rawLocation.zip
       location.locality = rawLocation.city
     }
