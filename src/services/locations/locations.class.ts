@@ -55,7 +55,7 @@ export class Locations extends Service<LocationData> {
   }
 
   async validateWithNominatim(data: LocationData, rawData: RawLocation): Promise<LocationData> {
-    const results = await this.nominatim.geocode(data.rawText)
+    const results = await this.nominatim.geocode(`${rawData.streetnumber} ${rawData.street}`, rawData.city, rawData.zip)
     let bestResult = await this.getBestResult(results)
 
     if (rawData.streetnumber !== '' && (!bestResult.address.house_number || bestResult.address.house_number === '')) {

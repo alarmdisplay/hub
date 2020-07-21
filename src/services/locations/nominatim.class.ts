@@ -44,7 +44,7 @@ export class Nominatim {
     this.baseUrl = baseUrl || new URL('https://nominatim.openstreetmap.org')
   }
 
-  geocode(search: string): Promise<NominatimResult[]> {
+  geocode(street: string, city: string, postalCode: string): Promise<NominatimResult[]> {
     return axios.get('/search', {
       baseURL: this.baseUrl.toString(),
       params: {
@@ -52,7 +52,9 @@ export class Nominatim {
         addressdetails: 1,
         countrycodes: 'de',
         format: 'json',
-        q: search
+        street: street,
+        city: city,
+        postalcode: postalCode
       },
       responseType: 'json'
     })
