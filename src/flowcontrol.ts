@@ -31,5 +31,9 @@ export default function (app: Application) {
     let ResourceService = app.service('resources')
     let resources = await ResourceService.find({ query: { id: { $in: Array.from(resourceIds.values()) } }, paginate: false });
     logger.debug(resources)
+
+    const LocationsService = app.service('locations')
+    let locationData = await LocationsService.createFromRawLocation(result.location)
+    logger.debug(locationData)
   })
 }

@@ -53,22 +53,23 @@ declare module '../../declarations' {
       name: string
       number: string
     }
-    location: Location
+    location: RawLocation
     reason: string
     keyword: string
     resources: string[]
     description: string
   }
 
-  interface Location {
+  interface RawLocation {
     street: string
     streetnumber: string
+    detail: string
     zip: string
     city: string
-    gk?: GaussKrueger
+    gk?: GaussKruegerText
   }
 
-  interface GaussKrueger {
+  interface GaussKruegerText {
     x: string
     y: string
   }
