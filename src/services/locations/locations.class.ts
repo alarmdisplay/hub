@@ -1,4 +1,5 @@
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
+import * as gk from 'gauss-krueger'
 import {Application, LocationData, RawLocation} from '../../declarations';
 import {Nominatim, NominatimResult} from './nominatim.class';
 import logger from '../../logger';
@@ -26,6 +27,19 @@ export class Locations extends Service<LocationData> {
       locality: '',
       country: ''
     };
+
+    // If we have Gauss-Krueger coordinates, try to convert them to WGS coordinates
+    if (rawLocation.gk) {
+      try {
+        let gkCoordinates = { x: Number(rawLocation.gk.x), y: Number(rawLocation.gk.y) }
+        let wgsCoordinates = gk.toWGS(gkCoordinates)
+        logger.debug(wgsCoordinates)
+        location.latitude = wgsCoordinates.latitude
+        location.longitude = wgsCoordinates.longitude
+      } catch (error) {
+        logger.warn('Could not convert Gauss-Krueger coordinates:', error.message || error)
+      }
+    }
 
     try {
       location = await this.validateWithNominatim(location, rawLocation)
@@ -74,8 +88,12 @@ export class Locations extends Service<LocationData> {
     data.postCode = bestResult.address.postcode
     data.locality = bestResult.address.village || bestResult.address.town || bestResult.address.city || bestResult.address.municipality || ''
     data.country = bestResult.address.country_code === 'de' ? 'Deutschland': ''
-    data.latitude = Number(bestResult.lat)
-    data.longitude = Number(bestResult.lon)
+
+    // If the coordinates have not been supplied before, use the ones from Nominatim
+    if (!data.latitude || !data.longitude) {
+      data.latitude = Number(bestResult.lat)
+      data.longitude = Number(bestResult.lon)
+    }
 
     return data
   }
