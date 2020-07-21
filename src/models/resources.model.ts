@@ -26,6 +26,7 @@ export default function (app: Application) {
       foreignKey: { allowNull: false },
       as: 'identifiers'
     })
+    models.resource.belongsToMany(models.alerts, { through: 'alerted_resources' })
   };
 
   return resources;
