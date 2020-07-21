@@ -47,6 +47,9 @@ export class Nominatim {
   geocode(street: string, city: string, postalCode: string): Promise<NominatimResult[]> {
     return axios.get('/search', {
       baseURL: this.baseUrl.toString(),
+      headers: {
+        'User-Agent': 'Alarmdisplay Hub/1.0.0'
+      },
       params: {
         'accept-language': 'de',
         addressdetails: 1,
