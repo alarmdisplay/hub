@@ -51,7 +51,12 @@ export class Locations extends Service<LocationData> {
    */
   getFallbackAddress(rawLocation: RawLocation): string {
     // For now we assume the address format used in Germany
-    return `${rawLocation.street || ''} ${rawLocation.streetnumber || ''}\n${rawLocation.zip || ''} ${rawLocation.city || ''}`
+    let line1 = `${rawLocation.street || ''} ${rawLocation.streetnumber || ''}`
+    if (rawLocation.detail !== '') {
+      line1 = `${line1}, ${rawLocation.detail}`
+    }
+    let line2 = `${rawLocation.zip || ''} ${rawLocation.city || ''}`
+    return `${line1}\n${line2}`
   }
 
   async validateWithNominatim(data: LocationData, rawData: RawLocation): Promise<LocationData> {
