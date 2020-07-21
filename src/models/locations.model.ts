@@ -12,12 +12,17 @@ export default function (app: Application): typeof Model {
       allowNull: false
     },
     latitude: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DOUBLE,
       allowNull: true
     },
     longitude: {
-      type: DataTypes.DECIMAL,
+      type: DataTypes.DOUBLE,
       allowNull: true
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: ''
     },
     street: {
       type: DataTypes.STRING,
@@ -39,7 +44,7 @@ export default function (app: Application): typeof Model {
       allowNull: false,
       defaultValue: ''
     },
-    city: {
+    locality: {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: ''

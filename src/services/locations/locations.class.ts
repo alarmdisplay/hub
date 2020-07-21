@@ -18,11 +18,12 @@ export class Locations extends Service<LocationData> {
       rawText: fallbackAddress,
       latitude: undefined,
       longitude: undefined,
+      name: '',
       street: '',
       number: '',
       detail: '',
       postCode: '',
-      city: '',
+      locality: '',
       country: ''
     };
 
@@ -35,7 +36,7 @@ export class Locations extends Service<LocationData> {
       location.street = rawLocation.street
       location.number = rawLocation.streetnumber
       location.postCode = rawLocation.zip
-      location.city = rawLocation.city
+      location.locality = rawLocation.city
     }
 
     return await this.create(location) as LocationData
@@ -56,10 +57,11 @@ export class Locations extends Service<LocationData> {
     let bestResult = await this.getBestResult(results)
 
     // Enhance the location data with bits from the Nominatim response
+    data.name = bestResult.address.house_name || ''
     data.street = bestResult.address.road
     data.number = bestResult.address.house_number
     data.postCode = bestResult.address.postcode
-    data.city = bestResult.address.village || bestResult.address.town || bestResult.address.city || bestResult.address.municipality || ''
+    data.locality = bestResult.address.village || bestResult.address.town || bestResult.address.city || bestResult.address.municipality || ''
     data.country = bestResult.address.country_code === 'de' ? 'Deutschland': ''
     data.latitude = Number(bestResult.lat)
     data.longitude = Number(bestResult.lon)

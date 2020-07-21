@@ -16,11 +16,12 @@ declare module '../../declarations' {
     rawText: string,
     latitude?: number,
     longitude?: number,
+    name: string,
     street: string,
     number: string,
     detail: string,
     postCode: string,
-    city: string,
+    locality: string,
     country: string
   }
 }
