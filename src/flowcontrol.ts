@@ -1,4 +1,4 @@
-import {Application, ResourceIdentifierData} from "./declarations";
+import {Application, ResourceIdentifierData, ResourceData} from "./declarations";
 import logger from "./logger";
 
 export default function (app: Application) {
@@ -29,11 +29,25 @@ export default function (app: Application) {
     }
 
     let ResourceService = app.service('resources')
-    let resources = await ResourceService.find({ query: { id: { $in: Array.from(resourceIds.values()) } }, paginate: false });
+    let resources = await ResourceService.find({ query: { id: { $in: Array.from(resourceIds.values()) } }, paginate: false }) as ResourceData[]
     logger.debug(resources)
 
     const LocationsService = app.service('locations')
     let locationData = await LocationsService.createFromRawLocation(result.location)
     logger.debug(locationData)
+
+    let AlertsService = app.service('alerts')
+    let alert = await AlertsService.create({
+      caller_name: result.caller.name,
+      caller_number: result.caller.number,
+      description: result.description,
+      keyword: result.keyword,
+      location: locationData,
+      reason: result.reason,
+      ref: result.ref,
+      resources: resources,
+      sender: result.sender
+    })
+    logger.debug(alert)
   })
 }

@@ -14,10 +14,8 @@ declare module '../../declarations' {
   interface AlertData {
     sender: string
     ref: string
-    caller: {
-      name: string
-      number: string
-    }
+    caller_name: string
+    caller_number: string
     location: LocationData
     reason: string
     keyword: string
