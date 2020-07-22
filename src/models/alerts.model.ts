@@ -50,7 +50,8 @@ export default function (app: Application): typeof Model {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (alerts as any).associate = function (models: any): void {
-    models.alerts.hasMany(models.resource, {
+    models.alerts.belongsToMany(models.resource, {
+      through: 'alerted_resources',
       as: 'resources'
     })
     models.alerts.hasOne(models.locations, {
