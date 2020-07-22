@@ -7,31 +7,38 @@ export default function (app: Application): typeof Model {
   const alerts = sequelizeClient.define('alerts', {
     sender: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ''
     },
     ref: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ''
     },
     caller_name: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ''
     },
     caller_number: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ''
     },
     reason: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ''
     },
     keyword: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ''
     },
     description: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: ''
     }
   }, {
     hooks: {
