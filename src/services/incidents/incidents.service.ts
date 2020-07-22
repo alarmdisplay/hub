@@ -1,17 +1,17 @@
-// Initializes the `alerts` service on path `/alerts`
+// Initializes the `incidents` service on path `/incidents`
 import { ServiceAddons } from '@feathersjs/feathers';
-import {Application} from '../../declarations';
-import { Alerts } from './alerts.class';
-import createModel from '../../models/alerts.model';
-import hooks from './alerts.hooks';
+import { Application } from '../../declarations';
+import { Incidents } from './incidents.class';
+import createModel from '../../models/incidents.model';
+import hooks from './incidents.hooks';
 
 // Add this service to the service type index
 declare module '../../declarations' {
   interface ServiceTypes {
-    'alerts': Alerts & ServiceAddons<any>;
+    'incidents': Incidents & ServiceAddons<any>;
   }
 
-  interface AlertData {
+  interface IncidentData {
     sender: string
     ref: string
     caller_name: string
@@ -31,10 +31,10 @@ export default function (app: Application): void {
   };
 
   // Initialize our service with any options it requires
-  app.use('/alerts', new Alerts(options, app));
+  app.use('/incidents', new Incidents(options, app));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('alerts');
+  const service = app.service('incidents');
 
   service.hooks(hooks);
 }

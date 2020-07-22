@@ -26,7 +26,7 @@ export default function (app: Application) {
       foreignKey: { allowNull: false },
       as: 'identifiers'
     })
-    models.resource.belongsToMany(models.alerts, { through: 'alerted_resources' })
+    models.resource.belongsToMany(models.incident, { through: 'dispatched_resources' })
   };
 
   return resources;

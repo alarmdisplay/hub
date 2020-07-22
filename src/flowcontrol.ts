@@ -13,7 +13,7 @@ export default function (app: Application) {
       return
     }
 
-    logger.debug('Text analysis completed', result)
+    logger.debug('Text analysis completed')
 
     // Determine the requested resources
     const resourceIds = new Set();
@@ -30,14 +30,14 @@ export default function (app: Application) {
 
     let ResourceService = app.service('resources')
     let resources = await ResourceService.find({ query: { id: { $in: Array.from(resourceIds.values()) } }, paginate: false }) as ResourceData[]
-    logger.debug(resources)
+    logger.debug('Checked for known resources')
 
     const LocationsService = app.service('locations')
     let locationData = await LocationsService.createFromRawLocation(result.location)
-    logger.debug(locationData)
+    logger.debug('Validated location')
 
-    let AlertsService = app.service('alerts')
-    let alert = await AlertsService.create({
+    let IncidentsService = app.service('incidents')
+    let incident = await IncidentsService.processAlert({
       caller_name: result.caller.name,
       caller_number: result.caller.number,
       description: result.description,
@@ -48,6 +48,6 @@ export default function (app: Application) {
       resources: resources,
       sender: result.sender
     })
-    logger.debug(alert)
+    logger.debug(incident)
   })
 }

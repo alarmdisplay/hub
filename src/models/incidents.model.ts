@@ -4,7 +4,7 @@ import { HookReturn } from 'sequelize/types/lib/hooks';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  const alerts = sequelizeClient.define('alerts', {
+  const Incident = sequelizeClient.define('incident', {
     sender: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -49,15 +49,15 @@ export default function (app: Application): typeof Model {
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (alerts as any).associate = function (models: any): void {
-    models.alerts.belongsToMany(models.resource, {
-      through: 'alerted_resources',
+  (Incident as any).associate = function (models: any): void {
+    models.incident.belongsToMany(models.resource, {
+      through: 'dispatched_resources',
       as: 'resources'
     })
-    models.alerts.hasOne(models.locations, {
+    models.incident.belongsTo(models.locations, {
       as: 'location'
     })
   };
 
-  return alerts;
+  return Incident;
 }
