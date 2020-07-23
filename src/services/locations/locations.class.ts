@@ -15,7 +15,7 @@ export class Locations extends Service<LocationData> {
   async createFromRawLocation(rawLocation: RawLocation): Promise<LocationData> {
     let fallbackAddress = this.getFallbackAddress(rawLocation)
 
-    let location: LocationData = {
+    let location: Partial<LocationData> = {
       rawText: fallbackAddress,
       latitude: undefined,
       longitude: undefined,
@@ -73,7 +73,7 @@ export class Locations extends Service<LocationData> {
     return `${line1}\n${line2}`
   }
 
-  async validateWithNominatim(data: LocationData, rawData: RawLocation): Promise<LocationData> {
+  async validateWithNominatim(data: Partial<LocationData>, rawData: RawLocation): Promise<Partial<LocationData>> {
     const results = await this.nominatim.geocode(`${rawData.streetnumber} ${rawData.street}`, rawData.city, rawData.zip)
     let bestResult = await this.getBestResult(results)
 

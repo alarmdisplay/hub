@@ -12,14 +12,15 @@ declare module '../../declarations' {
   }
 
   interface IncidentData {
+    id: number
     sender: string
     ref: string
     caller_name: string
     caller_number: string
-    location: LocationData
+    locationId?: number
     reason: string
     keyword: string
-    resources: ResourceData[]
+    resources: number[]
     description: string
   }
 }

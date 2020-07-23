@@ -12,7 +12,7 @@ declare module '../../declarations' {
   }
 
   interface ResourceData {
-    id: Number
+    id: number
     name: string
     type: ResourceType
     createdAt: Date
