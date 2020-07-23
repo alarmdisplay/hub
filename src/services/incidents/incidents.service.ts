@@ -20,7 +20,7 @@ declare module '../../declarations' {
     locationId?: number
     reason: string
     keyword: string
-    resources: number[]
+    resources: ResourceData[]
     description: string
   }
 }

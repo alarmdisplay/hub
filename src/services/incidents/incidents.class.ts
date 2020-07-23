@@ -26,7 +26,7 @@ export class Incidents extends Service<IncidentData> {
         locationId: alert.location?.id,
         reason: alert.reason,
         keyword: alert.keyword,
-        resources: alert.resources?.map(resource => resource.id),
+        resources: alert.resources,
         description: alert.description
       };
       return await this.create(newIncident) as IncidentData
