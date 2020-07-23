@@ -22,8 +22,8 @@ export default {
     find: [],
     get: [],
     create: [ updateDispatchedResources ],
-    update: [],
-    patch: [],
+    update: [ updateDispatchedResources ],
+    patch: [ updateDispatchedResources ],
     remove: []
   },
 
@@ -44,14 +44,39 @@ export default {
  * @param context
  */
 async function updateDispatchedResources(context: HookContext) {
-  let resources = context.data.resources
+  let resources: ResourceData[] = context.data.resources
   if (!resources || !Array.isArray(resources)) {
     return
   }
 
   const sequelizeClient: Sequelize = context.app.get('sequelizeClient')
   const model = sequelizeClient.model('dispatched_resources');
-  const resourceAssignments = (<ResourceData[]>resources).map(resource => { return { incidentId: context.result.id, resourceId: resource.id } });
-  await model.bulkCreate(resourceAssignments)
+
+  // Get the currently associated resources
+  const dispatchedResources = await model.findAll({ where: { incidentId: context.result.id } })
+  const associatedIds = dispatchedResources.map(r => r.get('resourceId') as number)
+
+  // Determine, which resources have to be added or removed
+  const submittedResourceIds = resources.map(resource => resource.id)
+  const addedResources = submittedResourceIds.filter(resourceId => !associatedIds.includes(resourceId))
+  const removedResources = associatedIds.filter(resourceId => !submittedResourceIds.includes(resourceId))
+
+  // Associate new resources
+  if (addedResources.length > 0) {
+    await model.bulkCreate(addedResources.map(resourceId => {
+      return { incidentId: context.result.id, resourceId: resourceId }
+    }))
+  }
+
+  // Remove resources that are no longer assigned to the incident
+  if (removedResources.length > 0) {
+    await model.destroy({
+      where: {
+        incidentId: context.result.id,
+        resourceId: removedResources
+      }
+    })
+  }
+
   return context
 }
