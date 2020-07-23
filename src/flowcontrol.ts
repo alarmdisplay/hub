@@ -34,7 +34,7 @@ export default function (app: Application) {
 
     const LocationsService = app.service('locations')
     let locationData = await LocationsService.createFromRawLocation(result.location)
-    logger.debug('Validated location')
+    logger.debug('Processed location')
 
     let IncidentsService = app.service('incidents')
     let incident = await IncidentsService.processAlert({
