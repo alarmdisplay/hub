@@ -5,6 +5,11 @@ import { HookReturn } from 'sequelize/types/lib/hooks';
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
   const Incident = sequelizeClient.define('incident', {
+    time: {
+      type: DataTypes.DATE,
+      allowNull: false,
+      defaultValue: DataTypes.NOW
+    },
     sender: {
       type: DataTypes.STRING,
       allowNull: false,

@@ -13,6 +13,7 @@ declare module '../../declarations' {
 
   interface IncidentData {
     id: number
+    time: Date
     sender: string
     ref: string
     caller_name: string
