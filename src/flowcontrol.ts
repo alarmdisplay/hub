@@ -1,13 +1,13 @@
-import {Application, ResourceIdentifierData, ResourceData} from "./declarations";
+import {AlertContext, Application, ResourceData, ResourceIdentifierData} from "./declarations";
 import logger from "./logger";
 
 export default function (app: Application) {
   let textAnalysisService = app.service('textanalysis');
   // Register for results from the OCR service
-  app.service('ocr').on('ocr_result', async text => {
+  app.service('ocr').on('ocr_result', async (context: AlertContext) => {
     let result
     try {
-      result = textAnalysisService.analyse(text)
+      result = textAnalysisService.analyse(context.rawContent)
     } catch (e) {
       logger.error('Text analysis aborted:', e)
       return
@@ -47,7 +47,7 @@ export default function (app: Application) {
       ref: result.ref,
       resources: resources,
       sender: result.sender
-    })
+    }, context)
     logger.debug(incident)
   })
 }

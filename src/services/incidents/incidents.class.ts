@@ -1,5 +1,5 @@
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
-import {AlertData, Application, IncidentData} from '../../declarations';
+import {AlertContext, AlertData, Application, IncidentData} from '../../declarations';
 import logger from "../../logger";
 
 export class Incidents extends Service<IncidentData> {
@@ -9,11 +9,13 @@ export class Incidents extends Service<IncidentData> {
   }
 
   /**
+   * Takes new alerts and either creates a new incident or updates an existing one
    *
-   * @param alert
+   * @param alert The content of the alert
+   * @param context Metadata on how the alert came to be
    */
-  async processAlert(alert: AlertData): Promise<IncidentData> {
-    const incidentToUpdate = await this.getIncidentToUpdate(alert)
+  async processAlert(alert: AlertData, context: AlertContext): Promise<IncidentData> {
+    const incidentToUpdate = await this.getIncidentToUpdate(alert, context)
 
     // If there is no existing incident to be updated, create a new one
     if (incidentToUpdate === false) {
@@ -41,8 +43,9 @@ export class Incidents extends Service<IncidentData> {
    * Checks if there is an incident on record that should be updated instead of creating a new one
    *
    * @param alert
+   * @param context
    */
-  async getIncidentToUpdate(alert: AlertData): Promise<IncidentData | false> {
+  async getIncidentToUpdate(alert: AlertData, context: AlertContext): Promise<IncidentData | false> {
     // TODO check if we can update an existing incident
     return false
   }

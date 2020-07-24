@@ -2,12 +2,13 @@ import * as cp from 'child_process'
 import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
-import { SetupMethod } from '@feathersjs/feathers'
-import { Application } from '../../declarations'
+import {SetupMethod} from '@feathersjs/feathers'
+import {AlertContext, Application} from '../../declarations'
+import {AlertSourceType} from '../incidents/incidents.service'
 import {BlobResult} from 'feathers-blob'
 import logger from '../../logger'
 // @ts-ignore
-import { parseDataURI } from 'dauria'
+import {parseDataURI} from 'dauria'
 
 export class Ocr implements SetupMethod {
   app: Application;
@@ -51,6 +52,15 @@ export class Ocr implements SetupMethod {
       return
     }
 
+    // Prepare the context to handle this alert
+    let alertContext = {
+      processingStarted: new Date(),
+      rawContent: '',
+      source: {
+        type: AlertSourceType.OCR
+      }
+    }
+
     // Write the blob to a file in the working directory
     const fileName = path.join(workDir, 'in.pdf')
     try {
@@ -68,19 +78,21 @@ export class Ocr implements SetupMethod {
       }
 
       logger.debug('PDF converted, starting OCR')
-      this.doOcr(workDir)
+      this.doOcr(workDir, alertContext)
     })
   }
 
-  private async doOcr(workDir: string) {
+  private async doOcr(workDir: string, context: AlertContext) {
     cp.exec('tesseract in.tif stdout --psm 6 -l deu', { cwd: workDir }, (error, stdout) => {
       if (error) {
         logger.error('OCR error:', error)
         return
       }
 
+      context.rawContent = stdout
+
       // @ts-ignore TypeScript does not know that this is an EventEmitter
-      this.emit('ocr_result', stdout)
+      this.emit('ocr_result', context)
     })
   }
 }

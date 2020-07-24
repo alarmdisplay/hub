@@ -24,6 +24,38 @@ declare module '../../declarations' {
     resources: ResourceData[]
     description: string
   }
+
+  export interface AlertContext {
+    /**
+     * The time and date of when the processing of the source started. Will be used as fallback if the alert itself does
+     * not contain time and date and also the sourceTime is not provided.
+     */
+    processingStarted: Date
+
+    /**
+     * The unprocessed content of the source
+     */
+    rawContent: any
+
+    /**
+     * Details about the source, from which the alert originated. Can be used to give the alert data more or less weight
+     * when it comes to combining multiple sources (e.g. OCR might introduce errors while other formats don't)
+     */
+    source: AlertSource
+
+    /**
+     * The time and date of the source (e.g. creation date of a PDF file, timestamp of an email)
+     */
+    sourceTime?: Date
+  }
+
+  export interface AlertSource {
+    type: AlertSourceType
+  }
+}
+
+export enum AlertSourceType {
+  OCR
 }
 
 export default function (app: Application): void {
