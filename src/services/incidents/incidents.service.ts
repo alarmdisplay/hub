@@ -27,6 +27,11 @@ declare module '../../declarations' {
 
   export interface AlertContext {
     /**
+     * Prevents this alert from being merged into an existing incident
+     */
+    forceNewIncident?: boolean
+
+    /**
      * The time and date of when the processing of the source started. Will be used as fallback if the alert itself does
      * not contain time and date and also the sourceTime is not provided.
      */
