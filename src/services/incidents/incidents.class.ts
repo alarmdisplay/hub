@@ -5,6 +5,11 @@ import logger from "../../logger";
 // Maximum age of an incident, before a new one gets created
 const MAX_AGE = process.env.NODE_ENV && process.env.NODE_ENV === 'production' ? 15 * 60 * 1000 : 60 * 1000;
 
+/**
+ * The properties of an incident, that can be updated or filled by later alerts
+ */
+const updatableProperties = ['ref', 'caller_name', 'caller_number', 'reason', 'keyword', 'description'];
+
 export class Incidents extends Service<IncidentData> {
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
   constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
@@ -104,9 +109,27 @@ export class Incidents extends Service<IncidentData> {
    * @param alert
    */
   getIncidentDiff(incident: IncidentData, alert: AlertData): Partial<IncidentData> {
-    // TODO determine the difference
-    return {
-      reason: alert.reason
+    const newData = {}
+
+    // Check for properties that the incident is missing and the alert can provide
+    for (const property of updatableProperties) {
+      // @ts-ignore
+      const incidentValue = incident[property]
+      // @ts-ignore
+      const alertValue = alert[property]
+
+      if ((incidentValue === undefined || incidentValue === '') && alertValue && alertValue !== '') {
+        // @ts-ignore
+        newData[property] = alertValue
+      }
     }
+
+    // If the incident does not have a location assigned and the alert can provide one, use it
+    if (!incident.locationId && alert.location) {
+      // @ts-ignore
+      newData.locationId = alert.location.id
+    }
+
+    return newData
   }
 }
