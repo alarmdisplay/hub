@@ -65,8 +65,8 @@ export class Incidents extends Service<IncidentData> {
         },
         paginate: false
       }) as IncidentData[]
-      logger.debug('Incidents with same ref', incidentWithSameRef)
       if (incidentWithSameRef.length > 0) {
+        logger.debug('Found incident with same reference')
         return incidentWithSameRef[0]
       }
     }
@@ -80,9 +80,17 @@ export class Incidents extends Service<IncidentData> {
       },
       paginate: false
     }) as IncidentData[]
-    logger.debug('Recent incidents', recentIncidents)
     if (recentIncidents.length > 0) {
-      return recentIncidents[0]
+      const incident = recentIncidents[0]
+      logger.debug('Found recent incident, ID %d', incident.id)
+
+      // If existing incident and new alert have conflicting references, create a new incident
+      if (incident.ref && alert.ref && incident.ref !== alert.ref) {
+        logger.debug('Incident reference conflict, enforcing new incident')
+        return false
+      }
+
+      return incident
     }
 
     return false
