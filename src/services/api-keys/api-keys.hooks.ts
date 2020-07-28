@@ -2,6 +2,9 @@ import * as authentication from '@feathersjs/authentication';
 import * as local from '@feathersjs/authentication-local';
 import {HookContext} from '@feathersjs/feathers';
 import {BadRequest} from '@feathersjs/errors';
+import {createHash} from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
+import has = Reflect.has;
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
@@ -67,7 +70,9 @@ function enforceNameOnly(context: HookContext): HookContext {
  */
 function generateToken(context: HookContext): HookContext {
   // Generate a random token and add it to the submitted data. This will not be stored directly, but returned to the client once
-  context.data.token = '' + Date.now() // FIXME This is obviously not secure, pick something better
+  const hash = createHash('sha256');
+  hash.update(uuidv4())
+  context.data.token = hash.digest('hex')
 
   // Duplicate the value in the tokenHash field, which will be hashed and stored
   context.data.tokenHash = context.data.token
