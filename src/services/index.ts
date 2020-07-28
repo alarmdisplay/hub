@@ -8,6 +8,7 @@ import resources from './resources/resources.service';
 import resourceIdentifiers from './resource-identifiers/resource-identifiers.service';
 import locations from './locations/locations.service';
 import incidents from './incidents/incidents.service';
+import apiKeys from './api-keys/api-keys.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application) {
@@ -20,4 +21,5 @@ export default function (app: Application) {
   app.configure(resourceIdentifiers);
   app.configure(locations);
   app.configure(incidents);
+  app.configure(apiKeys);
 }
