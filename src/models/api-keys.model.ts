@@ -12,6 +12,7 @@ export default function (app: Application): typeof Model {
     tokenHash: {
       type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
       field: 'token_hash'
     }
   }, {
