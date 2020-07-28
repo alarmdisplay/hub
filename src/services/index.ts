@@ -7,7 +7,7 @@ import textanalysis from './textanalysis/textanalysis.service';
 import resources from './resources/resources.service';
 import resourceIdentifiers from './resource-identifiers/resource-identifiers.service';
 import locations from './locations/locations.service';
-import alerts from './alerts/alerts.service';
+import incidents from './incidents/incidents.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application) {
@@ -19,5 +19,5 @@ export default function (app: Application) {
   app.configure(resources);
   app.configure(resourceIdentifiers);
   app.configure(locations);
-  app.configure(alerts);
+  app.configure(incidents);
 }

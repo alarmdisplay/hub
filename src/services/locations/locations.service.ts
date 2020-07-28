@@ -13,6 +13,7 @@ declare module '../../declarations' {
   }
 
   interface LocationData {
+    id: number
     rawText: string,
     latitude?: number,
     longitude?: number,

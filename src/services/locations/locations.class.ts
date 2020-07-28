@@ -4,6 +4,9 @@ import {Application, LocationData, RawLocation} from '../../declarations';
 import {Nominatim, NominatimResult} from './nominatim.class';
 import logger from '../../logger';
 
+// TODO turn this into an option
+const validateWithNominatim = false
+
 export class Locations extends Service<LocationData> {
   private nominatim: Nominatim
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -15,7 +18,7 @@ export class Locations extends Service<LocationData> {
   async createFromRawLocation(rawLocation: RawLocation): Promise<LocationData> {
     let fallbackAddress = this.getFallbackAddress(rawLocation)
 
-    let location: LocationData = {
+    let location: Partial<LocationData> = {
       rawText: fallbackAddress,
       latitude: undefined,
       longitude: undefined,
@@ -41,12 +44,18 @@ export class Locations extends Service<LocationData> {
       }
     }
 
-    try {
-      location = await this.validateWithNominatim(location, rawLocation)
-    } catch (error) {
-      logger.warn('Error while validating the location with Nominatim, using raw values', error.message || error)
+    // Optionally validate with Nominatim
+    let validatedLocation
+    if (validateWithNominatim) {
+      try {
+        validatedLocation = await this.validateWithNominatim(location, rawLocation)
+      } catch (error) {
+        logger.warn('Error while validating the location with Nominatim, using raw values', error.message || error)
+      }
+    }
 
-      // Just use the raw values
+    // If the validation failed or has been skipped, use the raw values
+    if (!validatedLocation) {
       location.street = rawLocation.street
       location.number = rawLocation.streetnumber
       location.postCode = rawLocation.zip
@@ -73,7 +82,7 @@ export class Locations extends Service<LocationData> {
     return `${line1}\n${line2}`
   }
 
-  async validateWithNominatim(data: LocationData, rawData: RawLocation): Promise<LocationData> {
+  async validateWithNominatim(data: Partial<LocationData>, rawData: RawLocation): Promise<Partial<LocationData>> {
     const results = await this.nominatim.geocode(`${rawData.streetnumber} ${rawData.street}`, rawData.city, rawData.zip)
     let bestResult = await this.getBestResult(results)
 
