@@ -25,4 +25,10 @@ export default function (app: Application): void {
   const service = app.service('api-keys');
 
   service.hooks(hooks);
+
+  // Prevent publishing of any newly created token
+  service.publish('created', () => {
+    // Do not return a channel to publish to
+    return
+  })
 }
