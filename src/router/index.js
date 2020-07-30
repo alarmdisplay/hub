@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import About from '../views/About'
 import Home from '../views/Home.vue'
 import Users from '../views/admin/Users'
+import ApiKeys from '@/views/admin/ApiKeys'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,10 @@ Vue.use(VueRouter)
     path: '/admin/users',
     name: 'Konten',
     component: Users
+  },
+  {
+    path: '/admin/api-keys',
+    component: ApiKeys
   }
 ]
 

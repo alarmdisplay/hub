@@ -23,6 +23,9 @@
                         <router-link tag="a" class="navbar-item" to="/admin/users">
                             Konten
                         </router-link>
+                        <router-link tag="a" class="navbar-item" to="/admin/api-keys">
+                            API-Keys
+                        </router-link>
                     </div>
                 </div>
 
