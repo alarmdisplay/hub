@@ -49,7 +49,7 @@
                     </a>
 
                     <div class="navbar-dropdown">
-                        <a class="navbar-item" @click="$store.dispatch('user/logout')">
+                        <a class="navbar-item" @click="$store.dispatch('auth/logout')">
                             Logout
                         </a>
                     </div>
@@ -64,7 +64,7 @@
     name: 'Navbar',
     computed: {
       displayName: function () {
-        const currentUser = this.$store.state.user.currentUser
+        const currentUser = this.$store.getters['auth/user']
         if (!currentUser) {
           return 'Nicht eingeloggt'
         }
