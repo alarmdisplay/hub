@@ -64,7 +64,7 @@
                                     Passwort
                                 </label>
                                 <p class="control">
-                                    <input class="input" type="password" id="password" v-model="newUser.password">
+                                    <input class="input" type="password" id="password" autocomplete="new-password" v-model="newUser.password">
                                 </p>
                             </div>
                             <div class="buttons is-right">
