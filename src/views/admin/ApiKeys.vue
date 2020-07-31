@@ -17,35 +17,33 @@
             </div>
 
             <FeathersVuexFind service="api-keys" :query="{}" qid="apiKeyList" watch="query">
-                <section slot-scope="{ items: apiKeys }">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Angelegt am</th>
-                            <th>Aktionen</th>
+                <table class="table" slot-scope="{ items: apiKeys }">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Angelegt am</th>
+                        <th>Aktionen</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template v-for="apiKey in apiKeys">
+                        <tr :key="apiKey.id">
+                            <th>{{ apiKey.name }}</th>
+                            <td>{{ apiKey.createdAt }}</td>
+                            <td>
+                                <div class="buttons">
+                                    <button class="button is-danger is-outlined" title="API-Key widerrufen" @click="removeApiKey(apiKey.id)">
+                                <span class="icon">
+                                    <font-awesome-icon icon="trash-alt"/>
+                                </span>
+                                        <span>Widerrufen</span>
+                                    </button>
+                                </div>
+                            </td>
                         </tr>
-                        </thead>
-                        <tbody>
-                        <template v-for="apiKey in apiKeys">
-                            <tr :key="apiKey.id">
-                                <th>{{ apiKey.name }}</th>
-                                <td>{{ apiKey.createdAt }}</td>
-                                <td>
-                                    <div class="buttons">
-                                        <button class="button is-danger is-outlined" title="API-Key widerrufen" @click="removeApiKey(apiKey.id)">
-                                    <span class="icon">
-                                        <font-awesome-icon icon="trash-alt"/>
-                                    </span>
-                                            <span>Widerrufen</span>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </template>
-                        </tbody>
-                    </table>
-                </section>
+                    </template>
+                    </tbody>
+                </table>
             </FeathersVuexFind>
 
             <div ref="new_apikey_modal" class="modal">
