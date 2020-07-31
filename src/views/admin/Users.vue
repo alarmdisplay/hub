@@ -8,32 +8,35 @@
                 </span>
                 <span>Konto anlegen</span>
             </button>
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>Email</th>
-                    <th>Angelegt am</th>
-                    <th>Aktionen</th>
-                </tr>
-                </thead>
-                <tbody>
-                <template v-for="user in users">
-                    <tr :key="user.id">
-                        <th>{{ user.email }}</th>
-                        <td>{{ user.createdAt }}</td>
-                        <td>
-                            <div class="buttons">
-                                <button class="button is-danger is-outlined" title="Konto entfernen" :disabled="user.id === $store.state.user.currentUser.id">
-                                    <span class="icon" @click="removeUser(user.id)">
-                                        <font-awesome-icon icon="user-minus"/>
-                                    </span>
-                                </button>
-                            </div>
-                        </td>
+
+            <FeathersVuexFind service="users" :query="{}" qid="userList" watch="query">
+                <table class="table" slot-scope="{ items: users }">
+                    <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Angelegt am</th>
+                        <th>Aktionen</th>
                     </tr>
-                </template>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    <template v-for="user in users">
+                        <tr :key="user.id">
+                            <th>{{ user.email }}</th>
+                            <td>{{ user.createdAt }}</td>
+                            <td>
+                                <div class="buttons">
+                                    <button class="button is-danger is-outlined" title="Konto entfernen" :disabled="user.id === $store.getters['auth/user'].id">
+                                        <span class="icon" @click="removeUser(user.id)">
+                                            <font-awesome-icon icon="user-minus"/>
+                                        </span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+            </FeathersVuexFind>
 
             <div ref="new_user_modal" class="modal">
                 <div class="modal-background"></div>
@@ -43,11 +46,9 @@
                         <button class="delete" type="button" aria-label="close" @click="closeModal"></button>
                     </header>
                     <section class="modal-card-body">
-                        <article class="message is-danger" v-if="createErrors.length > 0">
+                        <article class="message is-danger" v-if="$store.state['users'].errorOnCreate">
                             <div class="message-body">
-                                <ul>
-                                    <li v-for="error in createErrors" :key="error">{{ error }}</li>
-                                </ul>
+                                {{ $store.state['users'].errorOnCreate.message }}
                             </div>
                         </article>
                         <form @submit.prevent="createUser">
@@ -80,55 +81,29 @@
 </template>
 
 <script>
-  import api from '../../api/users'
-
   export default {
     name: 'Users',
     data() {
       return {
-        createErrors: [],
         newUser: {
           email: '',
           password: ''
-        },
-        users: []
+        }
       }
-    },
-    created () {
-      this.getUsers()
     },
     methods: {
       closeModal: function () {
         this.$refs.new_user_modal.classList.remove('is-active')
         this.resetNewUser()
-        this.createErrors = []
       },
       createUser: function () {
-        this.createErrors = []
-        api.create(this.newUser.email, this.newUser.password)
-          .then(user => {
-            this.users.push(user)
+        this.$store.commit('users/clearError', 'create')
+        this.$store.dispatch('users/create', { email: this.newUser.email, password: this.newUser.password })
+          .then(() => {
             this.closeModal()
           })
-          .catch(reason => {
-            if (reason.type === 'FeathersError') {
-              if (reason.errors.length > 0) {
-                this.createErrors = reason.errors.map(error => error.message)
-              } else {
-                this.createErrors = [reason.message]
-              }
-            } else {
-              this.createErrors = [reason.toString()]
-            }
-          })
-      },
-      getUsers: function () {
-        api.find()
-          .then(response => {
-            this.users = response.data
-          })
-          .catch(reason => {
-            console.error('Could not get users', reason)
+          .catch(() => {
+            // Do nothing, the error is handled by feathers-vuex
           })
       },
       removeUser: function (id) {
@@ -136,21 +111,12 @@
           return
         }
 
-        api.remove(id)
-          .then(removedUser => {
-            this.users = this.users.filter(user => user.id !== removedUser.id)
-          })
-          .catch(reason => {
-            console.error('Could not delete user', reason)
-          })
+        this.$store.dispatch('users/remove', id)
       },
       resetNewUser: function () {
         this.newUser.email = ''
         this.newUser.password = ''
       }
-    },
-    watch: {
-      '$route': 'getUsers'
     }
   }
 </script>
