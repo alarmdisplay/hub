@@ -2,8 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import About from '../views/About'
 import Home from '../views/Home.vue'
-import Users from '../views/admin/Users'
+import UserList from '../views/admin/UserList'
 import ApiKeys from '@/views/admin/ApiKeys'
+import UserForm from '@/views/admin/UserForm'
 
 Vue.use(VueRouter)
 
@@ -20,8 +21,13 @@ Vue.use(VueRouter)
   },
   {
     path: '/admin/users',
-    name: 'Konten',
-    component: Users
+    name: 'user-list',
+    component: UserList
+  },
+  {
+    path: '/admin/users/:id',
+    name: 'user-form',
+    component: UserForm
   },
   {
     path: '/admin/api-keys',
