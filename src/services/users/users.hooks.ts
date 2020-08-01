@@ -8,7 +8,7 @@ const { authenticate } = feathersAuthentication.hooks;
 const { hashPassword, protect } = local.hooks;
 
 function preventEmptyPassword (context: HookContext) {
-  if (context.data.password === '') {
+  if (context.data.password && context.data.password === '') {
     throw new BadRequest('Password must not be empty')
   }
 }
@@ -19,8 +19,8 @@ export default {
     find: [ authenticate('jwt') ],
     get: [ authenticate('jwt') ],
     create: [ preventEmptyPassword,  hashPassword('password') ],
-    update: [ hashPassword('password'),  authenticate('jwt') ],
-    patch: [ hashPassword('password'),  authenticate('jwt') ],
+    update: [ preventEmptyPassword, hashPassword('password'),  authenticate('jwt') ],
+    patch: [ preventEmptyPassword, hashPassword('password'),  authenticate('jwt') ],
     remove: [ authenticate('jwt') ]
   },
 
