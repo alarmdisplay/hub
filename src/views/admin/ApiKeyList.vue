@@ -17,7 +17,7 @@
                 <p>Dieser Key kann später nicht erneut angezeigt werden und sollte deshalb sofort notiert und sicher verwahrt werden.</p>
             </div>
 
-            <FeathersVuexFind service="api-keys" :query="{}" qid="apiKeyList" watch="query">
+            <FeathersVuexFind service="api-keys" :query="{ $limit: 50 }" qid="apiKeyList" watch="query">
                 <table class="table" slot-scope="{ items: apiKeys }">
                     <thead>
                     <tr>

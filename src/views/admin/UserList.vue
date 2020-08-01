@@ -10,7 +10,7 @@
                 <span>Konto anlegen</span>
             </router-link>
 
-            <FeathersVuexFind service="users" :query="{}" qid="userList" watch="query">
+            <FeathersVuexFind service="users" :query="{ $limit: 50 }" qid="userList" watch="query">
                 <table class="table" slot-scope="{ items: users }">
                     <thead>
                     <tr>
