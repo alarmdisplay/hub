@@ -4,12 +4,7 @@
             <h1 class="title">Konto {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}</h1>
 
             <div class="buttons is-left">
-                <button type="button" class="button" @click="$router.go(-1)">
-                <span class="icon">
-                    <font-awesome-icon icon="chevron-left"/>
-                </span>
-                    <span>Zurück</span>
-                </button>
+                <BackButton/>
             </div>
 
             <article class="message is-danger" v-if="$store.state['users'].errorOnCreate">
@@ -37,9 +32,11 @@
 
 <script>
 import UserEditor from '@/components/UserEditor'
+import BackButton from '@/components/BackButton'
+
 export default {
 name: 'UserForm',
-  components: { UserEditor },
+  components: { BackButton, UserEditor },
   computed: {
     id() {
       return this.$route.params.id
@@ -69,7 +66,3 @@ name: 'UserForm',
   }
 }
 </script>
-
-<style scoped>
-
-</style>

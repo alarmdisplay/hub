@@ -4,12 +4,7 @@
             <h1 class="title">API-Key {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}</h1>
 
             <div class="buttons is-left">
-                <button type="button" class="button" @click="$router.go(-1)">
-                <span class="icon">
-                    <font-awesome-icon icon="chevron-left"/>
-                </span>
-                    <span>Zurück</span>
-                </button>
+                <BackButton/>
             </div>
 
             <article class="message is-danger" v-if="$store.state['api-keys'].errorOnCreate">
@@ -37,9 +32,10 @@
 
 <script>
 import ApiKeyEditor from '@/components/ApiKeyEditor'
+import BackButton from '@/components/BackButton'
 export default {
 name: 'ApiKeyForm',
-  components: { ApiKeyEditor },
+  components: { BackButton, ApiKeyEditor },
   computed: {
     id() {
       return this.$route.params.id
@@ -69,7 +65,3 @@ name: 'ApiKeyForm',
   }
 }
 </script>
-
-<style scoped>
-
-</style>
