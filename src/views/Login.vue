@@ -53,7 +53,7 @@
     },
     methods: {
       login: function () {
-        this.$store.dispatch('user/login', { email: this.email, password: this.password })
+        this.$store.dispatch('auth/authenticate', { email: this.email, password: this.password, strategy: 'local' })
       }
     }
   }

@@ -1,0 +1,68 @@
+<template>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Konten</h1>
+
+            <router-link tag="button" type="button" class="button" to="new" append>
+                <span class="icon">
+                    <font-awesome-icon icon="user-plus"/>
+                </span>
+                <span>Konto anlegen</span>
+            </router-link>
+
+            <FeathersVuexFind service="users" :query="{ $limit: 50 }" qid="userList" watch="query">
+                <table class="table" slot-scope="{ items: users }">
+                    <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Angelegt am</th>
+                        <th>Aktionen</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template v-for="user in users">
+                        <tr :key="user.id">
+                            <th>{{ user.email }}</th>
+                            <td>{{ user.createdAt }}</td>
+                            <td>
+                                <div class="buttons">
+                                    <button class="button is-outlined" title="Konto bearbeiten" @click="$router.push({ name: 'user-form', params: { id: user.id } })">
+                                        <span class="icon">
+                                            <font-awesome-icon icon="user-edit"/>
+                                        </span>
+                                        <span>Bearbeiten</span>
+                                    </button>
+                                    <button class="button is-danger is-outlined" title="Konto entfernen" :disabled="user.id === $store.getters['auth/user'].id" @click="removeUser(user.id)">
+                                        <span class="icon">
+                                            <font-awesome-icon icon="user-minus"/>
+                                        </span>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+            </FeathersVuexFind>
+        </div>
+    </section>
+</template>
+
+<script>
+  export default {
+    name: 'UserList',
+    methods: {
+      removeUser: function (id) {
+        if (!id) {
+          return
+        }
+
+        this.$store.dispatch('users/remove', id)
+      }
+    }
+  }
+</script>
+
+<style scoped>
+
+</style>

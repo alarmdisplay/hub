@@ -19,12 +19,12 @@ export default {
   },
   computed: {
     loggedIn: function () {
-      return this.$store.state.user.currentUser !== null
+      return this.$store.getters['auth/isAuthenticated']
     }
   },
   created () {
     // Check if we have a valid authentication token
-    this.$store.dispatch('user/reauthenticate')
+    this.$store.dispatch('auth/authenticate')
   }
 }
 </script>
