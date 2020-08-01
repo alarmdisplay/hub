@@ -11,32 +11,38 @@
         <div ref="navbarmenu" class="navbar-menu">
             <div class="navbar-start">
                 <router-link tag="a" class="navbar-item" to="/">
-                    Home
+                    <span class="icon"><font-awesome-icon icon="home"/></span>
+                    <span>Home</span>
                 </router-link>
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
-                        Administration
+                        <span class="icon"><font-awesome-icon icon="cogs"/></span>
+                        <span>Administration</span>
                     </a>
 
                     <div class="navbar-dropdown">
                         <router-link tag="a" class="navbar-item" to="/admin/users">
-                            Konten
+                            <span class="icon"><font-awesome-icon icon="user"/></span>
+                            <span>Konten</span>
                         </router-link>
                         <router-link tag="a" class="navbar-item" to="/admin/api-keys">
-                            API-Keys
+                            <span class="icon"><font-awesome-icon icon="key"/></span>
+                            <span>API-Keys</span>
                         </router-link>
                     </div>
                 </div>
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
-                        Hilfe
+                        <span class="icon"><font-awesome-icon icon="question-circle"/></span>
+                        <span>Hilfe</span>
                     </a>
 
                     <div class="navbar-dropdown">
                         <router-link tag="a" class="navbar-item" to="/about">
-                            &Uuml;ber
+                            <span class="icon"><font-awesome-icon icon="info-circle"/></span>
+                            <span>&Uuml;ber</span>
                         </router-link>
                     </div>
                 </div>
@@ -45,12 +51,14 @@
             <div class="navbar-end">
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
-                        {{ displayName }}
+                        <span class="icon"><font-awesome-icon icon="user"/></span>
+                        <span>{{ displayName }}</span>
                     </a>
 
                     <div class="navbar-dropdown">
                         <a class="navbar-item" @click="$store.dispatch('auth/logout')">
-                            Logout
+                            <span class="icon"><font-awesome-icon icon="sign-out-alt"/></span>
+                            <span>Logout</span>
                         </a>
                     </div>
                 </div>
