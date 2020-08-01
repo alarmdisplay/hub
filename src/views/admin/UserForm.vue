@@ -22,7 +22,11 @@
                 <template v-slot="{ clone, save, reset }">
                     <UserEditor
                             :item="clone"
-                            @save="save().then(() => $router.push({name: 'user-list'}))"
+                            @save="
+                            () => {
+                              $store.commit('users/clearError', 'create')
+                              save().then(() => $router.push({name: 'user-list'}))
+                            }"
                             @reset="reset"
                     ></UserEditor>
                 </template>
@@ -34,7 +38,7 @@
 <script>
 import UserEditor from '@/components/UserEditor'
 export default {
-name: 'UserList',
+name: 'UserForm',
   components: { UserEditor },
   computed: {
     id() {
