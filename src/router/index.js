@@ -3,8 +3,9 @@ import VueRouter from 'vue-router'
 import About from '../views/About'
 import Home from '../views/Home.vue'
 import UserList from '../views/admin/UserList'
-import ApiKeys from '@/views/admin/ApiKeys'
+import ApiKeyList from '@/views/admin/ApiKeyList'
 import UserForm from '@/views/admin/UserForm'
+import ApiKeyForm from '@/views/admin/ApiKeyForm'
 
 Vue.use(VueRouter)
 
@@ -31,8 +32,14 @@ Vue.use(VueRouter)
   },
   {
     path: '/admin/api-keys',
-    component: ApiKeys
-  }
+    name: 'api-key-list',
+    component: ApiKeyList
+  },
+    {
+      path: '/admin/api-keys/:id',
+      name: 'api-key-form',
+      component: ApiKeyForm
+    }
 ]
 
 const router = new VueRouter({
