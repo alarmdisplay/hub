@@ -69,7 +69,7 @@
           return 'Nicht eingeloggt'
         }
 
-        return currentUser.email || '???'
+        return currentUser.displayName || '???'
       }
     },
     methods: {

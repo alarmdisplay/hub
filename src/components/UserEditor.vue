@@ -1,6 +1,14 @@
 <template>
     <form @submit.prevent="handleSubmit">
         <div class="field">
+            <label class="label" for="name">
+                Name
+            </label>
+            <p class="control">
+                <input class="input" type="text" id="name" v-model="item.name">
+            </p>
+        </div>
+        <div class="field">
             <label class="label" for="email">
                 E-Mail
             </label>

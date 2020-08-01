@@ -14,6 +14,7 @@
                 <table class="table" slot-scope="{ items: users }">
                     <thead>
                     <tr>
+                        <th>Name</th>
                         <th>Email</th>
                         <th>Angelegt am</th>
                         <th>Aktionen</th>
@@ -22,7 +23,8 @@
                     <tbody>
                     <template v-for="user in users">
                         <tr :key="user.id">
-                            <th>{{ user.email }}</th>
+                            <th>{{ user.name }}</th>
+                            <td>{{ user.email }}</td>
                             <td>{{ user.createdAt }}</td>
                             <td>
                                 <div class="buttons">

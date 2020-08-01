@@ -9,8 +9,12 @@ class User extends BaseModel {
 
   static instanceDefaults() {
     return {
+      name: '',
       email: '',
-      password: ''
+      password: '',
+      get displayName() {
+        return this.name || this.email
+      }
     }
   }
 }
