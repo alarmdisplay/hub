@@ -14,7 +14,9 @@
                     <span class="icon"><font-awesome-icon icon="home"/></span>
                     <span>Home</span>
                 </router-link>
+            </div>
 
+            <div class="navbar-end">
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
                         <span class="icon"><font-awesome-icon icon="cogs"/></span>
@@ -46,9 +48,7 @@
                         </router-link>
                     </div>
                 </div>
-            </div>
 
-            <div class="navbar-end">
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
                         <span class="icon"><font-awesome-icon icon="user"/></span>
