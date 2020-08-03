@@ -1,6 +1,7 @@
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import {AlertContext, AlertData, Application, IncidentData} from '../../declarations';
 import logger from "../../logger";
+import {IncidentCategory, IncidentStatus} from "./incidents.service";
 
 // Maximum age of an incident, before a new one gets created
 const MAX_AGE = process.env.NODE_ENV && process.env.NODE_ENV === 'production' ? 15 * 60 * 1000 : 60 * 1000;
@@ -37,7 +38,9 @@ export class Incidents extends Service<IncidentData> {
         reason: alert.reason,
         keyword: alert.keyword,
         resources: alert.resources,
-        description: alert.description
+        description: alert.description,
+        status: IncidentStatus.Actual, // TODO Add a mechanism to detect Test and Exercise status by keywords or date/time
+        category: IncidentCategory.Other // TODO Define the category according to reason or keyword
       };
       return await this.create(newIncident) as IncidentData
     }

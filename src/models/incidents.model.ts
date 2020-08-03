@@ -44,6 +44,18 @@ export default function (app: Application): typeof Model {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: ''
+    },
+    status: {
+      type: DataTypes.ENUM,
+      values: ['Actual', 'Exercise', 'Test'],
+      allowNull: false,
+      defaultValue: 'Actual'
+    },
+    category: {
+      type: DataTypes.ENUM,
+      values: ['Geo', 'Met', 'Safety', 'Security', 'Rescue', 'Fire', 'Health', 'Env', 'Transport', 'Infra', 'CBRNE', 'Other'],
+      allowNull: false,
+      defaultValue: 'Other'
     }
   }, {
     hooks: {

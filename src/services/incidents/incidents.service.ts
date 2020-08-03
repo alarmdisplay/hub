@@ -23,6 +23,8 @@ declare module '../../declarations' {
     keyword: string
     resources: ResourceData[]
     description: string
+    status: IncidentStatus
+    category: IncidentCategory
   }
 
   export interface AlertContext {
@@ -62,6 +64,28 @@ declare module '../../declarations' {
 export enum AlertSourceType {
   OCR
 }
+
+export enum IncidentStatus {
+  Actual = 'Actual',
+  Exercise = 'Exercise',
+  Test = 'Test'
+}
+
+export enum IncidentCategory {
+  Geo = 'Geo',
+  Met = 'Met',
+  Safety = 'Safety',
+  Security = 'Security',
+  Rescue = 'Rescue',
+  Fire = 'Fire',
+  Health = 'Health',
+  Env = 'Env',
+  Transport = 'Transport',
+  Infra = "Infra",
+  CBRNE = 'CBRNE',
+  Other = 'Other'
+}
+
 
 export default function (app: Application): void {
   const options = {
