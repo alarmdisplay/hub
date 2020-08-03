@@ -62,9 +62,11 @@ export default function (app: Application): typeof Model {
     }
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (locations as any).associate = function (models: any): void {
-    models.locations.hasOne(models.incident, { as: 'location' })
+    models.locations.belongsTo(models.incident, {
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    })
   };
 
   return locations;

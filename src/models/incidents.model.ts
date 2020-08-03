@@ -65,15 +65,12 @@ export default function (app: Application): typeof Model {
     }
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   (Incident as any).associate = function (models: any): void {
     models.incident.belongsToMany(models.resource, {
       through: 'dispatched_resources',
       as: 'resources'
     })
-    models.incident.belongsTo(models.locations, {
-      as: 'location'
-    })
+    models.incident.hasOne(models.locations)
   };
 
   return Incident;
