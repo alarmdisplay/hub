@@ -2,6 +2,7 @@ import * as authentication from '@feathersjs/authentication';
 import {HookContext} from "@feathersjs/feathers";
 import {Sequelize} from "sequelize";
 import {ResourceData} from '../../declarations';
+import {BadRequest} from "@feathersjs/errors";
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
@@ -58,6 +59,10 @@ async function updateDispatchedResources(context: HookContext) {
 
   // Determine, which resources have to be added or removed
   const submittedResourceIds = resources.map(resource => resource.id)
+  // @ts-ignore
+  if (submittedResourceIds.includes(undefined)) {
+    throw new BadRequest('Resources must have an id field')
+  }
   const addedResources = submittedResourceIds.filter(resourceId => !associatedIds.includes(resourceId))
   const removedResources = associatedIds.filter(resourceId => !submittedResourceIds.includes(resourceId))
 
