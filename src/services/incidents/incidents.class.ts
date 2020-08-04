@@ -9,7 +9,7 @@ const MAX_AGE = process.env.NODE_ENV && process.env.NODE_ENV === 'production' ? 
 /**
  * The properties of an incident, that can be updated or filled by later alerts
  */
-const updatableProperties = ['ref', 'caller_name', 'caller_number', 'reason', 'keyword', 'description'];
+const updatableProperties = ['ref', 'sender', 'caller_name', 'caller_number', 'reason', 'keyword', 'description'];
 
 export class Incidents extends Service<IncidentData> {
   private app: Application;
