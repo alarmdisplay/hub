@@ -8,11 +8,15 @@ import store from './store'
 
 // Import Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faChevronLeft, faCogs, faEdit, faEnvelope, faHome, faInfoCircle, faKey, faLock, faPlus, faQuestionCircle, faSignOutAlt, faTrashAlt, faUser, faUserEdit, faUserMinus, faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import { faCheck, faChevronLeft, faCogs, faEdit, faEnvelope, faFolder, faHome, faInbox, faInfoCircle, faKey, faLock,
+  faPause, faPlay, faPlus, faQuestionCircle, faSignOutAlt, faStop, faTimes, faTrashAlt, faUser, faUserEdit, faUserMinus,
+  faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // Configure Font Awesome
-library.add(faChevronLeft, faCogs, faEdit, faEnvelope, faHome, faInfoCircle, faKey, faLock, faPlus, faQuestionCircle, faSignOutAlt, faTrashAlt, faUser, faUserEdit, faUserMinus, faUserPlus)
+library.add(faCheck, faChevronLeft, faCogs, faEdit, faEnvelope, faFolder, faHome, faInbox, faInfoCircle, faKey, faLock,
+  faPause, faPlay, faPlus, faQuestionCircle, faSignOutAlt, faStop, faTimes, faTrashAlt, faUser, faUserEdit, faUserMinus,
+  faUserPlus)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

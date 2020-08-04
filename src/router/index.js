@@ -6,6 +6,8 @@ import UserList from '../views/admin/UserList'
 import ApiKeyList from '@/views/admin/ApiKeyList'
 import UserForm from '@/views/admin/UserForm'
 import ApiKeyForm from '@/views/admin/ApiKeyForm'
+import WatchedFolderList from '@/views/input/WatchedFolderList'
+import WatchedFolderForm from '@/views/input/WatchedFolderForm'
 
 Vue.use(VueRouter)
 
@@ -19,6 +21,16 @@ Vue.use(VueRouter)
       path: '/about',
       name: 'About',
       component: About
+    },
+    {
+      path: '/input/watched-folders',
+      name: 'watched-folder-list',
+      component: WatchedFolderList
+    },
+    {
+      path: '/input/watched-folders/:id',
+      name: 'watched-folder-form',
+      component: WatchedFolderForm
     },
     {
       path: '/admin/users',

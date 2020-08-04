@@ -14,6 +14,20 @@
                     <span class="icon"><font-awesome-icon icon="home"/></span>
                     <span>Home</span>
                 </router-link>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        <span class="icon"><font-awesome-icon icon="inbox"/></span>
+                        <span>Alarmeingang</span>
+                    </a>
+
+                    <div class="navbar-dropdown">
+                        <router-link tag="a" class="navbar-item" to="/input/watched-folders">
+                            <span class="icon"><font-awesome-icon icon="folder"/></span>
+                            <span>&Uuml;berwachte Ordner</span>
+                        </router-link>
+                    </div>
+                </div>
             </div>
 
             <div class="navbar-end">
