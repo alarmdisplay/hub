@@ -88,12 +88,22 @@ async function updateLocation(context: HookContext) {
  */
 async function updateDispatchedResources(context: HookContext) {
   let resources: ResourceData[] = context.data.resources
-  if (!resources || !Array.isArray(resources)) {
+  if ((context.method === 'create' || context.method === 'patch') && (!resources || !Array.isArray(resources))) {
     return
   }
 
   const sequelizeClient: Sequelize = context.app.get('sequelizeClient')
   const model = sequelizeClient.model('dispatched_resources');
+
+  // If the update data did not contain resources, remove all associated resources
+  if (context.method === 'update' && (!resources || resources.length === 0)) {
+    await model.destroy({
+      where: {
+        incidentId: context.result.id
+      }
+    })
+    return
+  }
 
   // Get the currently associated resources
   const dispatchedResources = await model.findAll({ where: { incidentId: context.result.id } })
@@ -105,17 +115,22 @@ async function updateDispatchedResources(context: HookContext) {
   if (submittedResourceIds.includes(undefined)) {
     throw new BadRequest('Resources must have an id field')
   }
-  const addedResources = submittedResourceIds.filter(resourceId => !associatedIds.includes(resourceId))
-  const removedResources = associatedIds.filter(resourceId => !submittedResourceIds.includes(resourceId))
 
   // Associate new resources
+  const addedResources = submittedResourceIds.filter(resourceId => !associatedIds.includes(resourceId))
   if (addedResources.length > 0) {
     await model.bulkCreate(addedResources.map(resourceId => {
       return { incidentId: context.result.id, resourceId: resourceId }
     }))
   }
 
+  // Only associate new resources when patching, but don't remove any
+  if (context.method === 'patch') {
+    return context
+  }
+
   // Remove resources that are no longer assigned to the incident
+  const removedResources = associatedIds.filter(resourceId => !submittedResourceIds.includes(resourceId))
   if (removedResources.length > 0) {
     await model.destroy({
       where: {
