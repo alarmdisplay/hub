@@ -11,7 +11,7 @@
             </router-link>
 
             <FeathersVuexFind service="users" :query="{ $limit: 50 }" qid="userList" watch="query">
-                <table class="table" slot-scope="{ items: users }">
+                <table class="table is-fullwidth" slot-scope="{ items: users }">
                     <thead>
                     <tr>
                         <th>Name</th>
@@ -26,19 +26,23 @@
                             <th>{{ user.name }}</th>
                             <td>{{ user.email }}</td>
                             <td>{{ user.createdAt }}</td>
-                            <td>
-                                <div class="buttons">
-                                    <button class="button is-outlined" title="Konto bearbeiten" @click="$router.push({ name: 'user-form', params: { id: user.id } })">
-                                        <span class="icon">
-                                            <font-awesome-icon icon="user-edit"/>
-                                        </span>
-                                        <span>Bearbeiten</span>
-                                    </button>
-                                    <button class="button is-danger is-outlined" title="Konto entfernen" :disabled="user.id === $store.getters['auth/user'].id" @click="removeUser(user.id)">
-                                        <span class="icon">
-                                            <font-awesome-icon icon="user-minus"/>
-                                        </span>
-                                    </button>
+                            <td class="is-narrow">
+                                <div class="field is-grouped">
+                                    <p class="control">
+                                        <button class="button is-outlined" title="Konto bearbeiten" @click="$router.push({ name: 'user-form', params: { id: user.id } })">
+                                            <span class="icon">
+                                                <font-awesome-icon icon="user-edit"/>
+                                            </span>
+                                            <span>Bearbeiten</span>
+                                        </button>
+                                    </p>
+                                    <p class="control">
+                                        <button class="button is-danger is-outlined" title="Konto entfernen" :disabled="user.id === $store.getters['auth/user'].id" @click="removeUser(user.id)">
+                                            <span class="icon">
+                                                <font-awesome-icon icon="user-minus"/>
+                                            </span>
+                                        </button>
+                                    </p>
                                 </div>
                             </td>
                         </tr>

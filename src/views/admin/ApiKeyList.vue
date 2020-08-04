@@ -18,7 +18,7 @@
             </div>
 
             <FeathersVuexFind service="api-keys" :query="{ $limit: 50 }" qid="apiKeyList" watch="query">
-                <table class="table" slot-scope="{ items: apiKeys }">
+                <table class="table is-fullwidth" slot-scope="{ items: apiKeys }">
                     <thead>
                     <tr>
                         <th>Name</th>
@@ -31,20 +31,24 @@
                         <tr :key="apiKey.id">
                             <th>{{ apiKey.name }}</th>
                             <td>{{ apiKey.createdAt }}</td>
-                            <td>
-                                <div class="buttons">
-                                    <button class="button is-outlined" title="API-Key bearbeiten" @click="$router.push({ name: 'api-key-form', params: { id: apiKey.id } })">
-                                        <span class="icon">
-                                            <font-awesome-icon icon="edit"/>
-                                        </span>
-                                        <span>Bearbeiten</span>
-                                    </button>
-                                    <button class="button is-danger is-outlined" title="API-Key widerrufen" @click="removeApiKey(apiKey.id)">
-                                        <span class="icon">
-                                            <font-awesome-icon icon="trash-alt"/>
-                                        </span>
-                                        <span>Widerrufen</span>
-                                    </button>
+                            <td class="is-narrow">
+                                <div class="field is-grouped">
+                                    <p class="control">
+                                        <button class="button is-outlined" title="API-Key bearbeiten" @click="$router.push({ name: 'api-key-form', params: { id: apiKey.id } })">
+                                            <span class="icon">
+                                                <font-awesome-icon icon="edit"/>
+                                            </span>
+                                            <span>Bearbeiten</span>
+                                        </button>
+                                    </p>
+                                    <p class="control">
+                                        <button class="button is-danger is-outlined" title="API-Key widerrufen" @click="removeApiKey(apiKey.id)">
+                                            <span class="icon">
+                                                <font-awesome-icon icon="trash-alt"/>
+                                            </span>
+                                            <span>Widerrufen</span>
+                                        </button>
+                                    </p>
                                 </div>
                             </td>
                         </tr>
