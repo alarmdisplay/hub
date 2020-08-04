@@ -15,7 +15,7 @@ export class Locations extends Service<LocationData> {
     this.nominatim = new Nominatim()
   }
 
-  async createFromRawLocation(rawLocation: RawLocation): Promise<LocationData> {
+  async processRawLocation(rawLocation: RawLocation): Promise<Partial<LocationData>> {
     let fallbackAddress = this.getFallbackAddress(rawLocation)
 
     let location: Partial<LocationData> = {
@@ -64,7 +64,7 @@ export class Locations extends Service<LocationData> {
 
     location.detail = rawLocation.detail
 
-    return await this.create(location) as LocationData
+    return location
   }
 
   /**

@@ -32,17 +32,13 @@ export default function (app: Application) {
     let resources = await ResourceService.find({ query: { id: { $in: Array.from(resourceIds.values()) } }, paginate: false }) as ResourceData[]
     logger.debug('Checked for known resources')
 
-    const LocationsService = app.service('locations')
-    let locationData = await LocationsService.createFromRawLocation(result.location)
-    logger.debug('Processed location')
-
     let IncidentsService = app.service('incidents')
     let incident = await IncidentsService.processAlert({
       caller_name: result.caller.name,
       caller_number: result.caller.number,
       description: result.description,
       keyword: result.keyword,
-      location: locationData,
+      location: result.location,
       reason: result.reason,
       ref: result.ref,
       resources: resources,

@@ -24,13 +24,15 @@ declare module '../../declarations' {
     postCode: string,
     locality: string,
     country: string
+    incidentId?: number
   }
 }
 
 export default function (app: Application): void {
   const options = {
     Model: createModel(app),
-    paginate: app.get('paginate')
+    paginate: app.get('paginate'),
+    multi: ['remove']
   };
 
   // Initialize our service with any options it requires

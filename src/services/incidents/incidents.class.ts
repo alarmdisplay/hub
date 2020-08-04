@@ -1,5 +1,5 @@
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
-import {AlertContext, AlertData, Application, IncidentData} from '../../declarations';
+import {AlertContext, AlertData, Application, IncidentData, LocationData} from '../../declarations';
 import logger from "../../logger";
 import {IncidentCategory, IncidentStatus} from "./incidents.service";
 
@@ -12,9 +12,10 @@ const MAX_AGE = process.env.NODE_ENV && process.env.NODE_ENV === 'production' ? 
 const updatableProperties = ['ref', 'caller_name', 'caller_number', 'reason', 'keyword', 'description'];
 
 export class Incidents extends Service<IncidentData> {
-  //eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private app: Application;
   constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
     super(options);
+    this.app = app;
   }
 
   /**
@@ -26,6 +27,22 @@ export class Incidents extends Service<IncidentData> {
   async processAlert(alert: AlertData, context: AlertContext): Promise<IncidentData> {
     const incidentToUpdate = await this.getIncidentToUpdate(alert, context)
 
+    let existingIncidentHasLocation = false
+    const LocationsService = this.app.service('locations')
+    if (incidentToUpdate !== false) {
+      const locations = await LocationsService.find({query: { incidentId: incidentToUpdate.id }, paginate: false}) as LocationData[]
+      if (locations.length > 0) {
+        existingIncidentHasLocation = true
+      }
+    }
+
+    // Process the location if it is a new incident or the existing one does not have a location record
+    let locationData
+    if (incidentToUpdate === false || !existingIncidentHasLocation) {
+      locationData = await LocationsService.processRawLocation(alert.location)
+      logger.debug('Processed location')
+    }
+
     // If there is no existing incident to be updated, create a new one
     if (incidentToUpdate === false) {
       logger.debug('Creating a new incident')
@@ -34,7 +51,7 @@ export class Incidents extends Service<IncidentData> {
         ref: alert.ref,
         caller_name: alert.caller_name,
         caller_number: alert.caller_number,
-        locationId: alert.location?.id,
+        location: locationData,
         reason: alert.reason,
         keyword: alert.keyword,
         resources: alert.resources,
@@ -42,12 +59,13 @@ export class Incidents extends Service<IncidentData> {
         status: IncidentStatus.Actual, // TODO Add a mechanism to detect Test and Exercise status by keywords or date/time
         category: IncidentCategory.Other // TODO Define the category according to reason or keyword
       };
+      // @ts-ignore Ignore that LocationData is only partial
       return await this.create(newIncident) as IncidentData
     }
 
     // Otherwise update the existing incident
     logger.debug('Updating incident %d...', incidentToUpdate.id)
-    return await this.patch(incidentToUpdate.id, this.getIncidentDiff(incidentToUpdate, alert)) as IncidentData
+    return await this.patch(incidentToUpdate.id, this.getIncidentDiff(incidentToUpdate, alert, locationData)) as IncidentData
   }
 
   /**
@@ -76,6 +94,8 @@ export class Incidents extends Service<IncidentData> {
       if (incidentWithSameRef.length > 0) {
         logger.debug('Found incident with same reference')
         return incidentWithSameRef[0]
+      } else {
+        logger.debug('Did not find incident with same reference')
       }
     }
 
@@ -99,6 +119,8 @@ export class Incidents extends Service<IncidentData> {
       }
 
       return incident
+    } else {
+      logger.debug('No recent incident found')
     }
 
     return false
@@ -110,8 +132,9 @@ export class Incidents extends Service<IncidentData> {
    *
    * @param incident
    * @param alert
+   * @param locationData
    */
-  getIncidentDiff(incident: IncidentData, alert: AlertData): Partial<IncidentData> {
+  getIncidentDiff(incident: IncidentData, alert: AlertData, locationData?: Partial<LocationData>): Partial<IncidentData> {
     const newData = {}
 
     // Check for properties that the incident is missing and the alert can provide
@@ -128,9 +151,9 @@ export class Incidents extends Service<IncidentData> {
     }
 
     // If the incident does not have a location assigned and the alert can provide one, use it
-    if (!incident.locationId && alert.location) {
+    if (!incident.location && locationData) {
       // @ts-ignore
-      newData.locationId = alert.location.id
+      newData.location = locationData
     }
 
     return newData
