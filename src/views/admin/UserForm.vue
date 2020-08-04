@@ -7,22 +7,23 @@
                 <BackButton/>
             </div>
 
-            <article class="message is-danger" v-if="$store.state['users'].errorOnCreate">
+            <article class="message is-danger" v-if="formError">
                 <div class="message-body">
-                    {{ $store.state['users'].errorOnCreate.message }}
+                    {{ formError.message }}
                 </div>
             </article>
 
             <FeathersVuexFormWrapper :item="item" watch>
                 <template v-slot="{ clone, save, reset }">
                     <UserEditor
-                            :item="clone"
-                            @save="
-                            () => {
-                              $store.commit('users/clearError', 'create')
-                              save().then(() => $router.push({name: 'user-list'}))
-                            }"
-                            @reset="reset"
+                        :item="clone"
+                        @save="
+                        () => {
+                          save()
+                            .then(() => $router.push({name: 'user-list'}))
+                            .catch(reason => { $data.formError = reason })
+                        }"
+                        @reset="reset"
                     ></UserEditor>
                 </template>
             </FeathersVuexFormWrapper>
@@ -46,6 +47,11 @@ name: 'UserForm',
       // Get the User for the given ID or create a new one if the ID is 'new'
       return this.id === 'new' ? new User() : User.getFromStore(this.id)
     },
+  },
+  data: function () {
+    return {
+      formError: null
+    }
   },
   watch: {
     id: {

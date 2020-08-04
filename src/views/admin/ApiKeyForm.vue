@@ -7,22 +7,23 @@
                 <BackButton/>
             </div>
 
-            <article class="message is-danger" v-if="$store.state['api-keys'].errorOnCreate">
+            <article class="message is-danger" v-if="formError">
                 <div class="message-body">
-                    {{ $store.state['api-keys'].errorOnCreate.message }}
+                    {{ formError.message }}
                 </div>
             </article>
 
             <FeathersVuexFormWrapper :item="item" watch>
                 <template v-slot="{ clone, save, reset }">
                     <ApiKeyEditor
-                            :item="clone"
-                            @save="
-                            () => {
-                              $store.commit('api-keys/clearError', 'create')
-                              return save().then(() => $router.push({name: 'api-key-list'}))
-                            }"
-                            @reset="reset"
+                        :item="clone"
+                        @save="
+                        () => {
+                          save()
+                            .then(() => $router.push({name: 'api-key-list'}))
+                            .catch(reason => { $data.formError = reason })
+                        }"
+                        @reset="reset"
                     ></ApiKeyEditor>
                 </template>
             </FeathersVuexFormWrapper>
@@ -45,6 +46,11 @@ name: 'ApiKeyForm',
       // Get the API key for the given ID or create a new one if the ID is 'new'
       return this.id === 'new' ? new ApiKey() : ApiKey.getFromStore(this.id)
     },
+  },
+  data: function () {
+    return {
+      formError: null
+    }
   },
   watch: {
     id: {
