@@ -10,31 +10,31 @@ import ApiKeyForm from '@/views/admin/ApiKeyForm'
 Vue.use(VueRouter)
 
   const routes = [
-  {
-    path: '/',
-    name: 'Home',
-    component: Home
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: About
-  },
-  {
-    path: '/admin/users',
-    name: 'user-list',
-    component: UserList
-  },
-  {
-    path: '/admin/users/:id',
-    name: 'user-form',
-    component: UserForm
-  },
-  {
-    path: '/admin/api-keys',
-    name: 'api-key-list',
-    component: ApiKeyList
-  },
+    {
+      path: '/',
+      name: 'Home',
+      component: Home
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: About
+    },
+    {
+      path: '/admin/users',
+      name: 'user-list',
+      component: UserList
+    },
+    {
+      path: '/admin/users/:id',
+      name: 'user-form',
+      component: UserForm
+    },
+    {
+      path: '/admin/api-keys',
+      name: 'api-key-list',
+      component: ApiKeyList
+    },
     {
       path: '/admin/api-keys/:id',
       name: 'api-key-form',
