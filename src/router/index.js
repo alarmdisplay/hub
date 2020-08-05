@@ -5,6 +5,8 @@ import Home from '../views/Home.vue'
 import ApiKeyList from '@/views/admin/ApiKeyList'
 import ApiKeyForm from '@/views/admin/ApiKeyForm'
 import OCR from '@/views/input/OCR'
+import ResourceForm from '@/views/processing/ResourceForm'
+import ResourceList from '@/views/processing/ResourceList'
 import UserList from '../views/admin/UserList'
 import UserForm from '@/views/admin/UserForm'
 import WatchedFolderList from '@/views/input/WatchedFolderList'
@@ -37,6 +39,16 @@ Vue.use(VueRouter)
       path: '/input/ocr',
       name: 'ocr',
       component: OCR
+    },
+    {
+      path: '/processing/resources',
+      name: 'resource-list',
+      component: ResourceList
+    },
+    {
+      path: '/processing/resources/:id',
+      name: 'resource-form',
+      component: ResourceForm
     },
     {
       path: '/admin/users',

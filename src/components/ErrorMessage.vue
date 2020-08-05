@@ -29,10 +29,7 @@ export default {
     }
   },
   props: {
-    formError: {
-      type: Object,
-      required: true
-    }
+    formError: Object
   }
 }
 </script>

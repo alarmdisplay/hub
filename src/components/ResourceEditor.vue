@@ -1,0 +1,76 @@
+<template>
+    <form @submit.prevent="handleSubmit">
+        <div class="field">
+            <label class="label" for="name">
+                Name
+            </label>
+            <p class="control">
+                <input class="input" type="text" id="name" v-model="item.name">
+            </p>
+        </div>
+        <div class="field">
+            <label class="label" for="type">
+                Typ
+            </label>
+            <div class="control has-icons-left">
+                <div class="select">
+                    <select id="type" v-model="item.type">
+                        <option value="ORGANIZATION">Organisation</option>
+                        <option value="VEHICLE">Fahrzeug</option>
+                        <option value="GROUP">Gruppe</option>
+                        <option value="ROLE">Führungsdienstgrad</option>
+                        <option value="OTHER">Andere</option>
+                    </select>
+                </div>
+                <div class="icon is-small is-left">
+                    <ResourceIcon :resource="item"/>
+                </div>
+            </div>
+        </div>
+        <div class="buttons is-right">
+            <button class="button" type="button" @click="$emit('reset')">Zur&uuml;cksetzen</button>
+            <button class="button is-success" type="submit" :disabled="!isValid()">Speichern</button>
+        </div>
+    </form>
+</template>
+
+<script>
+import ResourceIcon from '@/components/ResourceIcon'
+export default {
+  name: 'ResourceEditor',
+  components: { ResourceIcon },
+  props: {
+    item: {
+      type: Object,
+      required: true
+    }
+  },
+  computed: {
+    isNewItem: function () {
+      return this.item.id !== undefined
+    }
+  },
+  methods: {
+    isValid: function () {
+      return this.item.name !== ''
+    }
+  },
+  setup(props, context) {
+    function handleSubmit() {
+      if (this.isValid()) {
+        context.emit('save')
+      } else {
+        // TODO show validation result
+      }
+    }
+    return { handleSubmit }
+  }
+}
+</script>
+
+<style scoped>
+/* Give the icon in the dropdown a less light color */
+.control.has-icons-left .icon {
+    color: unset;
+}
+</style>
