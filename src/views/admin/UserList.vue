@@ -3,12 +3,12 @@
         <div class="container">
             <h1 class="title">Konten</h1>
 
-            <router-link tag="button" type="button" class="button" to="new" append>
-                <span class="icon">
-                    <font-awesome-icon icon="user-plus"/>
-                </span>
-                <span>Konto anlegen</span>
-            </router-link>
+            <div class="buttons">
+                <router-link tag="button" type="button" class="button" to="new" append>
+                    <span class="icon"><font-awesome-icon icon="user-plus"/></span>
+                    <span>Konto anlegen</span>
+                </router-link>
+            </div>
 
             <FeathersVuexFind service="users" :query="{ $limit: 50 }" qid="userList" watch="query">
                 <table class="table is-fullwidth" slot-scope="{ items: users }">

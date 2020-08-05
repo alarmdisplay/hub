@@ -7,12 +7,12 @@
                 Hier konfigurierte Einsatzmittel werden in den eingehenden Alarmen identifiziert und den Einsätzen zugeordnet.
             </div>
 
-            <router-link tag="button" type="button" class="button" to="new" append>
-                <span class="icon">
-                    <font-awesome-icon icon="plus"/>
-                </span>
-                <span>Einsatzmittel anlegen</span>
-            </router-link>
+            <div class="buttons">
+                <router-link tag="button" type="button" class="button" to="new" append>
+                    <span class="icon"><font-awesome-icon icon="plus"/></span>
+                    <span>Einsatzmittel anlegen</span>
+                </router-link>
+            </div>
 
             <FeathersVuexFind service="resources" :query="{ $sort: { name: 1 }, $limit: 50 }" qid="resourceList" watch="query">
                 <table class="table is-fullwidth" slot-scope="{ items: resources }">

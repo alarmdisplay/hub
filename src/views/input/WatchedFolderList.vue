@@ -8,12 +8,12 @@
                 Taucht eine neue PDF-Datei im überwachten Ordner auf, wird sie der Texterkennung zugeführt.
             </div>
 
-            <router-link tag="button" type="button" class="button" to="new" append>
-                <span class="icon">
-                    <font-awesome-icon icon="plus"/>
-                </span>
-                <span>Ordner überwachen</span>
-            </router-link>
+            <div class="buttons">
+                <router-link tag="button" type="button" class="button" to="new" append>
+                    <span class="icon"><font-awesome-icon icon="plus"/></span>
+                    <span>Ordner überwachen</span>
+                </router-link>
+            </div>
 
             <FeathersVuexFind service="watchedfolders" :query="{ $limit: 50 }" qid="watchedFolderList" watch="query">
                 <table class="table is-fullwidth" slot-scope="{ items: watchedFolders }">

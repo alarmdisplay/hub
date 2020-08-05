@@ -3,12 +3,12 @@
         <div class="container">
             <h1 class="title">API-Keys</h1>
 
-            <router-link tag="button" type="button" class="button" to="new" append>
-                <span class="icon">
-                    <font-awesome-icon icon="plus"/>
-                </span>
-                <span>API-Key erzeugen</span>
-            </router-link>
+            <div class="buttons">
+                <router-link tag="button" type="button" class="button" to="new" append>
+                    <span class="icon"><font-awesome-icon icon="plus"/></span>
+                    <span>API-Key erzeugen</span>
+                </router-link>
+            </div>
 
             <div class="notification is-success" v-if="createdApiKey">
                 <button class="delete" @click="$store.commit('api-keys/clearCreatedApiKey')"></button>
