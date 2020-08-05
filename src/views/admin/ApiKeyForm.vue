@@ -7,11 +7,7 @@
                 <BackButton/>
             </div>
 
-            <article class="message is-danger" v-if="formError">
-                <div class="message-body">
-                    {{ formError.message }}
-                </div>
-            </article>
+            <ErrorMessage :form-error="formError"/>
 
             <FeathersVuexFormWrapper :item="item" watch>
                 <template v-slot="{ clone, save, reset }">
@@ -19,6 +15,7 @@
                         :item="clone"
                         @save="
                         () => {
+                          $data.formError = null
                           save()
                             .then(() => $router.push({name: 'api-key-list'}))
                             .catch(reason => { $data.formError = reason })
@@ -34,9 +31,10 @@
 <script>
 import ApiKeyEditor from '@/components/ApiKeyEditor'
 import BackButton from '@/components/BackButton'
+import ErrorMessage from '@/components/ErrorMessage'
 export default {
 name: 'ApiKeyForm',
-  components: { BackButton, ApiKeyEditor },
+  components: { BackButton, ApiKeyEditor, ErrorMessage },
   computed: {
     id() {
       return this.$route.params.id

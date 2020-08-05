@@ -7,11 +7,7 @@
                 <BackButton/>
             </div>
 
-            <article class="message is-danger" v-if="formError">
-                <div class="message-body">
-                    {{ formError.message }}
-                </div>
-            </article>
+            <ErrorMessage :form-error="formError"/>
 
             <FeathersVuexFormWrapper :item="item" watch>
                 <template v-slot="{ clone, save, reset }">
@@ -19,6 +15,7 @@
                         :item="clone"
                         @save="
                         () => {
+                          $data.formError = null
                           save()
                             .then(() => $router.push({name: 'watched-folder-list'}))
                             .catch(reason => { $data.formError = reason })
@@ -33,10 +30,11 @@
 
 <script>
 import BackButton from '@/components/BackButton'
+import ErrorMessage from '@/components/ErrorMessage'
 import WatchedFolderEditor from '@/components/WatchedFolderEditor'
 export default {
 name: 'WatchedFolderForm',
-  components: { WatchedFolderEditor, BackButton },
+  components: { WatchedFolderEditor, BackButton, ErrorMessage },
   computed: {
     id() {
       return this.$route.params.id
