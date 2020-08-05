@@ -26,6 +26,34 @@
                             <span class="icon"><font-awesome-icon icon="folder"/></span>
                             <span>&Uuml;berwachte Ordner</span>
                         </router-link>
+                        <router-link tag="a" class="navbar-item" :to="{ name: 'ocr' }">
+                            <span class="icon"><font-awesome-icon icon="file-alt"/></span>
+                            <span>Texterkennung</span>
+                        </router-link>
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        <span class="icon"><font-awesome-icon icon="cogs"/></span>
+                        <span>Verarbeitung</span>
+                    </a>
+
+                    <div class="navbar-dropdown">
+                        <router-link tag="a" class="navbar-item" :to="{ name: 'resource-list' }">
+                            <span class="icon"><font-awesome-icon icon="ambulance"/></span>
+                            <span>Einsatzmittel</span>
+                        </router-link>
+                    </div>
+                </div>
+
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        <span class="icon"><font-awesome-icon icon="paper-plane"/></span>
+                        <span>Weiterleitung</span>
+                    </a>
+
+                    <div class="navbar-dropdown">
                     </div>
                 </div>
             </div>
@@ -33,7 +61,7 @@
             <div class="navbar-end">
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
-                        <span class="icon"><font-awesome-icon icon="cogs"/></span>
+                        <span class="icon"><font-awesome-icon icon="wrench"/></span>
                         <span>Administration</span>
                     </a>
 

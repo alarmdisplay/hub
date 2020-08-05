@@ -8,15 +8,17 @@ import store from './store'
 
 // Import Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
-import { faCheck, faChevronLeft, faCogs, faEdit, faEnvelope, faFolder, faHome, faInbox, faInfoCircle, faKey, faLock,
-  faPause, faPlay, faPlus, faQuestionCircle, faSignOutAlt, faStop, faTimes, faTrashAlt, faUser, faUserEdit, faUserMinus,
-  faUserPlus } from '@fortawesome/free-solid-svg-icons'
+import {
+  faAmbulance, faBell, faBuilding, faCheck, faChevronLeft, faCogs, faEdit, faEnvelope, faFileAlt, faFolder, faHome,
+  faInbox, faInfoCircle, faKey, faLock, faPaperPlane, faPause, faPlay, faPlus, faQuestionCircle, faSignOutAlt, faStop,
+  faTimes, faTools, faTrashAlt, faUser, faUserEdit, faUserMinus, faUserPlus, faUsers, faUserTag, faWrench
+} from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 // Configure Font Awesome
-library.add(faCheck, faChevronLeft, faCogs, faEdit, faEnvelope, faFolder, faHome, faInbox, faInfoCircle, faKey, faLock,
-  faPause, faPlay, faPlus, faQuestionCircle, faSignOutAlt, faStop, faTimes, faTrashAlt, faUser, faUserEdit, faUserMinus,
-  faUserPlus)
+library.add(faAmbulance, faBell, faBuilding, faCheck, faChevronLeft, faCogs, faEdit, faEnvelope, faFileAlt, faFolder,
+  faHome, faInbox, faInfoCircle, faKey, faLock, faPaperPlane, faPause, faPlay, faPlus, faQuestionCircle, faSignOutAlt,
+  faStop, faTimes, faTrashAlt, faTools, faUser, faUserEdit, faUserMinus, faUserPlus, faUsers,faUserTag, faWrench)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
