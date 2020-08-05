@@ -8,6 +8,10 @@ const { authenticate } = feathersAuthentication.hooks;
 const { hashPassword, protect } = local.hooks;
 
 function preventEmptyPassword (context: HookContext) {
+  if ((context.method === 'create' || context.method === 'update') && !context.data.password) {
+    throw new BadRequest('Password must not be empty')
+  }
+
   if (context.data.password && context.data.password === '') {
     throw new BadRequest('Password must not be empty')
   }
