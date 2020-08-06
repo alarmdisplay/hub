@@ -29,7 +29,7 @@ export default {
     },
     size: {
       type: String,
-      default: ''
+      required: false
     }
   }
 }
