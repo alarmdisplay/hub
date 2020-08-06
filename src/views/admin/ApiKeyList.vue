@@ -30,7 +30,7 @@
                     <template v-for="apiKey in apiKeys">
                         <tr :key="apiKey.id">
                             <th>{{ apiKey.name }}</th>
-                            <td>{{ apiKey.createdAt }}</td>
+                            <td>{{ apiKey.createdAt | moment('LL') }}</td>
                             <td class="is-narrow">
                                 <div class="field is-grouped">
                                     <p class="control">

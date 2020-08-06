@@ -25,7 +25,7 @@
                         <tr :key="user.id">
                             <th>{{ user.name }}</th>
                             <td>{{ user.email }}</td>
-                            <td>{{ user.createdAt }}</td>
+                            <td>{{ user.createdAt | moment('LL') }}</td>
                             <td class="is-narrow">
                                 <div class="field is-grouped">
                                     <p class="control">
