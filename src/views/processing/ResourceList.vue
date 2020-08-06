@@ -15,63 +15,21 @@
             </div>
 
             <FeathersVuexFind service="resources" :query="{ $sort: { name: 1 }, $limit: 50 }" qid="resourceList" watch="query">
-                <table class="table is-fullwidth" slot-scope="{ items: resources }">
-                    <thead>
-                    <tr>
-                        <th>Typ</th>
-                        <th>Name</th>
-                        <th>Alternative Namen</th>
-                        <th>Aktionen</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <template v-for="resource in resources">
-                        <tr :key="resource.id">
-                            <td class="is-narrow">
-                                <ResourceIcon :resource="resource"/>
-                            </td>
-                            <th>
-                                {{ resource.name }}
-                            </th>
-                            <td>
-                                <ul v-for="identifier in resource.identifiers" :key="identifier.id">
-                                    <li>{{ identifier.value }}</li>
-                                </ul>
-                            </td>
-                            <td class="is-narrow">
-                                <div class="field is-grouped">
-                                    <p class="control">
-                                        <button class="button is-outlined" title="Einsatzmittel bearbeiten" @click="$router.push({ name: 'resource-form', params: { id: resource.id } })">
-                                            <span class="icon">
-                                                <font-awesome-icon icon="edit"/>
-                                            </span>
-                                            <span>Bearbeiten</span>
-                                        </button>
-                                    </p>
-                                    <p class="control">
-                                        <button class="button is-danger is-outlined" title="Einsatzmittel entfernen" @click="removeResource(resource.id)">
-                                            <span class="icon">
-                                                <font-awesome-icon icon="trash-alt"/>
-                                            </span>
-                                            <span>Entfernen</span>
-                                        </button>
-                                    </p>
-                                </div>
-                            </td>
-                        </tr>
-                    </template>
-                    </tbody>
-                </table>
+                <ul slot-scope="{ items: resources }">
+                    <li v-for="resource in resources" :key="resource.id">
+                        <ResourceCard :resource="resource"/>
+                    </li>
+                </ul>
             </FeathersVuexFind>
         </div>
     </section>
 </template>
 
 <script>
-  import ResourceIcon from '@/components/ResourceIcon'
+  import ResourceCard from '@/components/ResourceCard'
   export default {
     name: 'WatchedFolderList',
-    components: { ResourceIcon },
+    components: { ResourceCard },
     methods: {
       removeResource: function (id) {
         if (!id) {
