@@ -29,16 +29,7 @@
   import ResourceCard from '@/components/ResourceCard'
   export default {
     name: 'WatchedFolderList',
-    components: { ResourceCard },
-    methods: {
-      removeResource: function (id) {
-        if (!id) {
-          return
-        }
-
-        this.$store.dispatch('resources/remove', id)
-      }
-    }
+    components: { ResourceCard }
   }
 </script>
 

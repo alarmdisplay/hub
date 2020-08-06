@@ -22,19 +22,11 @@
                     </div>
                 </div>
                 <div class="media-right">
-                    <div class="field is-grouped">
-                        <p class="control">
-                            <router-link class="icon" title="Einsatzmittel bearbeiten" :to="{ name: 'resource-form', params: { id: resource.id } }">
-                                <font-awesome-icon icon="edit"/>
-                            </router-link>
-                        </p>
-                        <p class="control">
-                            <span class="icon has-text-danger" title="Einsatzmittel entfernen" @click="removeResource(resource.id)">
-                                <font-awesome-icon icon="trash-alt"/>
-                            </span>
-                        </p>
-                    </div>
-
+                    <button class="button is-small is-danger is-outlined" title="Einsatzmittel entfernen" @click="resource.remove()">
+                        <span class="icon">
+                            <font-awesome-icon icon="trash-alt"/>
+                        </span>
+                    </button>
                 </div>
             </article>
         </div>
