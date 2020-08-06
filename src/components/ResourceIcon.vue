@@ -6,7 +6,7 @@
 const icons = {
   'ORGANIZATION': 'building',
   'GROUP': 'users',
-  'VEHICLE': 'ambulance',
+  'VEHICLE': 'truck',
   'ROLE': 'user-tag',
   'OTHER': 'tools'
 }
