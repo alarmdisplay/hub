@@ -41,7 +41,7 @@
 
                     <div class="navbar-dropdown">
                         <router-link tag="a" class="navbar-item" :to="{ name: 'resource-list' }">
-                            <span class="icon"><font-awesome-icon icon="ambulance"/></span>
+                            <span class="icon"><font-awesome-icon icon="truck"/></span>
                             <span>Einsatzmittel</span>
                         </router-link>
                     </div>
