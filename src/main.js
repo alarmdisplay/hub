@@ -6,6 +6,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
+import moment from 'moment'
+import VueMoment from 'vue-moment'
+require('moment/locale/de')
+Vue.use(VueMoment, { moment })
+
 // Import Font Awesome
 import { library } from '@fortawesome/fontawesome-svg-core'
 import {

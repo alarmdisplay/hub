@@ -5,15 +5,7 @@
             <FeathersVuexFind service="incidents" :query="{ $limit: 5 }" qid="recentIncidents" watch="query">
                 <ol class="" slot-scope="{ items: incidents }">
                     <li class="media" v-for="incident in incidents" :key="incident.id">
-                        <div class="media-content">
-                            <div class="content">
-                                <p>
-                                    <span class="tag is-danger">{{ incident.keyword }}</span>&nbsp;<strong>{{ incident.reason }}</strong><br>
-                                    <span>{{ incident.description }}</span><br>
-                                    <small>{{ incident.time }}</small>
-                                </p>
-                            </div>
-                        </div>
+                        <IncidentMediaObject :incident="incident"/>
                     </li>
                 </ol>
             </FeathersVuexFind>
@@ -23,8 +15,10 @@
 
 <script>
 
+import IncidentMediaObject from '@/components/IncidentMediaObject'
+
 export default {
   name: 'Home',
-  components: {}
+  components: { IncidentMediaObject }
 }
 </script>
