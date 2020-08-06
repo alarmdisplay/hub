@@ -7,7 +7,9 @@
                 </div>
                 <div class="media-content">
                     <div class="content">
-                        <p class="has-text-weight-bold">{{ resource.name }}</p>
+                        <p class="has-text-weight-bold">
+                            <EditableText :item="resource" prop="name"/>
+                        </p>
                         <p v-show="resource.identifiers.length">
                             Alternative Namen:
                             <span class="tags">
@@ -40,9 +42,10 @@
 </template>
 <script>
 import ResourceIcon from '@/components/ResourceIcon'
+import EditableText from '@/components/EditableText'
 export default {
   name: 'ResourceCard',
-  components: { ResourceIcon },
+  components: { EditableText, ResourceIcon },
   props: {
     resource: {}
   }
