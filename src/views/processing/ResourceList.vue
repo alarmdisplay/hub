@@ -20,7 +20,7 @@
                     <tr>
                         <th>Typ</th>
                         <th>Name</th>
-                        <th>Bezeichner</th>
+                        <th>Alternative Namen</th>
                         <th>Aktionen</th>
                     </tr>
                     </thead>
@@ -34,7 +34,9 @@
                                 {{ resource.name }}
                             </th>
                             <td>
-                                &nbsp;
+                                <ul v-for="identifier in resource.identifiers" :key="identifier.id">
+                                    <li>{{ identifier.value }}</li>
+                                </ul>
                             </td>
                             <td class="is-narrow">
                                 <div class="field is-grouped">
