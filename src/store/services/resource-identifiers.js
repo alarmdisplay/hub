@@ -1,31 +1,23 @@
 import feathersClient, { makeServicePlugin, BaseModel } from '../../feathers-client'
 
-class Resource extends BaseModel {
+class ResourceIdentifier extends BaseModel {
   constructor(data, options) {
     super(data, options)
   }
 
-  static modelName = 'Resource'
+  static modelName = 'ResourceIdentifier'
 
   static instanceDefaults() {
     return {
-      identifiers: [],
-      name: '',
-      type: 'VEHICLE'
+      type: 'name',
+      value: ''
     }
-  }
-
-  static setupInstance(data, { models }) {
-    if (data.identifiers && Array.isArray(data.identifiers)) {
-      data.identifiers = data.identifiers.map(identifier => new models.api.ResourceIdentifier(identifier))
-    }
-    return data
   }
 }
 
-const servicePath = 'resources'
+const servicePath = 'resource-identifiers'
 const servicePlugin = makeServicePlugin({
-  Model: Resource,
+  Model: ResourceIdentifier,
   service: feathersClient.service(servicePath),
   servicePath
 })

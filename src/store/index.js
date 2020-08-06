@@ -5,6 +5,7 @@ import auth from './store.auth'
 
 import apiKeys from './services/api-keys'
 import incidents from './services/incidents'
+import resourceIdentifiers from './services/resource-identifiers'
 import resources from './services/resources'
 import users from './services/users'
 import watchedFolders from './services/watched-folders'
@@ -23,6 +24,7 @@ export default new Vuex.Store({
     auth,
     apiKeys,
     incidents,
+    resourceIdentifiers,
     resources,
     users,
     watchedFolders
