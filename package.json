@@ -53,6 +53,7 @@
     "feathers-blob": "github:feathersjs-ecosystem/feathers-blob",
     "feathers-hooks-common": "^5.0.3",
     "feathers-sequelize": "^6.2.0",
+    "feathers-shallow-populate": "^2.0.4",
     "fs-blob-store": "^5.2.1",
     "gauss-krueger": "^1.0.1",
     "helmet": "^3.23.3",
