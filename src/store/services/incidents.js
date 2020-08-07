@@ -21,6 +21,17 @@ class Incident extends BaseModel {
       category: 'Other'
     }
   }
+
+  static setupInstance(data) {
+    // Convert date strings into Date objects
+    for (const prop of ['time']) {
+      if (data[prop]) {
+        data[prop] = new Date(data[prop])
+      }
+    }
+
+    return data
+  }
 }
 
 const servicePath = 'incidents'
