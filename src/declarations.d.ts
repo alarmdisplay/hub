@@ -10,7 +10,7 @@ export interface AlertData {
   ref?: string
   caller_name?: string
   caller_number?: string
-  location: RawLocation
+  location?: RawLocation
   reason?: string
   keyword?: string
   resources?: ResourceData[]

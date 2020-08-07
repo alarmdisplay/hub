@@ -38,7 +38,7 @@ export class Incidents extends Service<IncidentData> {
 
     // Process the location if it is a new incident or the existing one does not have a location record
     let locationData
-    if (incidentToUpdate === false || !existingIncidentHasLocation) {
+    if (alert.location && (incidentToUpdate === false || !existingIncidentHasLocation)) {
       locationData = await LocationsService.processRawLocation(alert.location)
       logger.debug('Processed location')
     }
@@ -65,7 +65,7 @@ export class Incidents extends Service<IncidentData> {
 
     // Otherwise update the existing incident
     logger.debug('Updating incident %d...', incidentToUpdate.id)
-    const incidentDiff = this.getIncidentDiff(incidentToUpdate, alert, locationData);
+    const incidentDiff = this.getIncidentDiff(incidentToUpdate, alert);
     // Always include the resources and the location, the difference is calculated in the hooks
     // @ts-ignore
     incidentDiff.location = locationData
@@ -137,9 +137,8 @@ export class Incidents extends Service<IncidentData> {
    *
    * @param incident
    * @param alert
-   * @param locationData
    */
-  getIncidentDiff(incident: IncidentData, alert: AlertData, locationData?: Partial<LocationData>): Partial<IncidentData> {
+  getIncidentDiff(incident: IncidentData, alert: AlertData): Partial<IncidentData> {
     const newData = {}
 
     // Check for properties that the incident is missing and the alert can provide
