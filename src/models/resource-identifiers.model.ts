@@ -7,7 +7,7 @@ export default function (app: Application): typeof Model {
   const ResourceIdentifier = sequelizeClient.define('resource_identifier', {
     type: {
       type: DataTypes.ENUM,
-      values: ['name'],
+      values: ['name', 'selcall'],
       allowNull: false
     },
     value: {
