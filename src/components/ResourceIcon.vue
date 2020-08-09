@@ -4,22 +4,22 @@
 
 <script>
 const icons = {
-  'ORGANIZATION': 'building',
-  'GROUP': 'users',
-  'VEHICLE': 'truck',
-  'ROLE': 'user-tag',
-  'OTHER': 'tools'
+  'organization': 'building',
+  'group': 'users',
+  'vehicle': 'truck',
+  'role': 'user-tag',
+  'other': 'tools'
 }
 
 export default {
   name: "ResourceIcon",
   methods: {
     getIcon: function (resource) {
-      if (!resource || !resource.type || !Object.keys(icons).includes(resource.type)) {
+      if (!resource || !resource.type || !Object.keys(icons).includes(resource.type.toLowerCase())) {
         return icons['other']
       }
 
-      return icons[resource.type]
+      return icons[resource.type.toLowerCase()]
     },
   },
   props: {
