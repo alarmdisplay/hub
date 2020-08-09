@@ -10,6 +10,11 @@ declare module '../../declarations' {
   interface ServiceTypes {
     'api-keys': ApiKeys & ServiceAddons<any>;
   }
+
+  interface ApiKeyData {
+    name: string
+    tokenHash: string
+  }
 }
 
 export default function (app: Application): void {

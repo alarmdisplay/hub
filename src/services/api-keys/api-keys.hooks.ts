@@ -4,7 +4,6 @@ import {HookContext} from '@feathersjs/feathers';
 import {BadRequest} from '@feathersjs/errors';
 import {createHash} from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
-import has = Reflect.has;
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
