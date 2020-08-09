@@ -59,7 +59,8 @@ export default function (app: Application): typeof Model {
       beforeCount(options: any): HookReturn {
         options.raw = true;
       }
-    }
+    },
+    tableName: [app.get('db_prefix'), 'locations'].join('_')
   });
 
   (locations as any).associate = function (models: any): void {

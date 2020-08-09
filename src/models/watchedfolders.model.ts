@@ -20,7 +20,8 @@ export default function (app: Application) {
       beforeCount(options: any) {
         options.raw = true;
       }
-    }
+    },
+    tableName: [app.get('db_prefix'), 'watched_folders'].join('_')
   });
 
   // eslint-disable-next-line no-unused-vars

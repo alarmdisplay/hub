@@ -62,12 +62,13 @@ export default function (app: Application): typeof Model {
       beforeCount(options: any): HookReturn {
         options.raw = true;
       }
-    }
+    },
+    tableName: [app.get('db_prefix'), 'incidents'].join('_')
   });
 
   (Incident as any).associate = function (models: any): void {
     models.incident.belongsToMany(models.resource, {
-      through: 'dispatched_resources',
+      through: [app.get('db_prefix'), 'dispatched_resources'].join('_'),
       as: 'resources'
     })
     models.incident.hasOne(models.locations)

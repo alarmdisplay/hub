@@ -93,7 +93,8 @@ async function updateDispatchedResources(context: HookContext) {
   }
 
   const sequelizeClient: Sequelize = context.app.get('sequelizeClient')
-  const model = sequelizeClient.model('dispatched_resources');
+  const modelName = [context.app.get('db_prefix'), 'dispatched_resources'].join('_');
+  const model = sequelizeClient.model(modelName);
 
   // If the update data did not contain resources, remove all associated resources
   if (context.method === 'update' && (!resources || resources.length === 0)) {

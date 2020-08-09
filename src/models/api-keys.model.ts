@@ -1,6 +1,6 @@
-import { Sequelize, DataTypes, Model } from 'sequelize';
-import { Application } from '../declarations';
-import { HookReturn } from 'sequelize/types/lib/hooks';
+import {DataTypes, Model, Sequelize} from 'sequelize';
+import {Application} from '../declarations';
+import {HookReturn} from 'sequelize/types/lib/hooks';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
@@ -21,7 +21,7 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: 'api_keys'
+    tableName: [app.get('db_prefix'), 'api_keys'].join('_')
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
