@@ -8,21 +8,25 @@ import logger from '../../logger';
 interface WatchedFolderData {
   id: number,
   path: string,
-  active: boolean
+  active: boolean,
+  polling: boolean
 }
 
-const filePattern = /\.pdf$/i;
+// Pattern to match files with the pdf extension, that begin with a letter or number
+const filePattern = /^[a-z0-9][\w-.]*\.pdf$/i;
 
 export class WatchedFolders extends Service<WatchedFolderData> {
   private app: Application
-  private knownFiles: Map<Number, Set<String>>
+  private intervals: Map<Number, NodeJS.Timeout>
+  private knownFiles: Map<Number, Set<string>>
   private paths: Map<Number, String>
   private watchers: Map<Number, fs.FSWatcher>
 
   constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
     super(options)
     this.app = app
-    this.knownFiles = new Map<Number, Set<String>>()
+    this.intervals = new Map<Number, NodeJS.Timeout>()
+    this.knownFiles = new Map<Number, Set<string>>()
     this.paths = new Map<Number, String>()
     this.watchers = new Map<Number, fs.FSWatcher>()
   }
@@ -66,30 +70,77 @@ export class WatchedFolders extends Service<WatchedFolderData> {
   private async startWatching(folderToWatch: WatchedFolderData) {
     let normalizedPath = WatchedFolders.getNormalizedPath(folderToWatch)
 
-    let watcher
-    try {
-      watcher = fs.watch(normalizedPath);
-    } catch (e) {
-      logger.error('Not watching folder %s: %s', normalizedPath, e.message)
-      return
+    // Remember the initial list of matching files in the directory
+    let matchingFiles = await this.getMatchingFilesFromFolder(normalizedPath)
+    this.knownFiles.set(folderToWatch.id, new Set<string>(matchingFiles))
+
+    if (folderToWatch.polling) {
+      // Make sure there is no old interval still running
+      if (this.intervals.has(folderToWatch.id)) {
+        clearInterval(<NodeJS.Timeout>this.intervals.get(folderToWatch.id))
+      }
+
+      const interval = setInterval(async () => {
+        // Compare the known file list to the current folder contents
+        const files = await this.getMatchingFilesFromFolder(normalizedPath)
+        const knownFilesSet = this.knownFiles.get(folderToWatch.id);
+        const knownFileNames = Array.from(knownFilesSet?.values() || []);
+        const newFiles = files.filter(filename => !knownFileNames.includes(filename));
+        const removedFiles = knownFileNames.filter(filename => !files.includes(filename));
+
+        // Forget removed files
+        for (const filename of removedFiles) {
+          knownFilesSet?.delete(filename)
+        }
+
+        // Check every new file and forward it
+        for (const filename of newFiles) {
+          let filePath = path.join(normalizedPath, filename);
+
+          // Get more info about the file
+          const stat = await fs.promises.stat(filePath)
+          if (stat.size === 0) {
+            // Ignore the file if it has 0 bytes, this usually means that it is still being written
+            continue
+          }
+
+          // Remember this file
+          knownFilesSet?.add(filename)
+
+          const buffer = await fs.promises.readFile(filePath)
+          const uploadsService = this.app.service('uploads')
+          await uploadsService.create({ buffer: buffer, contentType: 'application/pdf' })
+          logger.info('Forwarded file %s to uploads service', filePath)
+        }
+      }, 3000);
+      this.intervals.set(folderToWatch.id, interval)
+    } else {
+      let watcher
+      try {
+        watcher = fs.watch(normalizedPath);
+      } catch (e) {
+        logger.error('Not watching folder %s: %s', normalizedPath, e.message)
+        return
+      }
+
+      watcher.addListener('change', this.changeListener(normalizedPath, folderToWatch.id))
+      watcher.addListener('error', error => logger.error(error))
+      watcher.addListener('close', () => {
+        logger.warn('Watcher for folder %s closed', normalizedPath)
+        this.knownFiles.delete(folderToWatch.id)
+        this.paths.delete(folderToWatch.id)
+        this.watchers.delete(folderToWatch.id)
+      })
+      this.watchers.set(folderToWatch.id, watcher)
     }
 
-    // Remember the initial list of matching files in the directory
-    let dirContent = await fs.promises.readdir(normalizedPath);
-    let matchingFiles = dirContent.filter(filename => filePattern.test(filename));
-    this.knownFiles.set(folderToWatch.id, new Set<String>(matchingFiles))
-
-    watcher.addListener('change', this.changeListener(normalizedPath, folderToWatch.id))
-    watcher.addListener('error', error => logger.error(error))
-    watcher.addListener('close', () => {
-      logger.warn('Watcher for folder %s closed', normalizedPath)
-      this.knownFiles.delete(folderToWatch.id)
-      this.paths.delete(folderToWatch.id)
-      this.watchers.delete(folderToWatch.id)
-    })
     this.paths.set(folderToWatch.id, normalizedPath)
-    this.watchers.set(folderToWatch.id, watcher)
     logger.info('Started watching folder %s', normalizedPath)
+  }
+
+  private async getMatchingFilesFromFolder(normalizedPath: string) {
+    let dirContent = await fs.promises.readdir(normalizedPath);
+    return dirContent.filter(filename => filePattern.test(filename));
   }
 
   /**
@@ -99,24 +150,35 @@ export class WatchedFolders extends Service<WatchedFolderData> {
    */
   private async stopWatching(folderToWatch: WatchedFolderData) {
     let watchedPath = this.paths.get(folderToWatch.id) || '???'
-    let watcher = this.watchers.get(folderToWatch.id)
-    if (!watcher) {
-      logger.warn('Could not find watcher for path %s', watchedPath)
-      return
-    }
 
-    return new Promise(resolve => {
-      // remove the close listener from above
-      watcher?.removeAllListeners('close')
-      watcher?.addListener('close', () => {
-        logger.info('Stopped watching folder %s', watchedPath)
-        this.knownFiles.delete(folderToWatch.id)
-        this.paths.delete(folderToWatch.id)
-        this.watchers.delete(folderToWatch.id)
-        resolve()
+    if (this.intervals.has(folderToWatch.id)) {
+      let interval = this.intervals.get(folderToWatch.id)
+      if (!interval) {
+        logger.warn('Did not find interval to stop polling folder %s', watchedPath)
+        return
+      }
+      clearInterval(interval);
+      logger.info('Stopped polling folder %s', watchedPath)
+    } else {
+      let watcher = this.watchers.get(folderToWatch.id)
+      if (!watcher) {
+        logger.warn('Could not find watcher for path %s', watchedPath)
+        return
+      }
+
+      return new Promise(resolve => {
+        // remove the close listener from above
+        watcher?.removeAllListeners('close')
+        watcher?.addListener('close', () => {
+          logger.info('Stopped watching folder %s', watchedPath)
+          this.knownFiles.delete(folderToWatch.id)
+          this.paths.delete(folderToWatch.id)
+          this.watchers.delete(folderToWatch.id)
+          resolve()
+        })
+        watcher?.close()
       })
-      watcher?.close()
-    })
+    }
   }
 
   private changeListener (watchedPath: string, watcherId: Number) {
@@ -203,7 +265,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
 
   private async onWatchedFolderUpdated(watchedFolderData: WatchedFolderData) {
     // If the folder is currently watched, stop watching
-    if (this.watchers.has(watchedFolderData.id)) {
+    if (this.watchers.has(watchedFolderData.id) || this.intervals.has(watchedFolderData.id)) {
       await this.stopWatching(watchedFolderData)
     }
 
