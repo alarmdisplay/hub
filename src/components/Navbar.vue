@@ -18,7 +18,7 @@
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
                         <span class="icon"><font-awesome-icon icon="inbox"/></span>
-                        <span>Alarmeingang</span>
+                        <span>Eingang</span>
                     </a>
 
                     <div class="navbar-dropdown">
@@ -28,7 +28,7 @@
                         </router-link>
                         <router-link tag="a" class="navbar-item" :to="{ name: 'ocr' }">
                             <span class="icon"><font-awesome-icon icon="file-alt"/></span>
-                            <span>Texterkennung</span>
+                            <span>Texterkennung / Analyse</span>
                         </router-link>
                     </div>
                 </div>
@@ -50,10 +50,14 @@
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
                         <span class="icon"><font-awesome-icon icon="paper-plane"/></span>
-                        <span>Weiterleitung</span>
+                        <span>Ausgabe</span>
                     </a>
 
                     <div class="navbar-dropdown">
+                        <router-link class="navbar-item" :to="{ name: 'display' }">
+                            <span class="icon"><font-awesome-icon icon="desktop"/></span>
+                            <span>Alarmanzeige</span>
+                        </router-link>
                     </div>
                 </div>
             </div>

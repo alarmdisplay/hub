@@ -5,7 +5,7 @@
 
             <div class="content">
                 Ordner können auf Änderungen der enthaltenen Dateien überwacht werden.
-                Taucht eine neue PDF-Datei im überwachten Ordner auf, wird sie der Texterkennung zugeführt.
+                Taucht eine neue PDF-Datei im überwachten Ordner auf, wird sie der <router-link :to="{ name: 'ocr' }">Texterkennung</router-link> zugeführt.
             </div>
 
             <div class="buttons">

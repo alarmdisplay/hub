@@ -4,6 +4,7 @@ import About from '../views/About'
 import Home from '../views/Home.vue'
 import ApiKeyList from '@/views/admin/ApiKeyList'
 import ApiKeyForm from '@/views/admin/ApiKeyForm'
+import Display from '@/views/output/Display'
 import OCR from '@/views/input/OCR'
 import ResourceForm from '@/views/processing/ResourceForm'
 import ResourceList from '@/views/processing/ResourceList'
@@ -49,6 +50,11 @@ Vue.use(VueRouter)
       path: '/processing/resources/:id',
       name: 'resource-form',
       component: ResourceForm
+    },
+    {
+      path: '/output/display',
+      name: 'display',
+      component: Display
     },
     {
       path: '/admin/users',
