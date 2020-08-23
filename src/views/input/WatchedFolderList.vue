@@ -21,6 +21,7 @@
                     <tr>
                         <th>Pfad</th>
                         <th>Aktiv</th>
+                        <th>Polling</th>
                         <th>Dateitypen</th>
                         <th>Aktionen</th>
                     </tr>
@@ -30,9 +31,17 @@
                         <tr :key="watchedFolder.id">
                             <th>{{ watchedFolder.path }}</th>
                             <td><font-awesome-icon :icon="watchedFolder.active ? 'check' : 'times'" size="lg"/></td>
+                            <td><font-awesome-icon :icon="watchedFolder.polling ? 'check' : 'times'" size="lg"/></td>
                             <td>PDF</td>
                             <td class="is-narrow">
                                 <div class="field is-grouped">
+                                    <p class="control">
+                                        <router-link tag="button" class="button is-outlined" title="Überwachung bearbeiten" :to="{ name: 'watched-folder-form', params: { id: watchedFolder.id } }">
+                                            <span class="icon">
+                                                <font-awesome-icon icon="edit"/>
+                                            </span>
+                                        </router-link>
+                                    </p>
                                     <p class="control">
                                         <button class="button is-outlined" :title="getToggleLabel(watchedFolder)" @click="toggleActive(watchedFolder)">
                                             <span class="icon">
@@ -42,11 +51,11 @@
                                         </button>
                                     </p>
                                     <p class="control">
-                                        <button class="button is-danger is-outlined" title="&Uuml;berwachung beenden" @click="removeWatchedFolder(watchedFolder.id)">
+                                        <button class="button is-danger is-outlined" title="Überwachung beenden" @click="removeWatchedFolder(watchedFolder.id)">
                                             <span class="icon">
                                                 <font-awesome-icon icon="stop"/>
                                             </span>
-                                            <span>&Uuml;berwachung beenden</span>
+                                            <span>Beenden</span>
                                         </button>
                                     </p>
                                 </div>
@@ -65,7 +74,7 @@
     name: 'WatchedFolderList',
     methods: {
       getToggleLabel: function (watchedFolder) {
-        return watchedFolder.active ? 'Überwachung pausieren' : 'Überwachung fortsetzen'
+        return watchedFolder.active ? 'Pausieren' : 'Fortsetzen'
       },
       removeWatchedFolder: function (id) {
         if (!id) {

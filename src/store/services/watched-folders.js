@@ -10,7 +10,8 @@ class WatchedFolder extends BaseModel {
   static instanceDefaults() {
     return {
       path: '',
-      active: true
+      active: true,
+      polling: false
     }
   }
 }

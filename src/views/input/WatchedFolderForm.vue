@@ -1,7 +1,7 @@
 <template>
     <section class="section">
         <div class="container">
-            <h1 class="title">Überwachten Ordner {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}</h1>
+            <h1 class="title">{{ id === 'new' ? 'Ordner überwachen' : 'Überwachten Ordner bearbeiten' }}</h1>
 
             <div class="buttons is-left">
                 <BackButton/>

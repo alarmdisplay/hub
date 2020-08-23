@@ -17,6 +17,15 @@
                 </label>
             </p>
         </div>
+        <div class="field">
+            <p class="control">
+                <label class="checkbox">
+                    <input type="checkbox" v-model="item.polling">
+                    Polling
+                </label>
+            </p>
+            <p class="help">Regelmäßig den Inhalt des Ordners abfragen, anstatt auf Benachrichtigungen des Betriebssystems zu warten. Dies kann für eingebundene Netzlaufwerke erforderlich sein.</p>
+        </div>
         <div class="buttons is-right">
             <button class="button" type="button" @click="$emit('reset')">Zur&uuml;cksetzen</button>
             <button class="button is-success" type="submit" :disabled="!isValid()">Speichern</button>
