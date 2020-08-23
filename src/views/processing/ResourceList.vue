@@ -28,7 +28,7 @@
 <script>
   import ResourceCard from '@/components/ResourceCard'
   export default {
-    name: 'WatchedFolderList',
+    name: 'ResourceList',
     components: { ResourceCard }
   }
 </script>
