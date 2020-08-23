@@ -197,7 +197,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
             this.knownFiles.get(watcherId)?.add(filename)
 
             if (stats.size === 0) {
-              logger.warn('The file %s is empty, will not notify listeners')
+              logger.warn('The file %s is empty, will not notify listeners', filename)
               return
             }
 
