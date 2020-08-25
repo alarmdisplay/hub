@@ -1,8 +1,6 @@
 import * as authentication from '@feathersjs/authentication';
 // @ts-ignore
 import { shallowPopulate } from 'feathers-shallow-populate'
-import { createUpdateSchema, patchSchema } from './resources.schemas';
-import { validateJoiSchema } from '../../hooks/validateJoiSchema';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
@@ -21,9 +19,9 @@ export default {
     all: [ authenticate('jwt') ],
     find: [],
     get: [],
-    create: [ validateJoiSchema(createUpdateSchema) ],
-    update: [ validateJoiSchema(createUpdateSchema) ],
-    patch: [ validateJoiSchema(patchSchema) ],
+    create: [],
+    update: [],
+    patch: [],
     remove: []
   },
 
