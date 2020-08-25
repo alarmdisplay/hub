@@ -4,14 +4,12 @@ import {Application, LocationData, RawLocation} from '../../declarations';
 import {Nominatim, NominatimResult} from './nominatim.class';
 import logger from '../../logger';
 
-// TODO turn this into an option
-const validateWithNominatim = false
-
 export class Locations extends Service<LocationData> {
   private nominatim: Nominatim
-  //eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private readonly app: Application;
   constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
     super(options);
+    this.app = app;
     this.nominatim = new Nominatim()
   }
 
@@ -46,7 +44,7 @@ export class Locations extends Service<LocationData> {
 
     // Optionally validate with Nominatim
     let validatedLocation
-    if (validateWithNominatim) {
+    if (this.app.get('validate_location')) {
       try {
         validatedLocation = await this.validateWithNominatim(location, rawLocation)
       } catch (error) {

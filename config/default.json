@@ -28,5 +28,6 @@
     }
   },
   "mysql": "mysql://root:@localhost:3306/ad_hub",
-  "db_prefix": "hub"
+  "db_prefix": "hub",
+  "validate_location": false
 }
