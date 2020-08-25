@@ -11,7 +11,6 @@ class User extends BaseModel {
     return {
       name: '',
       email: '',
-      password: '',
       get displayName() {
         return this.name || this.email
       }
