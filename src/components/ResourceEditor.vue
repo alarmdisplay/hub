@@ -15,11 +15,11 @@
             <div class="control has-icons-left">
                 <div class="select">
                     <select id="type" v-model="item.type">
-                        <option value="ORGANIZATION">Organisation</option>
-                        <option value="VEHICLE">Fahrzeug</option>
-                        <option value="GROUP">Gruppe</option>
-                        <option value="ROLE">Führungsdienstgrad</option>
-                        <option value="OTHER">Andere</option>
+                        <option value="organization">Organisation</option>
+                        <option value="vehicle">Fahrzeug</option>
+                        <option value="group">Gruppe</option>
+                        <option value="role">Führungsdienstgrad</option>
+                        <option value="other">Andere</option>
                     </select>
                 </div>
                 <div class="icon is-small is-left">
