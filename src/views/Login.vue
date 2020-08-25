@@ -5,7 +5,7 @@
         Alarmzentrale
       </h1>
       <p class="subtitle">
-        Bitte einloggen
+        Console
       </p>
 
       <ErrorMessage :form-error="loginError"/>
