@@ -1,6 +1,8 @@
 import '@feathersjs/transport-commons';
 import { HookContext } from '@feathersjs/feathers';
 import { Application } from './declarations';
+import logger from './logger';
+import {ApiKeyStrategy} from './auth-strategies/api-key.strategy';
 
 export default function(app: Application) {
   if(typeof app.channel !== 'function') {
@@ -8,7 +10,25 @@ export default function(app: Application) {
     return;
   }
 
-  app.on('connection', (connection: any) => {
+  const apiKeyStrategy = new ApiKeyStrategy
+  apiKeyStrategy.setApplication(app)
+
+  app.on('connection', async (connection: any) => {
+    if (connection.headers && connection.headers['x-api-key']) {
+      try {
+        const authResult = await apiKeyStrategy.authenticate({
+          strategy: 'api-key',
+          'api-key': connection.headers['x-api-key']
+        }, {})
+        if (authResult['api-key']) {
+          app.channel('authenticated').join(connection);
+          return
+        }
+      } catch (e) {
+        logger.warn('Socket connected, API key not accepted:', e.message || e)
+      }
+    }
+
     // On a new real-time connection, add it to the anonymous channel
     app.channel('anonymous').join(connection);
   });

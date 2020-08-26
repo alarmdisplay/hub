@@ -111,3 +111,6 @@ $RECYCLE.BIN/
 lib/
 data/
 config/development.json
+uploads/
+inbox/
+ext-console

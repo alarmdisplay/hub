@@ -18,6 +18,8 @@ import appHooks from './app.hooks';
 import channels from './channels';
 import authentication from './authentication';
 import sequelize from './sequelize';
+import flowcontrol from "./flowcontrol";
+import fs from "fs";
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers());
@@ -34,6 +36,13 @@ app.use(favicon(path.join(app.get('public'), 'favicon.ico')));
 // Host the public folder
 app.use('/', express.static(app.get('public')));
 
+// Serve the Console UI statically
+if (fs.existsSync('ext-console')) {
+  app.use('/console', express.static('ext-console'));
+} else if (process.env.NODE_ENV === 'production') {
+  logger.warn('The static files for the console UI could not be found, the path /console will not work');
+}
+
 // Set up Plugins and providers
 app.configure(express.rest());
 app.configure(socketio());
@@ -47,6 +56,9 @@ app.configure(authentication);
 app.configure(services);
 // Set up event channels (see channels.js)
 app.configure(channels);
+
+// Set up flow control (connects different services)
+app.configure(flowcontrol)
 
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());

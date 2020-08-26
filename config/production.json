@@ -1,4 +1,5 @@
 {
-  "host": "hub-backend-app.feathersjs.com",
-  "port": "PORT"
+  "port": "PORT",
+  "mysql": "",
+  "validate_location": false
 }
