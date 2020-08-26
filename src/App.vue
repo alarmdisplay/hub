@@ -1,28 +1,36 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <Navbar v-if="loggedIn"/>
+    <router-view v-if="loggedIn"/>
+    <Setup v-else-if="$store.state.showSetup"/>
+    <Login v-else/>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import 'bulma/css/bulma.css'
+import Navbar from './components/Navbar'
+import Login from './views/Login'
+import Setup from '@/views/Setup'
 
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    Setup,
+    Login,
+    Navbar
+  },
+  computed: {
+    loggedIn: function () {
+      return this.$store.getters['auth/isAuthenticated']
+    }
+  },
+  created () {
+    // Check if we have a valid authentication token
+    this.$store.dispatch('auth/authenticate')
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
