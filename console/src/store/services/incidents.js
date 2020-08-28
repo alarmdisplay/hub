@@ -18,16 +18,21 @@ class Incident extends BaseModel {
       keyword: '',
       description: '',
       status: 'Actual',
-      category: 'Other'
+      category: 'Other',
+      location: null
     }
   }
 
-  static setupInstance(data) {
+  static setupInstance(data, { models }) {
     // Convert date strings into Date objects
     for (const prop of ['time']) {
       if (data[prop]) {
         data[prop] = new Date(data[prop])
       }
+    }
+
+    if (data.location) {
+      data.location = new models.api.Location(data.location)
     }
 
     return data

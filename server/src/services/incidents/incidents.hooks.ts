@@ -5,9 +5,21 @@ import {ResourceData, LocationData} from '../../declarations';
 import {BadRequest} from "@feathersjs/errors";
 import {Service} from "feathers-sequelize";
 import logger from "../../logger";
+// @ts-ignore
+import { shallowPopulate } from 'feathers-shallow-populate'
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
+
+const populateOptions = {
+  include: {
+    service: 'locations',
+    nameAs: 'location',
+    keyHere: 'id',
+    keyThere: 'incidentId',
+    asArray: false
+  }
+}
 
 export default {
   before: {
@@ -21,7 +33,7 @@ export default {
   },
 
   after: {
-    all: [],
+    all: [ shallowPopulate(populateOptions) ],
     find: [],
     get: [],
     create: [ updateLocation, updateDispatchedResources ],

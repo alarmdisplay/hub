@@ -5,6 +5,7 @@ import auth from './store.auth'
 
 import apiKeys from './services/api-keys'
 import incidents from './services/incidents'
+import locations from './services/locations'
 import resourceIdentifiers from './services/resource-identifiers'
 import resources from './services/resources'
 import users from './services/users'
@@ -33,6 +34,7 @@ export default new Vuex.Store({
     createSocketPlugin(feathersClient.io),
     apiKeys,
     incidents,
+    locations,
     resourceIdentifiers,
     resources,
     users,
