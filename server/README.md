@@ -8,7 +8,7 @@ This project uses [Feathers](http://feathersjs.com). An open source web framewor
 
 ## Getting Started
 
-Getting up and running is as easy as 1, 2, 3.
+Getting up and running is as easy as 1, 2, 3, 4.
 
 1. Make sure you have [NodeJS](https://nodejs.org/) and [npm](https://www.npmjs.com/) installed.
 2. Install your dependencies
@@ -18,7 +18,13 @@ Getting up and running is as easy as 1, 2, 3.
     npm install
     ```
 
-3. Start your app
+3. Build [console](../console/README.md) and copy to current folder
+
+    ```
+    cp -r ../console/dist ./ext-console
+    ```
+
+4. Start your app
 
     ```
     npm start
@@ -39,6 +45,20 @@ $ feathers generate service               # Generate a new Service
 $ feathers generate hook                  # Generate a new Hook
 $ feathers help                           # Show all commands
 ```
+
+## Build for production
+
+1. Make sure you have typescript installed.
+
+    ```
+    npm install -g typescript
+    ```
+
+2. Build application
+
+    ```
+    tsc --build tsconfig.json
+    ```
 
 ## Help
 
