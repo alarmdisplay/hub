@@ -33,13 +33,13 @@ export default {
   },
 
   after: {
-    all: [ shallowPopulate(populateOptions) ],
-    find: [],
-    get: [],
-    create: [ updateLocation, updateDispatchedResources ],
-    update: [ updateLocation, updateDispatchedResources ],
-    patch: [ updateLocation, updateDispatchedResources ],
-    remove: []
+    all: [],
+    find: [ shallowPopulate(populateOptions) ],
+    get: [ shallowPopulate(populateOptions) ],
+    create: [ updateLocation, updateDispatchedResources, shallowPopulate(populateOptions) ],
+    update: [ updateLocation, updateDispatchedResources, shallowPopulate(populateOptions) ],
+    patch: [ updateLocation, updateDispatchedResources, shallowPopulate(populateOptions) ],
+    remove: [ shallowPopulate(populateOptions) ]
   },
 
   error: {
