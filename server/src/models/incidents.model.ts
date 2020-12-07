@@ -41,7 +41,7 @@ export default function (app: Application): typeof Model {
       defaultValue: ''
     },
     description: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       defaultValue: ''
     },
