@@ -11,7 +11,7 @@ class Resource extends BaseModel {
     return {
       identifiers: [],
       name: '',
-      type: 'VEHICLE'
+      type: 'vehicle'
     }
   }
 
