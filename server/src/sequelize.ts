@@ -1,5 +1,8 @@
-import { Sequelize } from 'sequelize';
-import { Application } from './declarations';
+import {Sequelize} from 'sequelize';
+import {Application} from './declarations';
+import Umzug from 'umzug';
+import * as path from 'path';
+import logger from "./logger";
 
 export default function (app: Application) {
   const connectionString = app.get('mysql');
@@ -14,6 +17,10 @@ export default function (app: Application) {
 
   app.set('sequelizeClient', sequelize);
 
+  app.set('databaseReady', new Promise(resolve => {
+    app.set('databaseReadyResolve', resolve);
+  }));
+
   app.setup = function (...args) {
     const result = oldSetup.apply(this, args);
 
@@ -25,8 +32,31 @@ export default function (app: Application) {
       }
     });
 
-    // Sync to the database
-    app.set('sequelizeSync', sequelize.sync());
+    // Initialize Umzug, used for database migrations
+    const umzug = new Umzug({
+      migrations: {
+        // indicates the folder containing the migration .js files
+        path: path.join(__dirname, './migrations'),
+        // inject sequelize's QueryInterface in the migrations
+        params: [
+          sequelize.getQueryInterface(),
+          app
+        ]
+      },
+      storage: 'sequelize',
+      storageOptions: { sequelize }
+    });
+
+    // Migrate and sync to the database
+    app.set('sequelizeSync', umzug.up().then(() => {
+      logger.info('Database migration successful');
+      // Resolve the databaseReady Promise
+      app.get('databaseReadyResolve')();
+    }).catch((reason: Error) => {
+      logger.error('Database migration failed:', reason.message);
+      // Return a Promise that never fulfills, so services depending on it will not start
+      return new Promise((() => {}));
+    }));
 
     return result;
   };
