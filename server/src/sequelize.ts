@@ -17,6 +17,7 @@ export default function (app: Application) {
 
   app.set('sequelizeClient', sequelize);
 
+  // Set up a global Promise to check if the database is ready
   app.set('databaseReady', new Promise(resolve => {
     app.set('databaseReadyResolve', resolve);
   }));
@@ -54,8 +55,6 @@ export default function (app: Application) {
       app.get('databaseReadyResolve')();
     }).catch((reason: Error) => {
       logger.error('Database migration failed:', reason.message);
-      // Return a Promise that never fulfills, so services depending on it will not start
-      return new Promise((() => {}));
     }));
 
     return result;
