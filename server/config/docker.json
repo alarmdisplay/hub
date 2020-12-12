@@ -1,0 +1,4 @@
+{
+  "mysql": "MYSQL_URI",
+  "validate_location": false
+}
