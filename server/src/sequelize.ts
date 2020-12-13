@@ -49,12 +49,19 @@ export default function (app: Application) {
     });
 
     // Migrate and sync to the database
-    app.set('sequelizeSync', umzug.up().then(() => {
+    app.set('sequelizeSync', sequelize.authenticate().then(() => {
+      logger.info('Connected to database');
+      return umzug.up();
+    }, (reason: Error) => {
+      logger.error('Database connection failed:', reason.message);
+      process.exit(1);
+    }).then(() => {
       logger.info('Database migration successful');
       // Resolve the databaseReady Promise
       app.get('databaseReadyResolve')();
     }).catch((reason: Error) => {
       logger.error('Database migration failed:', reason.message);
+      process.exit(2);
     }));
 
     return result;
