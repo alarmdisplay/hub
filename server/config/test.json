@@ -1,1 +1,3 @@
-{}
+{
+  "db_prefix": "test"
+}
