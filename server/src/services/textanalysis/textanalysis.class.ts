@@ -1,6 +1,5 @@
 import {SetupMethod} from '@feathersjs/feathers'
 import {Application, Config, SectionDefinition, TextAnalysisResult} from '../../declarations'
-import config from './configs/ILS_Augsburg'
 import logger from '../../logger'
 
 export class TextAnalysis implements SetupMethod {
@@ -15,7 +14,7 @@ export class TextAnalysis implements SetupMethod {
   setup(app: Application, path: string): void {
   }
 
-  analyse(text: string): TextAnalysisResult {
+  analyse(text: string, config: Config): TextAnalysisResult {
     // Check for certain trigger words to make sure we try to apply the correct config
     if (config.triggerWords.length > 0) {
       let foundWords = this.checkForTriggerWords(text, config.triggerWords)

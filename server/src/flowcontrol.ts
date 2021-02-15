@@ -1,4 +1,5 @@
 import {AlertContext, Application, ResourceData, ResourceIdentifierData} from "./declarations";
+import config from './services/textanalysis/configs/ILS_Augsburg'
 import logger from "./logger";
 
 export default function (app: Application) {
@@ -7,7 +8,7 @@ export default function (app: Application) {
   app.service('ocr').on('ocr_result', async (context: AlertContext) => {
     let result
     try {
-      result = textAnalysisService.analyse(context.rawContent)
+      result = textAnalysisService.analyse(context.rawContent, config)
     } catch (e) {
       logger.error('Text analysis aborted:', e)
       return
