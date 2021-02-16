@@ -7,6 +7,7 @@ import {Service} from "feathers-sequelize";
 import logger from "../../logger";
 // @ts-ignore
 import { shallowPopulate } from 'feathers-shallow-populate'
+import {allowApiKey} from "../../hooks/allowApiKey";
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
@@ -23,7 +24,7 @@ const populateOptions = {
 
 export default {
   before: {
-    all: [ authenticate('jwt') ],
+    all: [ allowApiKey(), authenticate('jwt', 'api-key') ],
     find: [],
     get: [],
     create: [],
