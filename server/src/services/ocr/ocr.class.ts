@@ -71,28 +71,34 @@ export class Ocr implements SetupMethod {
     }
 
     // Convert the PDF file into a TIF image
-    cp.exec('convert -density 204x196 in.pdf -monochrome in.tif', { cwd: workDir }, error => {
+    cp.exec('convert -density 204x196 in.pdf -monochrome in.tif', { cwd: workDir }, async error => {
       if (error) {
         logger.error(error)
         return
       }
 
       logger.debug('PDF converted, starting OCR')
-      this.doOcr(workDir, alertContext)
+      try {
+        this.doOcr(workDir, alertContext)
+      } catch (error) {
+        logger.error('OCR error:', error)
+      } finally {
+        // In order to use a file multiple times during development, remove the working directory so it can be recreated
+        if (this.app.get('devMode')) {
+          await fs.promises.rm(workDir, { recursive: true, force: true })
+        }
+      }
     })
   }
 
-  private async doOcr(workDir: string, context: AlertContext) {
-    cp.exec('tesseract in.tif stdout --psm 6 -l deu', { cwd: workDir }, (error, stdout) => {
-      if (error) {
-        logger.error('OCR error:', error)
-        return
-      }
+  private doOcr(workDir: string, context: AlertContext) {
+    let buffer = cp.execSync(
+      'tesseract in.tif stdout --psm 6 -l deu',
+      { cwd: workDir, stdio: [undefined, undefined, this.app.get('devMode') ? 2 : 'ignore'] }
+    );
+    context.rawContent = buffer.toString();
 
-      context.rawContent = stdout
-
-      // @ts-ignore TypeScript does not know that this is an EventEmitter
-      this.emit('ocr_result', context)
-    })
+    // @ts-ignore TypeScript does not know that this is an EventEmitter
+    this.emit('ocr_result', context)
   }
 }
