@@ -27,6 +27,11 @@ const app: Application = express(feathers());
 
 // Load app configuration
 app.configure(configuration());
+app.set('devMode', !process.env.NODE_ENV || process.env.NODE_ENV === 'development');
+if (app.get('devMode')) {
+  logger.level = 'debug';
+}
+
 // Enable security, CORS, compression, favicon and body parsing
 app.use(helmet());
 app.use(cors<Request>());
@@ -66,5 +71,4 @@ app.use(express.notFound());
 app.use(express.errorHandler({ logger } as any));
 
 app.hooks(appHooks);
-
 export default app;

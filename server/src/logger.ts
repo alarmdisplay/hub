@@ -1,6 +1,6 @@
 import { getLogger } from 'log4js';
 
 const logger = getLogger()
-logger.level = 'debug'
+logger.level = 'info'
 
 export default logger;
