@@ -8,6 +8,8 @@ import logger from "../../logger";
 // @ts-ignore
 import { shallowPopulate } from 'feathers-shallow-populate'
 import {allowApiKey} from "../../hooks/allowApiKey";
+import {checkContext, getItems, replaceItems} from "feathers-hooks-common";
+import has = Reflect.has;
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
@@ -35,12 +37,12 @@ export default {
 
   after: {
     all: [],
-    find: [ shallowPopulate(populateOptions) ],
-    get: [ shallowPopulate(populateOptions) ],
-    create: [ updateLocation, updateDispatchedResources, shallowPopulate(populateOptions) ],
-    update: [ updateLocation, updateDispatchedResources, shallowPopulate(populateOptions) ],
-    patch: [ updateLocation, updateDispatchedResources, shallowPopulate(populateOptions) ],
-    remove: [ shallowPopulate(populateOptions) ]
+    find: [ shallowPopulate(populateOptions), nullifyEmptyObjects(['location']) ],
+    get: [ shallowPopulate(populateOptions), nullifyEmptyObjects(['location']) ],
+    create: [ updateLocation, updateDispatchedResources, shallowPopulate(populateOptions), nullifyEmptyObjects(['location']) ],
+    update: [ updateLocation, updateDispatchedResources, shallowPopulate(populateOptions), nullifyEmptyObjects(['location']) ],
+    patch: [ updateLocation, updateDispatchedResources, shallowPopulate(populateOptions), nullifyEmptyObjects(['location']) ],
+    remove: [ shallowPopulate(populateOptions), nullifyEmptyObjects(['location']) ]
   },
 
   error: {
@@ -155,4 +157,34 @@ async function updateDispatchedResources(context: HookContext) {
   }
 
   return context
+}
+
+function nullifyEmptyObjects(fields: string[]): (context: HookContext) => HookContext {
+  return function (context: HookContext): HookContext {
+    checkContext(context, 'after');
+
+    const items = getItems(context);
+    if (Array.isArray(items)) {
+      items.forEach(item => replaceEmptyObjects(item));
+    } else {
+      replaceEmptyObjects(items);
+    }
+    replaceItems(context, items);
+
+
+    function replaceEmptyObjects(item: object) {
+      for (let field of fields) {
+        if (!has(item, field)) {
+          continue;
+        }
+
+        let value = Reflect.get(item, field);
+        if (typeof value === 'object' && Object.keys(value).length === 0) {
+          Reflect.set(item, field, null);
+        }
+      }
+    }
+
+    return context;
+  }
 }
