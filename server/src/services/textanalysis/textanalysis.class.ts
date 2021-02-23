@@ -81,6 +81,13 @@ export class TextAnalysis implements SetupMethod {
     let textToSplit = text
     config.sections.forEach((section, index) => {
       const [previousSection, rest] = textToSplit.split(section.beginningMark, 2)
+
+      if (!rest) {
+        logger.warn('Could not find section start matching %s', section.beginningMark)
+        sections.push('')
+        return
+      }
+
       textToSplit = rest
 
       // Skip everything before the first section
