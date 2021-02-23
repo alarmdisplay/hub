@@ -15,6 +15,7 @@ export class TextAnalysis implements SetupMethod {
   }
 
   analyse(text: string, config: Config): TextAnalysisResult {
+    logger.debug('Starting text analysis with config %s', config.name || 'NONAME')
     // Check for certain trigger words to make sure we try to apply the correct config
     if (config.triggerWords.length > 0) {
       let foundWords = this.checkForTriggerWords(text, config.triggerWords)

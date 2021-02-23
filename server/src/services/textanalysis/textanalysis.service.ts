@@ -12,6 +12,11 @@ declare module '../../declarations' {
 
   interface Config {
     /**
+     * The name of the config to be shown to the user
+     */
+    name: string
+
+    /**
      * Text before this mark is ignored
      */
     beginningMark: RegExp

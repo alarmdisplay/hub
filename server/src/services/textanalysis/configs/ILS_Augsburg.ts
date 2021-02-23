@@ -1,6 +1,7 @@
 import {Config} from '../../../declarations'
 
 export default {
+  name: 'ILS Augsburg',
   beginningMark: /Alarmfax der ILS Augsburg/,
   endMark: /\n.*ENDE FAX.*\n/,
   sections: [
