@@ -1,14 +1,12 @@
 import * as cp from 'child_process'
+import * as crypto from 'crypto'
 import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
 import {SetupMethod} from '@feathersjs/feathers'
-import {AlertContext, Application} from '../../declarations'
+import {AlertContext, Application, FoundFileContext} from '../../declarations'
 import {AlertSourceType} from '../incidents/incidents.service'
-import {BlobResult} from 'feathers-blob'
 import logger from '../../logger'
-// @ts-ignore
-import {parseDataURI} from 'dauria'
 
 export class Ocr implements SetupMethod {
   app: Application;
@@ -18,30 +16,21 @@ export class Ocr implements SetupMethod {
   }
 
   setup (app: Application) {
-    // Register to be notified of new uploads
-    const uploadService = this.app.service('uploads');
-    uploadService.on('created', (blobResult: BlobResult) => this.onUpload(blobResult))
+    // Register to be notified of new files
+    const watchedFoldersService = this.app.service('watchedfolders');
+    watchedFoldersService.on('found_file', (context: FoundFileContext) => this.onNewFile(context.path))
   }
 
-  private async onUpload(blobResult: BlobResult) {
-    if (!blobResult.uri || !blobResult.id) {
-      logger.warn('Upload does not have a unique ID or a DataURI')
-      return
-    }
-
-    const data = parseDataURI(blobResult.uri)
-
-    // We only process PDFs at the moment
-    if (data.MIME !== 'application/pdf') {
-      return
-    }
-
+  private async onNewFile(filePath: string) {
     // Create a temporary working directory for this file
     let workDir: string
+    const buffer = await fs.promises.readFile(filePath);
+    const hash = crypto.createHash('sha256');
+    hash.update(buffer);
+    let digest = hash.digest('hex');
     try {
       let tmpdir = os.tmpdir();
-      let [id] = blobResult.id.split('.', 1)
-      workDir = path.join(tmpdir, id);
+      workDir = path.join(tmpdir, digest);
       await fs.promises.mkdir(workDir)
     } catch (e) {
       if (e.code === 'EEXIST') {
@@ -61,10 +50,10 @@ export class Ocr implements SetupMethod {
       }
     }
 
-    // Write the blob to a file in the working directory
+    // Copy the file into the working directory
     const fileName = path.join(workDir, 'in.pdf')
     try {
-      await fs.promises.writeFile(fileName, data.buffer)
+      await fs.promises.copyFile(filePath, fileName)
     } catch (e) {
       logger.error('Could not write file in working directory', e)
       return

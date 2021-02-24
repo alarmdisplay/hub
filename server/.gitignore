@@ -111,6 +111,5 @@ $RECYCLE.BIN/
 /lib/
 /data/
 /config/local-*.json
-/uploads/
 /inbox/
 /ext-console
