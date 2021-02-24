@@ -10,7 +10,7 @@ declare module '../../declarations' {
     'textanalysis': TextAnalysis & ServiceAddons<any>;
   }
 
-  interface Config {
+  interface TextAnalysisConfig {
     /**
      * The name of the config to be shown to the user
      */

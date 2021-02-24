@@ -1,5 +1,5 @@
 import {SetupMethod} from '@feathersjs/feathers'
-import {Application, Config, SectionDefinition, TextAnalysisResult, FoundFileContext, ResourceIdentifierData, ResourceData} from '../../declarations'
+import {Application, TextAnalysisConfig, SectionDefinition, TextAnalysisResult, FoundFileContext, ResourceIdentifierData, ResourceData} from '../../declarations'
 import logger from '../../logger'
 import { Ocr } from "./ocr.class";
 import config from "./configs/ILS_Augsburg";
@@ -75,7 +75,7 @@ export class TextAnalysis implements SetupMethod {
     logger.debug(incident)
   }
 
-  analyse(text: string, config: Config): TextAnalysisResult {
+  analyse(text: string, config: TextAnalysisConfig): TextAnalysisResult {
     logger.debug('Starting text analysis with config %s', config.name || 'NONAME')
     // Check for certain trigger words to make sure we try to apply the correct config
     if (config.triggerWords.length > 0) {
@@ -137,7 +137,7 @@ export class TextAnalysis implements SetupMethod {
     return foundTriggerWords
   }
 
-  private splitIntoSections (text: string, config: Config) : Map<SectionDefinition, string> {
+  private splitIntoSections (text: string, config: TextAnalysisConfig) : Map<SectionDefinition, string> {
     const map = new Map<SectionDefinition, string>()
     const sections: string[] = []
     let textToSplit = text
