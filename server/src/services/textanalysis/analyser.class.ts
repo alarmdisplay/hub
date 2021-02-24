@@ -9,6 +9,10 @@ export class Analyser {
   }
 
   analyse(text: string, config: TextAnalysisConfig): TextAnalysisResult {
+    if (!config) {
+      throw new Error('No valid config given');
+    }
+
     logger.debug('Starting text analysis with config %s', config.name || 'NONAME')
     // Check for certain trigger words to make sure we try to apply the correct config
     if (config.triggerWords.length > 0) {

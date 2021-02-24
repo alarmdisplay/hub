@@ -1,8 +1,8 @@
-import {SetupMethod} from '@feathersjs/feathers'
-import {Application, FoundFileContext, ResourceIdentifierData, ResourceData} from '../../declarations'
+import { SetupMethod } from '@feathersjs/feathers'
+import { Application, FoundFileContext, ResourceData, ResourceIdentifierData } from '../../declarations'
 import logger from '../../logger'
 import { Ocr } from "./ocr.class";
-import config from "./configs/ILS_Augsburg";
+import configs from "./configs";
 import { AlertSourceType } from "../incidents/incidents.service";
 import { Analyser } from "./analyser.class";
 
@@ -36,7 +36,7 @@ export class TextAnalysis implements SetupMethod {
     alertContext.rawContent = await this.ocr.getTextFromFile(filePath);
     let result
     try {
-      result = this.analyser.analyse(alertContext.rawContent, config)
+      result = this.analyser.analyse(alertContext.rawContent, configs['ils_augsburg'])
     } catch (e) {
       logger.error('Text analysis aborted:', e)
       return
