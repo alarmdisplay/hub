@@ -21,7 +21,7 @@ export default function (app: Application) {
 
   // eslint-disable-next-line no-unused-vars
   (textAnalysis as any).associate = function (models: any) {
-    models.textanalysis.belongsTo(models.watchedfolder, {
+    models.textanalysis.belongsTo(models.watched_folder, {
       foreignKey: {
         name: 'watchedFolderId',
         allowNull: false,

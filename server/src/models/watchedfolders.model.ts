@@ -5,7 +5,7 @@ import { Application } from '../declarations';
 
 export default function (app: Application) {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  const watchedFolders = sequelizeClient.define('watchedfolder', {
+  const watchedFolders = sequelizeClient.define('watched_folder', {
     path: {
       type: DataTypes.STRING,
       allowNull: false
@@ -31,7 +31,7 @@ export default function (app: Application) {
 
   // eslint-disable-next-line no-unused-vars
   (watchedFolders as any).associate = function (models: any) {
-    models.watchedfolder.hasOne(models.textanalysis)
+    models.watched_folder.hasOne(models.textanalysis)
   };
 
   return watchedFolders;
