@@ -25,6 +25,25 @@ export class TextAnalysis extends Service<TextAnalysisData> {
   }
 
   private async onNewFile(filePath: string, watchedFolderId: number) {
+    const textAnalysisJobs = await this.find({
+      query: {
+        watchedFolderId: watchedFolderId,
+        $limit: 1
+      },
+      paginate: false
+    }) as TextAnalysisData[];
+    if (textAnalysisJobs.length === 0) {
+      logger.warn('Did not find a textanalysis job for watched folder %d, aborting ...', watchedFolderId)
+      return
+    }
+    let configName = textAnalysisJobs[0].config;
+    let configIndex = Object.keys(configs).indexOf(configName);
+    if (configIndex === -1) {
+      logger.error('Found textanalysis job, but there is no config by the name \'%s\'', configName)
+      return
+    }
+    const textAnalysisConfig = Object.values(configs)[configIndex];
+
     // Prepare the context to handle this alert
     let alertContext = {
       processingStarted: new Date(),
@@ -37,7 +56,7 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     alertContext.rawContent = await this.ocr.getTextFromFile(filePath);
     let result
     try {
-      result = this.analyser.analyse(alertContext.rawContent, configs['ils_augsburg'])
+      result = this.analyser.analyse(alertContext.rawContent, textAnalysisConfig)
     } catch (e) {
       logger.error('Text analysis aborted:', e)
       return
