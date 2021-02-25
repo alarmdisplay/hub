@@ -4,6 +4,23 @@ export default {
   name: 'ILS Augsburg',
   beginningMark: /Alarmfax der ILS Augsburg/,
   endMark: /\n.*ENDE FAX.*\n/,
+  importantWords: [
+    'MITTEILER',
+    'EINSATZORT',
+    'ZIELORT',
+    'EINSATZGRUND',
+    'EINSATZMITTEL',
+    'BEMERKUNG',
+    'ENDE',
+    'FAX',
+    'Absender',
+    'Einsatznummer',
+    'Rückrufnummer',
+    'Straße',
+    'Ort',
+    'Koordinate',
+    'Einsatzplan',
+  ],
   sections: [
     {
       beginningMark: /Alarmfax der ILS Augsburg/,

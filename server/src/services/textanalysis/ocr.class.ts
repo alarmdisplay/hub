@@ -3,7 +3,7 @@ import * as crypto from 'crypto'
 import * as fs from 'fs'
 import * as os from 'os'
 import * as path from 'path'
-import { Application } from '../../declarations'
+import { Application, TextAnalysisConfig } from '../../declarations'
 import logger from '../../logger'
 
 export class Ocr {
@@ -13,7 +13,7 @@ export class Ocr {
     this.app = app;
   }
 
-  public async getTextFromFile(filePath: string): Promise<string> {
+  public async getTextFromFile(filePath: string, textAnalysisConfig: TextAnalysisConfig): Promise<string> {
     // Create a temporary working directory for this file
     let workDir: string
     const buffer = await fs.promises.readFile(filePath);
@@ -41,6 +41,8 @@ export class Ocr {
       throw new Error('Could not write file in working directory: ' + e.message)
     }
 
+    await this.generateUserWords(workDir, textAnalysisConfig)
+
     // Convert the PDF file into a TIF image
     cp.execSync('convert -density 204x196 in.pdf -monochrome in.tif', { cwd: workDir })
 
@@ -62,9 +64,22 @@ export class Ocr {
 
   private doOcr(workDir: string): string {
     let buffer = cp.execSync(
-      'tesseract in.tif stdout --psm 6 -l deu',
+      'tesseract in.tif stdout --psm 6 -l deu --user-words words.txt',
       { cwd: workDir, stdio: [undefined, undefined, this.app.get('devMode') ? 2 : 'ignore'] }
     );
     return buffer.toString();
+  }
+
+  /**
+   * Places a text file – containing a list of words to assist the OCR process – into the working directory.
+   *
+   * @param workDir
+   * @param textAnalysisConfig
+   * @private
+   */
+  private async generateUserWords(workDir: string, textAnalysisConfig: TextAnalysisConfig) {
+    let words: string[] = textAnalysisConfig.triggerWords || []
+    words = words.concat(textAnalysisConfig.importantWords || [])
+    await fs.promises.writeFile(path.join(workDir, 'words.txt'), words.join('\n'))
   }
 }

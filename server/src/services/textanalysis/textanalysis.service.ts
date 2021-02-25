@@ -34,6 +34,14 @@ declare module '../../declarations' {
     endMark: RegExp
 
     /**
+     * List of words that should reliably be recognized by OCR. They are passed to the OCR process as a reference which
+     * increases the chance of them being recognized correctly. It makes sense to include strings that are used in the
+     * RegExps to ensure proper splitting of sections and extraction of information. Trigger words are added to this
+     * list automatically.
+     */
+    importantWords: string[]
+
+    /**
      * Definition objects for the different sections of the text
      */
     sections: SectionDefinition[]

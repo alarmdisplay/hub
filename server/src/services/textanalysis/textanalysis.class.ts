@@ -53,7 +53,7 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       }
     }
 
-    alertContext.rawContent = await this.ocr.getTextFromFile(filePath);
+    alertContext.rawContent = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
     let result
     try {
       result = this.analyser.analyse(alertContext.rawContent, textAnalysisConfig)
