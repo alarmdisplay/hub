@@ -1,29 +1,30 @@
-import { SetupMethod } from '@feathersjs/feathers'
-import { Application, FoundFileContext, ResourceData, ResourceIdentifierData } from '../../declarations'
+import { Application, FoundFileContext, ResourceData, ResourceIdentifierData, TextAnalysisData } from '../../declarations'
 import logger from '../../logger'
 import { Ocr } from "./ocr.class";
 import configs from "./configs";
 import { AlertSourceType } from "../incidents/incidents.service";
 import { Analyser } from "./analyser.class";
+import { SequelizeServiceOptions, Service } from "feathers-sequelize";
 
-export class TextAnalysis implements SetupMethod {
+export class TextAnalysis extends Service<TextAnalysisData> {
   app: Application
   analyser: Analyser
   ocr: Ocr
 
-  constructor (app: Application) {
+  constructor (options: Partial<SequelizeServiceOptions>, app: Application) {
+    super(options)
     this.app = app
     this.analyser = new Analyser()
     this.ocr = new Ocr(app)
   }
 
-  setup(app: Application, path: string): void {
+  setup(app: Application): void {
     // Register to be notified of new files
-    const watchedFoldersService = this.app.service('watchedfolders');
+    const watchedFoldersService = app.service('watchedfolders');
     watchedFoldersService.on('found_file', (context: FoundFileContext) => this.onNewFile(context.path, context.watchedFolderId))
   }
 
-  async onNewFile(filePath: string, watchedFolderId: number) {
+  private async onNewFile(filePath: string, watchedFolderId: number) {
     // Prepare the context to handle this alert
     let alertContext = {
       processingStarted: new Date(),

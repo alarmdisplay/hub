@@ -3,11 +3,18 @@ import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import { TextAnalysis } from './textanalysis.class';
 import hooks from './textanalysis.hooks';
+import createModel from "../../models/textanalysis.model";
 
 // Add this service to the service type index
 declare module '../../declarations' {
   interface ServiceTypes {
     'textanalysis': TextAnalysis & ServiceAddons<any>;
+  }
+
+  interface TextAnalysisData {
+    id: number
+    config: string
+    watchedFolderId: number
   }
 
   interface TextAnalysisConfig {
@@ -81,8 +88,12 @@ declare module '../../declarations' {
 }
 
 export default function (app: Application) {
+  const options = {
+    Model: createModel(app)
+  };
+
   // Initialize our service with any options it requires
-  app.use('/textanalysis', new TextAnalysis(app));
+  app.use('/textanalysis', new TextAnalysis(options, app));
 
   // Get our initialized service so that we can register hooks
   const service = app.service('textanalysis');
