@@ -19,7 +19,6 @@ import appHooks from './app.hooks';
 import channels from './channels';
 import authentication from './authentication';
 import sequelize from './sequelize';
-import flowcontrol from "./flowcontrol";
 import fs from "fs";
 // Don't remove this comment. It's needed to format import lines nicely.
 
@@ -62,9 +61,6 @@ app.configure(authentication);
 app.configure(services);
 // Set up event channels (see channels.js)
 app.configure(channels);
-
-// Set up flow control (connects different services)
-app.configure(flowcontrol)
 
 // Configure a middleware for 404s and the error handler
 app.use(express.notFound());

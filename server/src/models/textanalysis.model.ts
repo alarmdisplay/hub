@@ -5,20 +5,10 @@ import { Application } from '../declarations';
 
 export default function (app: Application) {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  const watchedFolders = sequelizeClient.define('watched_folder', {
-    path: {
+  const textAnalysis = sequelizeClient.define('textanalysis', {
+    config: {
       type: DataTypes.STRING,
       allowNull: false
-    },
-    active: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: true
-    },
-    polling: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false
     }
   }, {
     hooks: {
@@ -26,13 +16,21 @@ export default function (app: Application) {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'watched_folders'].join('_')
+    tableName: [app.get('db_prefix'), 'textanalysis'].join('_')
   });
 
   // eslint-disable-next-line no-unused-vars
-  (watchedFolders as any).associate = function (models: any) {
-    models.watched_folder.hasOne(models.textanalysis)
+  (textAnalysis as any).associate = function (models: any) {
+    models.textanalysis.belongsTo(models.watched_folder, {
+      foreignKey: {
+        name: 'watchedFolderId',
+        allowNull: false,
+        unique: true
+      },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
+    })
   };
 
-  return watchedFolders;
+  return textAnalysis;
 }

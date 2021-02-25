@@ -1,9 +1,11 @@
 import {NullableId, Params} from "@feathersjs/feathers";
 import {SequelizeServiceOptions, Service} from 'feathers-sequelize';
-import {Application} from '../../declarations';
+import {Application, FoundFileContext} from '../../declarations';
 import * as fs from 'fs';
 import * as path from 'path';
 import logger from '../../logger';
+import os from 'os';
+import { v4 as uuidv4 } from 'uuid';
 
 interface WatchedFolderData {
   id: number,
@@ -108,10 +110,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
           // Remember this file
           knownFilesSet?.add(filename)
 
-          const buffer = await fs.promises.readFile(filePath)
-          const uploadsService = this.app.service('uploads')
-          await uploadsService.create({ buffer: buffer, contentType: 'application/pdf' })
-          logger.info('Forwarded file %s to uploads service', filePath)
+          await this.getFileAndNotifyListeners(filePath, folderToWatch.id)
         }
       }, 3000);
       this.intervals.set(folderToWatch.id, interval)
@@ -182,7 +181,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
     }
   }
 
-  private changeListener (watchedPath: string, watcherId: Number) {
+  private changeListener (watchedPath: string, watcherId: number) {
     return (eventType: string, filename: string) => {
       // We don't care about files that do not match the pattern
       if (!filePattern.test(filename)) {
@@ -202,13 +201,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
               return
             }
 
-            // Upload the new file to the blob store
-            return fs.promises.readFile(filePath)
-              .then(buffer => {
-                const uploadsService = this.app.service('uploads')
-                return uploadsService.create({ buffer: buffer, contentType: 'application/pdf' })
-              })
-              .then(() => logger.info('Forwarded file %s to uploads service', filePath))
+            return this.getFileAndNotifyListeners(filePath, watcherId)
           }
         }, err => {
           // If the file cannot be found, it just got deleted
@@ -276,6 +269,21 @@ export class WatchedFolders extends Service<WatchedFolderData> {
     }
 
     return watchedFolderData
+  }
+
+  private async getFileAndNotifyListeners(filePath: string, watcherId: number) {
+    logger.info('Found new file in watched folder %d', watcherId)
+
+    // Copy the file to a temporary location, so we don't have to rely on the original file
+    let tmpdir = os.tmpdir();
+    let extname = path.extname(filePath);
+    let fileName = uuidv4() + extname.toLowerCase();
+    let destination = path.join(tmpdir, fileName)
+    await fs.promises.copyFile(filePath, destination)
+
+    let context: FoundFileContext = { watchedFolderId: watcherId, path: destination };
+    // @ts-ignore TypeScript does not know that this is an EventEmitter
+    this.emit('found_file', context)
   }
 }
 

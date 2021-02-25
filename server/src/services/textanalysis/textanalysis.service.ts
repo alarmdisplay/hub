@@ -3,6 +3,7 @@ import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import { TextAnalysis } from './textanalysis.class';
 import hooks from './textanalysis.hooks';
+import createModel from "../../models/textanalysis.model";
 
 // Add this service to the service type index
 declare module '../../declarations' {
@@ -10,7 +11,13 @@ declare module '../../declarations' {
     'textanalysis': TextAnalysis & ServiceAddons<any>;
   }
 
-  interface Config {
+  interface TextAnalysisData {
+    id: number
+    config: string
+    watchedFolderId: number
+  }
+
+  interface TextAnalysisConfig {
     /**
      * The name of the config to be shown to the user
      */
@@ -25,6 +32,14 @@ declare module '../../declarations' {
      * Text after this mark is ignored
      */
     endMark: RegExp
+
+    /**
+     * List of words that should reliably be recognized by OCR. They are passed to the OCR process as a reference which
+     * increases the chance of them being recognized correctly. It makes sense to include strings that are used in the
+     * RegExps to ensure proper splitting of sections and extraction of information. Trigger words are added to this
+     * list automatically.
+     */
+    importantWords: string[]
 
     /**
      * Definition objects for the different sections of the text
@@ -81,8 +96,12 @@ declare module '../../declarations' {
 }
 
 export default function (app: Application) {
+  const options = {
+    Model: createModel(app)
+  };
+
   // Initialize our service with any options it requires
-  app.use('/textanalysis', new TextAnalysis(app));
+  app.use('/textanalysis', new TextAnalysis(options, app));
 
   // Get our initialized service so that we can register hooks
   const service = app.service('textanalysis');

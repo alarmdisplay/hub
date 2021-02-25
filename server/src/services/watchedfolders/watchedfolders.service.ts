@@ -10,6 +10,11 @@ declare module '../../declarations' {
   interface ServiceTypes {
     'watchedfolders': WatchedFolders & ServiceAddons<any>;
   }
+
+  interface FoundFileContext {
+    watchedFolderId: number
+    path: string
+  }
 }
 
 export default function (app: Application) {
