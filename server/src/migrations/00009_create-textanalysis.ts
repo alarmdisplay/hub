@@ -3,7 +3,6 @@ import {Application} from '../declarations';
 
 export default {
   async up(query: QueryInterface, app: Application): Promise<void> {
-    console.log('moin')
     const tableName = [app.get('db_prefix'), 'textanalysis'].join('_');
 
     try {
