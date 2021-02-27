@@ -8,6 +8,7 @@ import incidents from './services/incidents'
 import locations from './services/locations'
 import resourceIdentifiers from './services/resource-identifiers'
 import resources from './services/resources'
+import textAnalysis from './services/text-analysis'
 import users from './services/users'
 import watchedFolders from './services/watched-folders'
 import socket, { createSocketPlugin } from '@/store/socket'
@@ -37,6 +38,7 @@ export default new Vuex.Store({
     locations,
     resourceIdentifiers,
     resources,
+    textAnalysis,
     users,
     watchedFolders
   ]

@@ -10,28 +10,15 @@
 
         <div ref="navbarmenu" class="navbar-menu">
             <div class="navbar-start">
-                <router-link tag="a" class="navbar-item" to="/">
+                <router-link tag="a" class="navbar-item is-tab" to="/" active-class="is-active" exact>
                     <span class="icon"><font-awesome-icon icon="home"/></span>
                     <span>Home</span>
                 </router-link>
 
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
-                        <span class="icon"><font-awesome-icon icon="inbox"/></span>
-                        <span>Eingang</span>
-                    </a>
-
-                    <div class="navbar-dropdown">
-                        <router-link tag="a" class="navbar-item" to="/input/watched-folders">
-                            <span class="icon"><font-awesome-icon icon="folder"/></span>
-                            <span>&Uuml;berwachte Ordner</span>
-                        </router-link>
-                        <router-link tag="a" class="navbar-item" :to="{ name: 'ocr' }">
-                            <span class="icon"><font-awesome-icon icon="file-alt"/></span>
-                            <span>Texterkennung / Analyse</span>
-                        </router-link>
-                    </div>
-                </div>
+                <router-link tag="a" class="navbar-item is-tab" :to="{ name: 'input' }" active-class="is-active">
+                    <span class="icon"><font-awesome-icon icon="inbox"/></span>
+                    <span>Eingang</span>
+                </router-link>
 
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
@@ -40,7 +27,7 @@
                     </a>
 
                     <div class="navbar-dropdown">
-                        <router-link tag="a" class="navbar-item" :to="{ name: 'resource-list' }">
+                        <router-link tag="a" class="navbar-item" :to="{ name: 'resource-list' }" active-class="is-active">
                             <span class="icon"><font-awesome-icon icon="truck"/></span>
                             <span>Einsatzmittel</span>
                         </router-link>
