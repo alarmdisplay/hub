@@ -36,7 +36,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
   setup (app: Application) {
     // Wait for the database, then start watching all watched folders marked as active
     (app.get('databaseReady') as Promise<void>)
-      .then(() => this.find({ query: { active: true } }))
+      .then(() => this.find({ query: { active: true }, paginate: false }))
       .then(folders => {
         if (!Array.isArray(folders)) {
           logger.error('Query for watched folders did not return an Array')
