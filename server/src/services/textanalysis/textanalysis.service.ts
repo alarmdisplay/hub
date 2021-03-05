@@ -62,6 +62,32 @@ declare module '../../declarations' {
 
     /**
      * Regular expressions with named capture groups to extract the information
+     *
+     * Available capture group names are:
+     * - caller_name: The person who reported the incident
+     * - caller_number: A telephone number to contact the person who reported the incident
+     * - description: Free text field with details about this incident
+     * - keyword: Usually a term of a taxonomy to roughly categorize types of incidents
+     * - loc_city: City of the incident location
+     * - loc_detail: Additional detail for the incident location (e. g. 1st floor)
+     * - loc_gk_x: X component of a Gauss Krueger coordinate of the incident location
+     * - loc_gk_y: Y component of a Gauss Krueger coordinate of the incident location
+     * - loc_street: The street name of the incident location
+     * - loc_streetnumber: The street number of the incident location
+     * - loc_zip: Postal code of the incident location
+     * - reason: Reason for the incident, usually a refinement of `keyword`
+     * - ref: A unique identifier or reference number for the incident
+     * - resources: The name or identifier of a requested or dispatched resource
+     * - sender: The authority or organization that sent the document
+     *
+     * RegExps with the multiline modifier are matched against the entire section, while RegExps without the modifier
+     * are executed against every single line of the section. Multiline-RegExps are executed before non-multiline
+     * RegExps.
+     *
+     * Capture group names can be used multiple times, but only the first match will be used. This allows for fallback
+     * RegExps that match less strictly and can also be combined with the multiline behaviour mentioned above.
+     *
+     * The exception to this rule is `resources`, which can be matched multiple times, and the values will be appended.
      */
     regexps: RegExp[]
   }
