@@ -34,7 +34,7 @@ RUN groupadd --gid 1000 node \
 
 WORKDIR /home/node/app
 COPY ./server/package.json ./server/package-lock.json /home/node/app/
-RUN npm ci --only=production --no-audit && mkdir -m777 uploads
+RUN npm ci --only=production --no-audit
 
 COPY --from=build-server /home/node/app/lib /home/node/app
 COPY ./server/config /home/node/app/config
