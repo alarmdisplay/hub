@@ -20,7 +20,7 @@ cp -r public lib/
 
 mkdir lib/config
 cp config/default.json lib/config/
-# cp config/docker.json lib/config/
+cp config/docker.json lib/config/
 cp config/production.json lib/config/
 
 mv lib "$PROJECT_DIR/build"
