@@ -166,7 +166,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
         return
       }
 
-      return new Promise(resolve => {
+      return new Promise<void>(resolve => {
         // remove the close listener from above
         watcher?.removeAllListeners('close')
         watcher?.addListener('close', () => {
