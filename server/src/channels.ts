@@ -31,6 +31,7 @@ export default function(app: Application) {
 
     // On a new real-time connection, add it to the anonymous channel
     app.channel('anonymous').join(connection);
+    logger.debug('New anonymous socket connection');
   });
 
   app.on('login', (authResult: any, { connection }: any) => {
@@ -58,6 +59,10 @@ export default function(app: Application) {
       // app.channel(`emails/${user.email}`).join(channel);
       // app.channel(`userIds/$(user.id}`).join(channel);
     }
+  });
+
+  app.on('disconnect', async (connection: any) => {
+    logger.debug('Socket disconnected');
   });
 
   // eslint-disable-next-line no-unused-vars

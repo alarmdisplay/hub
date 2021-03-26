@@ -70,7 +70,6 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     for (const name of result.resources) {
       const identifiers = await ResourceIdentifierService.find({ query: { type: 'name', value: name, $limit: 1 }, paginate: false }) as ResourceIdentifierData[]
       if (identifiers.length === 0) {
-        logger.warn('Unknown resource: %s', name)
         continue;
       }
 
@@ -79,7 +78,7 @@ export class TextAnalysis extends Service<TextAnalysisData> {
 
     let ResourceService = this.app.service('resources')
     let resources = await ResourceService.find({ query: { id: { $in: Array.from(resourceIds.values()) } }, paginate: false }) as ResourceData[]
-    logger.debug('Checked for known resources')
+    logger.debug('Checked for known resources, found %d', resources.length)
 
     let IncidentsService = this.app.service('incidents')
     let incident = await IncidentsService.processAlert({
