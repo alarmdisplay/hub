@@ -48,7 +48,7 @@ export default {
       regexps: []
     },
     {
-      beginningMark: /EINSATZGRUND/,
+      beginningMark: /EINSAT[AZ]GRUND/,
       regexps: [
         /Schlagw\.[:;=]\s(?<reason>.*)$/,
         /Stichwort[:;=]\s(?<keyword>.*)$/
