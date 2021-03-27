@@ -44,7 +44,7 @@ export class Ocr {
     await this.generateUserWords(workDir, textAnalysisConfig)
 
     // Convert the PDF file into a TIF image
-    cp.execSync('convert -density 204x196 in.pdf -monochrome in.tif', { cwd: workDir })
+    cp.execSync('convert -density 204x196 in.pdf -type Grayscale -compress lzw -background white in.tif', { cwd: workDir })
 
     logger.debug('PDF converted, starting OCR')
     let text: string = ''
