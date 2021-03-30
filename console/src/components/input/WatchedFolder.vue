@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div v-else class="content">
-                <p class="has-text-warning-dark has-text-weight-bold">PDF-Dateien müssen eine Texterkennung durchlaufen.</p>
+                <p class="has-text-warning-dark">PDF-Dateien müssen eine Texterkennung durchlaufen, bevor sie als Alarmquelle verwendet werden können.</p>
                 <div class="field">
                     <label class="label">Layout</label>
                     <div class="control">
