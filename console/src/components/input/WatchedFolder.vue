@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="content">
-                <strong>Dateityp:</strong> PDF
+                <b>Dateityp:</b> PDF
             </div>
 
             <hr>
@@ -37,7 +37,7 @@
                 </div>
                 <div class="media-content">
                     Texterkennung mit Layout<br>
-                    <strong>{{ getConfigDisplayName(textAnalysisJob.config) }}</strong>
+                    <b>{{ getConfigDisplayName(textAnalysisJob.config) }}</b>
                 </div>
                 <div class="media-right">
                     <button class="delete is-small" @click="removeTextAnalysisJob" title="Texterkennung entfernen"></button>
