@@ -17,7 +17,7 @@ import {
   faBell, faBuilding, faCheck, faChevronDown, faChevronLeft, faChevronRight, faChevronUp, faCogs, faDesktop, faEdit,
   faEnvelope, faFileAlt, faFolder, faHome, faInbox, faInfoCircle, faKey, faLock, faPaperPlane, faPause, faPlay, faPlus,
   faQuestionCircle, faSignOutAlt, faStop, faTimes, faTools, faTrashAlt, faTruck, faUser, faUserEdit, faUserMinus,
-  faUserPlus, faUsers, faUserTag, faWrench, faCircle
+  faUserPlus, faUsers, faUserTag, faWrench, faCircle, faPrint, faAngleDown
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
@@ -25,7 +25,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(faBell, faBuilding, faCheck, faChevronDown, faChevronLeft, faChevronRight, faChevronUp, faCogs, faDesktop,
   faEdit, faEnvelope, faFileAlt, faFolder, faHome, faInbox, faInfoCircle, faKey, faLock, faPaperPlane, faPause, faPlay,
   faPlus, faQuestionCircle, faSignOutAlt, faStop, faTimes, faTrashAlt, faTools,faTruck, faUser, faUserEdit, faUserMinus,
-  faUserPlus, faUsers,faUserTag, faWrench, faCircle)
+  faUserPlus, faUsers,faUserTag, faWrench, faCircle, faPrint, faAngleDown)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

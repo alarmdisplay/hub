@@ -6,6 +6,7 @@ import auth from './store.auth'
 import apiKeys from './services/api-keys'
 import incidents from './services/incidents'
 import locations from './services/locations'
+import printTasks from './services/print-tasks'
 import resourceIdentifiers from './services/resource-identifiers'
 import resources from './services/resources'
 import textAnalysis from './services/text-analysis'
@@ -36,6 +37,7 @@ export default new Vuex.Store({
     apiKeys,
     incidents,
     locations,
+    printTasks,
     resourceIdentifiers,
     resources,
     textAnalysis,
