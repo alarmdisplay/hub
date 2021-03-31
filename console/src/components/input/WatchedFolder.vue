@@ -76,6 +76,7 @@ export default {
       // TODO This should be retrieved from the backend
       return {
         'ils_augsburg': 'Alarmfax ILS Augsburg',
+		'ls_bodenseekreis': 'Pager LS Bodensee-Oberschwaben'
       }
     },
     textAnalysisJob () {
