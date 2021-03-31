@@ -1,10 +1,11 @@
-import { Application, FoundFileContext, ResourceData, ResourceIdentifierData, TextAnalysisData } from '../../declarations'
+import { Application, AlarmContext, FoundFileContext, ResourceData, ResourceIdentifierData, TextAnalysisData } from '../../declarations'
 import logger from '../../logger'
 import { Ocr } from "./ocr.class";
 import configs from "./configs";
 import { AlertSourceType } from "../incidents/incidents.service";
 import { Analyser } from "./analyser.class";
 import { SequelizeServiceOptions, Service } from "feathers-sequelize";
+import { string } from '@hapi/joi';
 
 export class TextAnalysis extends Service<TextAnalysisData> {
   app: Application
@@ -22,12 +23,61 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     // Register to be notified of new files
     const watchedFoldersService = app.service('watchedfolders');
     watchedFoldersService.on('found_file', (context: FoundFileContext) => this.onNewFile(context.path, context.watchedFolderId))
+    const serialMonitorService = app.service('serialmonitor');
+    serialMonitorService.on('pager_alarm', (context: AlarmContext) => this.onNewSerialAlarm(context.pager_id, context.alarmText, context.port))
+
+  }
+
+  private async onNewSerialAlarm(pagerID: number, alarmText: string, port: string){
+    const textAnalysisJobs = await this.find({
+      query: {
+        event: 'pager_alarm',
+        sourceID: pagerID,
+        $limit: 1
+      },
+      paginate: false
+    }) as TextAnalysisData[];
+    if (textAnalysisJobs.length === 0) {
+      //logger.warn('Did not find a textanalysis job for watched folder %d, aborting ...', watchedFolderId)
+      return
+    }
+    let configName = textAnalysisJobs[0].config;
+    let configIndex = Object.keys(configs).indexOf(configName);
+    if (configIndex === -1) {
+      logger.error('Found textanalysis job, but there is no config by the name \'%s\'', configName)
+      return
+    }
+    const textAnalysisConfig = Object.values(configs)[configIndex];
+    
+    let alertContext = {
+      processingStarted: new Date(),
+      rawContent: '',
+      source: {
+        type: AlertSourceType.PAGER
+      }
+    }
+
+    alertContext.rawContent = alarmText
+
+    let result
+    try {
+      result = this.analyser.analyse(alertContext.rawContent, textAnalysisConfig)
+    } catch (e) {
+      logger.error('Text analysis aborted:', e)
+      return
+    }
+
+    logger.debug('Text analysis completed')
+
+    // Determine the requested resources
+    this.analyzeAlarmResults(result, alertContext)
   }
 
   private async onNewFile(filePath: string, watchedFolderId: number) {
     const textAnalysisJobs = await this.find({
       query: {
-        watchedFolderId: watchedFolderId,
+        source: 'found_file',
+        eventID: watchedFolderId,
         $limit: 1
       },
       paginate: false
@@ -54,6 +104,7 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     }
 
     alertContext.rawContent = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
+    
     let result
     try {
       result = this.analyser.analyse(alertContext.rawContent, textAnalysisConfig)
@@ -65,6 +116,10 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     logger.debug('Text analysis completed')
 
     // Determine the requested resources
+    this.analyzeAlarmResults(result, alertContext)
+  }
+
+  private async analyzeAlarmResults(result: any, alertContext: any ){
     const resourceIds = new Set();
     const ResourceIdentifierService = this.app.service('resource-identifiers');
     for (const name of result.resources) {

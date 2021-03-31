@@ -77,7 +77,7 @@ export class Analyser {
   private splitIntoSections (text: string, config: TextAnalysisConfig) : Map<SectionDefinition, string> {
     const map = new Map<SectionDefinition, string>()
     const sections: string[] = []
-    let textToSplit = text
+    let textToSplit = text + ''
     config.sections.forEach((section, index) => {
       const [previousSection, rest] = textToSplit.split(section.beginningMark, 2)
 
