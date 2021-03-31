@@ -57,6 +57,7 @@
     "log4js": "^6.3.0",
     "mysql2": "^2.2.5",
     "sequelize": "^6.3.5",
+    "serialport": "^9.0.7",
     "serve-favicon": "^2.5.0",
     "umzug": "^2.3.0",
     "uuid": "^8.3.1"
