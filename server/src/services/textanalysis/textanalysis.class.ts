@@ -5,7 +5,6 @@ import configs from "./configs";
 import { AlertSourceType } from "../incidents/incidents.service";
 import { Analyser } from "./analyser.class";
 import { SequelizeServiceOptions, Service } from "feathers-sequelize";
-import { string } from '@hapi/joi';
 
 export class TextAnalysis extends Service<TextAnalysisData> {
   app: Application
@@ -33,7 +32,8 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       query: {
         event: 'pager_alarm',
         sourceID: pagerID,
-        $limit: 1
+        $limit: 1,
+        $select: [ 'id', 'event', 'sourceID', 'config' ]
       },
       paginate: false
     }) as TextAnalysisData[];
@@ -78,7 +78,8 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       query: {
         source: 'found_file',
         eventID: watchedFolderId,
-        $limit: 1
+        $limit: 1,
+        $select: [ 'id', 'event', 'sourceID', 'config' ]
       },
       paginate: false
     }) as TextAnalysisData[];

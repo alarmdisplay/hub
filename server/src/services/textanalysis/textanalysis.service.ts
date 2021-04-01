@@ -14,7 +14,8 @@ declare module '../../declarations' {
   interface TextAnalysisData {
     id: number
     config: string
-    watchedFolderId: number
+    event: string
+    sourceID: number
   }
 
   interface TextAnalysisConfig {
