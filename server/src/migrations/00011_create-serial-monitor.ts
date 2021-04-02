@@ -19,8 +19,8 @@ export default {
         allowNull: false,
         defaultValue: true
       },
-      delimitter: {
-        type: Sequelize.STRING,
+      timeout: {
+        type: Sequelize.INTEGER,
         allowNull: false
       },
       createdAt: {

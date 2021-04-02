@@ -16,8 +16,8 @@ export default function (app: Application): typeof Model {
       allowNull: false,
       defaultValue: true
     },
-    delimitter: {
-      type: DataTypes.STRING,
+    timeout: {
+      type: DataTypes.INTEGER,
       allowNull: false
     }
   }, {

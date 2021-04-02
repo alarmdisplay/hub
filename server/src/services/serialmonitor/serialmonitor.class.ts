@@ -8,13 +8,13 @@ interface serialMonitorData {
   id: number,
   port: string,
   active: boolean,
-  delimitter: string
+  timeout: number
 }
 
 export class Serialmonitor extends Service<serialMonitorData> {
   private app: Application
   private serialPort: any
-  private delimitter: any
+  private InterByteTimeout: any
   private port: any
   private parser: any
 
@@ -23,7 +23,7 @@ export class Serialmonitor extends Service<serialMonitorData> {
     super(options);
     this.app = app
     this.serialPort = require('serialport')
-    this.delimitter = require('@serialport/parser-delimiter')
+    this.InterByteTimeout = require('@serialport/parser-inter-byte-timeout')
   
   }
 
@@ -45,7 +45,7 @@ export class Serialmonitor extends Service<serialMonitorData> {
 
   private async startMonitoring(portToWatch: serialMonitorData){
     this.port = new this.serialPort(portToWatch.port)
-    this.parser = this.port.pipe(new this.delimitter({ delimiter: portToWatch.delimitter }))
+    this.parser = this.port.pipe(new this.InterByteTimeout({ interval: portToWatch.timeout }))
     this.parser.on('data', (data: any) => this.notifyListeners(data, portToWatch))
     logger.info('Start monitoring %s', portToWatch.port)
   }
