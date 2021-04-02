@@ -11,21 +11,8 @@ import VueMoment from 'vue-moment'
 require('moment/locale/de')
 Vue.use(VueMoment, { moment })
 
-// Import Font Awesome
-import { library } from '@fortawesome/fontawesome-svg-core'
-import {
-  faBell, faBuilding, faCheck, faChevronDown, faChevronLeft, faChevronRight, faChevronUp, faCogs, faDesktop, faEdit,
-  faEnvelope, faFileAlt, faFolder, faHome, faInbox, faInfoCircle, faKey, faLock, faPaperPlane, faPause, faPlay, faPlus,
-  faQuestionCircle, faSignOutAlt, faStop, faTimes, faTools, faTrashAlt, faTruck, faUser, faUserEdit, faUserMinus,
-  faUserPlus, faUsers, faUserTag, faWrench, faCircle, faPrint, faAngleDown
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
-// Configure Font Awesome
-library.add(faBell, faBuilding, faCheck, faChevronDown, faChevronLeft, faChevronRight, faChevronUp, faCogs, faDesktop,
-  faEdit, faEnvelope, faFileAlt, faFolder, faHome, faInbox, faInfoCircle, faKey, faLock, faPaperPlane, faPause, faPlay,
-  faPlus, faQuestionCircle, faSignOutAlt, faStop, faTimes, faTrashAlt, faTools,faTruck, faUser, faUserEdit, faUserMinus,
-  faUserPlus, faUsers,faUserTag, faWrench, faCircle, faPrint, faAngleDown)
+// Load Font Awesome
+import FontAwesomeIcon from './font-awesome'
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
