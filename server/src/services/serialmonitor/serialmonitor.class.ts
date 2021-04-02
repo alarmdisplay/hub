@@ -31,23 +31,23 @@ export class Serialmonitor extends Service<serialMonitorData> {
     (app.get('databaseReady') as Promise<void>).then(() => this.find({ query: { active: true }, paginate: false }))
     .then(ports => {
       if (!Array.isArray(ports)) {
-        logger.error('Query for watched folders did not return an Array')
+        logger.error('Query for serial ports did not return an Array')
         return
       }
 
       Promise.all(ports.map(ser_port => this.startMonitoring(ser_port)))
           .catch(reason => {
-            logger.error('Could not start to watch folders', reason)
+            logger.error('Could not start to monitor serial port', reason)
           })
 
     })
   }
 
   private async startMonitoring(portToWatch: serialMonitorData){
-    this.port = new this.serialPort('COM3')
+    this.port = new this.serialPort(portToWatch.port)
     this.parser = this.port.pipe(new this.delimitter({ delimiter: portToWatch.delimitter }))
     this.parser.on('data', (data: any) => this.notifyListeners(data, portToWatch))
-    logger.info('Started monitoring %s', portToWatch.port)
+    logger.info('Start monitoring %s', portToWatch.port)
   }
 
   private async notifyListeners(alarmText: string, portToWatch: serialMonitorData){
