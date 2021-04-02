@@ -26,7 +26,7 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'serialmonitor'].join('_')
+    tableName: [app.get('db_prefix'), 'serial_monitor'].join('_')
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
