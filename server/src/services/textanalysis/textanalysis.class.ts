@@ -76,8 +76,8 @@ export class TextAnalysis extends Service<TextAnalysisData> {
   private async onNewFile(filePath: string, watchedFolderId: number) {
     const textAnalysisJobs = await this.find({
       query: {
-        source: 'found_file',
-        eventID: watchedFolderId,
+        event: 'found_file',
+        sourceId: watchedFolderId,
         $limit: 1,
         $select: [ 'id', 'event', 'sourceID', 'config' ]
       },
