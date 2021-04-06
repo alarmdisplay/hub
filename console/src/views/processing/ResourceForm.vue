@@ -9,8 +9,8 @@
 
             <ErrorMessage :form-error="formError"/>
 
-            <FeathersVuexFormWrapper :item="item" watch>
-                <template v-slot="{ clone, save, reset }">
+            <FeathersVuexFormWrapper v-if="item" :item="item" watch>
+                <template v-slot="{ clone, save, reset, remove }">
                     <ResourceEditor
                         :item="clone"
                         @save="
@@ -21,6 +21,13 @@
                             .catch(reason => { $data.formError = reason })
                         }"
                         @reset="reset"
+                        @remove="
+                        () => {
+                          $data.formError = null
+                          remove()
+                            .then(() => $router.push({name: 'resource-list'}))
+                            .catch(reason => { $data.formError = reason })
+                        }"
                     ></ResourceEditor>
                 </template>
             </FeathersVuexFormWrapper>
