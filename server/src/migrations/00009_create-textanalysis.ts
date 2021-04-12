@@ -24,13 +24,10 @@ export default {
         type: Sequelize.STRING,
         allowNull: false
       },
-      sourceID: {
+      watchedFolderId: {
         type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      event: {
-        type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        unique: true
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -40,6 +37,15 @@ export default {
         type: Sequelize.DATE,
         allowNull: false
       }
+    });
+
+    await query.addConstraint(tableName, {
+      name: `${tableName}_ibfk_1`,
+      type: 'foreign key',
+      fields: ['watchedFolderId'],
+      references: { table: [app.get('db_prefix'), 'watched_folders'].join('_'), field: 'id' },
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE'
     });
   },
   async down(query: QueryInterface, app: Application): Promise<void> {
