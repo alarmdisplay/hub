@@ -3,33 +3,24 @@ import {Application} from '../declarations';
 
 export default {
   async up(query: QueryInterface, app: Application): Promise<void> {
-    const tableName = [app.get('db_prefix'), 'textanalysis'].join('_');
-
-    try {
-      await query.describeTable(tableName);
-      // Exit early if the table exists
-      return;
-    } catch (e) {
-      // The table does not exist, so we just continue
-    }
-
-    await query.createTable(tableName, {
+    await query.createTable([app.get('db_prefix'), 'serial_monitor'].join('_'), {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
         autoIncrement: true,
         primaryKey: true
       },
-      config: {
+      port: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      sourceID: {
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true
+      },
+      timeout: {
         type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      event: {
-        type: Sequelize.STRING,
         allowNull: false
       },
       createdAt: {
@@ -43,6 +34,6 @@ export default {
     });
   },
   async down(query: QueryInterface, app: Application): Promise<void> {
-    await query.dropTable([app.get('db_prefix'), 'textanalysis'].join('_'));
+    await query.dropTable([app.get('db_prefix'), 'serial_monitor'].join('_'));
   }
 };
