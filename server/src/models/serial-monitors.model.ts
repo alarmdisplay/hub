@@ -6,7 +6,7 @@ import { HookReturn } from 'sequelize/types/lib/hooks';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  const serialmonitor = sequelizeClient.define('serialmonitor', {
+  const serialMonitors = sequelizeClient.define('serial_monitor', {
     port: {
       type: DataTypes.STRING,
       allowNull: false
@@ -26,14 +26,14 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'serial_monitor'].join('_')
+    tableName: [app.get('db_prefix'), 'serial_monitors'].join('_')
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  (serialmonitor as any).associate = function (models: any): void {
+  (serialMonitors as any).associate = function (models: any): void {
     // Define associations here
     // See http://docs.sequelizejs.com/en/latest/docs/associations/
   };
 
-  return serialmonitor;
+  return serialMonitors;
 }

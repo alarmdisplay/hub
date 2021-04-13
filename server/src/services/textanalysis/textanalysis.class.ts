@@ -22,9 +22,8 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     // Register to be notified of new files
     const watchedFoldersService = app.service('watchedfolders');
     watchedFoldersService.on('found_file', (context: FoundFileContext) => this.onNewFile(context.path, context.watchedFolderId))
-    const serialMonitorService = app.service('serialmonitor');
-    serialMonitorService.on('pager_alarm', (context: AlarmContext) => this.onNewSerialAlarm(context.pager_id, context.alarmText, context.port))
-
+    const serialMonitorsService = app.service('serial-monitors');
+    serialMonitorsService.on('pager_alarm', (context: AlarmContext) => this.onNewSerialAlarm(context.pager_id, context.alarmText, context.port))
   }
 
   private async onNewSerialAlarm(pagerID: number, alarmText: string, port: string){
@@ -48,7 +47,7 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       return
     }
     const textAnalysisConfig = Object.values(configs)[configIndex];
-    
+
     let alertContext = {
       processingStarted: new Date(),
       rawContent: '',
@@ -105,7 +104,7 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     }
 
     alertContext.rawContent = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
-    
+
     let result
     try {
       result = this.analyser.analyse(alertContext.rawContent, textAnalysisConfig)

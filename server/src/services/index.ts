@@ -9,7 +9,7 @@ import incidents from './incidents/incidents.service';
 import apiKeys from './api-keys/api-keys.service';
 import inputPager from './input/pager/pager.service';
 import printTasks from './print-tasks/print-tasks.service';
-import serialmonitor from './serialmonitor/serialmonitor.service';
+import serialMonitors from './serial-monitors/serial-monitors.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application) {
@@ -23,5 +23,5 @@ export default function (app: Application) {
   app.configure(apiKeys);
   app.configure(inputPager);
   app.configure(printTasks);
-  app.configure(serialmonitor);
+  app.configure(serialMonitors);
 }

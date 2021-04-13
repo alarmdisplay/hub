@@ -1,14 +1,14 @@
-// Initializes the `serialmonitor` service on path `/serialmonitor`
+// Initializes the `serial-monitors` service on path `/serial-monitors`
 import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
-import { Serialmonitor } from './serialmonitor.class';
-import createModel from '../../models/serialmonitor.model';
-import hooks from './serialmonitor.hooks';
+import { SerialMonitors } from './serial-monitors.class';
+import createModel from '../../models/serial-monitors.model';
+import hooks from './serial-monitors.hooks';
 
 // Add this service to the service type index
 declare module '../../declarations' {
   interface ServiceTypes {
-    'serialmonitor': Serialmonitor & ServiceAddons<any>;
+    'serial-monitors': SerialMonitors & ServiceAddons<any>;
   }
 
   interface AlarmContext {
@@ -25,10 +25,10 @@ export default function (app: Application): void {
   };
 
   // Initialize our service with any options it requires
-  app.use('/serialmonitor', new Serialmonitor(options, app));
+  app.use('/serial-monitors', new SerialMonitors(options, app));
 
   // Get our initialized service so that we can register hooks
-  const service = app.service('serialmonitor');
+  const service = app.service('serial-monitors');
 
   service.hooks(hooks);
 }

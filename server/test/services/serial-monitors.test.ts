@@ -1,8 +1,8 @@
 import app from '../../src/app';
 
-describe('\'serialmonitor\' service', () => {
+describe('\'serial-monitors\' service', () => {
   it('registered the service', () => {
-    const service = app.service('serialmonitor');
+    const service = app.service('serial-monitors');
     expect(service).toBeTruthy();
   });
 });
