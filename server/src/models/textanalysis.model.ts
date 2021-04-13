@@ -7,11 +7,6 @@ import { HookReturn } from 'sequelize/types/lib/hooks';
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
   return sequelizeClient.define('textanalysis', {
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      primaryKey: true
-    },
     config: {
       type: DataTypes.STRING,
       allowNull: false
