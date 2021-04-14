@@ -2,7 +2,7 @@ import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application, AlarmContext } from '../../declarations';
 import SerialPort from "serialport";
 import logger from '../../logger';
-import { Params } from '@feathersjs/feathers';
+import { Params, NullableId } from '@feathersjs/feathers';
 
 // @ts-ignore The types for serialport are incomplete
 const InterByteTimeout = SerialPort.parsers.InterByteTimeout;
@@ -74,7 +74,7 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
       })
 
       port.on('close', error => {
-        if (error.disconnected) {
+        if (error?.disconnected) {
           logger.error('Serial port %s disconnected', serialMonitor.port)
         }
         logger.info('Serial monitor for %s stopped', serialMonitor.port)
@@ -137,5 +137,15 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
     await this.bulkStartMonitoring(activeSerialMonitors)
 
     return result;
+  }
+
+  async _remove(id: NullableId, params?: Params): Promise<SerialMonitorsData> {
+    let serialMonitor = await super._remove(id, params);
+    try {
+      await this.stopMonitoring(serialMonitor)
+    } catch (e) {
+      logger.warn('Serial monitor has been removed, but closing the port gave an error:', e.message)
+    }
+    return serialMonitor;
   }
 }
