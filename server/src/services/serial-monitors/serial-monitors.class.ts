@@ -2,6 +2,7 @@ import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application, AlarmContext } from '../../declarations';
 import SerialPort from "serialport";
 import logger from '../../logger';
+import { Params } from '@feathersjs/feathers';
 
 // @ts-ignore The types for serialport are incomplete
 const InterByteTimeout = SerialPort.parsers.InterByteTimeout;
@@ -28,23 +29,24 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
     // Wait for the database, then start monitoring all serial ports marked as active
     (app.get('databaseReady') as Promise<void>)
       .then(() => this.find({ query: { active: true }, paginate: false }) as Promise<SerialMonitorsData[]>)
-      .then((serialMonitors) => {
-        let serialMonitorPromises = serialMonitors.map(serialMonitor => this.startMonitoring(serialMonitor));
-        // @ts-ignore Function allSettled() seems to be unknown
-        return Promise.allSettled(serialMonitorPromises)
-      })
-      .then(results => {
-        for (const result of results) {
-          if (result.status === "fulfilled") {
-            logger.info('Started monitoring %s', result.value.port)
-          } else {
-            logger.error('Could not start monitoring: ', result.reason.message)
-          }
-        }
-      })
+      .then(serialMonitors => this.bulkStartMonitoring(serialMonitors))
       .catch(reason => {
-        logger.error('Could not query serial ports to monitor: ', reason)
+        logger.error('Could not query serial ports to monitor: ', reason.message)
       })
+  }
+
+  private async bulkStartMonitoring(serialMonitors: SerialMonitorsData[]) {
+    let serialMonitorPromises = serialMonitors.map(serialMonitor => this.startMonitoring(serialMonitor));
+    // @ts-ignore Function allSettled() seems to be unknown
+    let results = await Promise.allSettled(serialMonitorPromises);
+
+    for (const result of results) {
+      if (result.status === "fulfilled") {
+        logger.info('Started monitoring %s', result.value.port)
+      } else {
+        logger.error('Could not start monitoring: ', result.reason.message)
+      }
+    }
   }
 
   private async startMonitoring(serialMonitor: SerialMonitorsData): Promise<SerialMonitorsData> {
@@ -121,5 +123,19 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
     let context: AlarmContext = {pager_id: portToWatch.id, alarmText: alarmText, port: portToWatch.port};
     // @ts-ignore TypeScript does not know that this is an EventEmitter
     this.emit('pager_alarm', context)
+  }
+
+  async _create(data: Partial<SerialMonitorsData> | Array<Partial<SerialMonitorsData>>, params?: Params): Promise<SerialMonitorsData[] | SerialMonitorsData> {
+    let result = await super._create(data, params)
+
+    let activeSerialMonitors: SerialMonitorsData[] = []
+    if (Array.isArray(result)) {
+      activeSerialMonitors = result.filter(serialMonitor => serialMonitor.active)
+    } else if (result.active) {
+      activeSerialMonitors = [result]
+    }
+    await this.bulkStartMonitoring(activeSerialMonitors)
+
+    return result;
   }
 }
