@@ -9,6 +9,7 @@ const InterByteTimeout = SerialPort.parsers.InterByteTimeout;
 interface SerialMonitorsData {
   id: number
   port: string
+  baudRate: number
   active: boolean
   timeout: number
 }
@@ -54,7 +55,7 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
     }
 
     return new Promise((resolve, reject) => {
-      let port = new SerialPort(serialMonitor.port, { autoOpen: false })
+      let port = new SerialPort(serialMonitor.port, { autoOpen: false, baudRate: serialMonitor.baudRate })
       this.monitors.set(serialMonitor.id, port)
 
       // Register for the open event

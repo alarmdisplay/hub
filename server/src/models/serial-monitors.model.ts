@@ -11,6 +11,11 @@ export default function (app: Application): typeof Model {
       type: DataTypes.STRING,
       allowNull: false
     },
+    baudRate: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      defaultValue: 9600
+    },
     active: {
       type: DataTypes.BOOLEAN,
       allowNull: false,

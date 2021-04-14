@@ -1,4 +1,4 @@
-import Sequelize, {QueryInterface} from 'sequelize';
+import Sequelize, { DataTypes, QueryInterface } from 'sequelize';
 import {Application} from '../declarations';
 
 export default {
@@ -13,6 +13,11 @@ export default {
       port: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      baudRate: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 9600
       },
       active: {
         type: Sequelize.BOOLEAN,
