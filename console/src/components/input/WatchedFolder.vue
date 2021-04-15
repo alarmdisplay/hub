@@ -13,7 +13,7 @@
         <div class="card-content">
             <div class="media">
                 <div class="media-left">
-                    <font-awesome-icon icon="folder" size="3x"/>
+                    <font-awesome-icon icon="folder" style="font-size: 2.5em"/>
                 </div>
                 <div class="media-content">
                     <p class="title is-4">{{ watchedFolder.path }}</p>
@@ -129,7 +129,6 @@ export default {
       // TODO This should be retrieved from the backend
       return {
         'ils_augsburg': 'Alarmfax ILS Augsburg',
-		'ls_bodenseekreis': 'Pager LS Bodensee-Oberschwaben'
       }
     },
     textAnalysisJob () {

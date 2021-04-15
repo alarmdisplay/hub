@@ -23,7 +23,8 @@ export default function (app: Application): typeof Model {
     },
     timeout: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 1000
     }
   }, {
     hooks: {

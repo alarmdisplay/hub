@@ -37,12 +37,12 @@
 
             <div class="columns is-multiline">
                 <template v-for="watchedFolder in watchedFolders">
-                    <div class="column is-3" :key="`watchedFolder-${watchedFolder.id}`">
+                    <div class="column is-4 is-3-widescreen" :key="`watchedFolder-${watchedFolder.id}`">
                         <WatchedFolder :watched-folder="watchedFolder" @edit-step="onEditStep"/>
                     </div>
                 </template>
                 <template v-for="serialMonitor in serialMonitors">
-                    <div class="column is-3" :key="`serialMonitor-${serialMonitor.id}`">
+                    <div class="column is-4 is-3-widescreen" :key="`serialMonitor-${serialMonitor.id}`">
                         <SerialMonitor :serial-monitor="serialMonitor"/>
                     </div>
                 </template>
