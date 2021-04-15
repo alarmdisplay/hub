@@ -32,7 +32,6 @@ export class TextAnalysis extends Service<TextAnalysisData> {
         event: 'pager_alarm',
         sourceID: pagerID,
         $limit: 1,
-        $select: [ 'id', 'event', 'sourceID', 'config' ]
       },
       paginate: false
     }) as TextAnalysisData[];
@@ -78,7 +77,6 @@ export class TextAnalysis extends Service<TextAnalysisData> {
         event: 'found_file',
         sourceId: watchedFolderId,
         $limit: 1,
-        $select: [ 'id', 'event', 'sourceID', 'config' ]
       },
       paginate: false
     }) as TextAnalysisData[];
