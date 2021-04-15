@@ -141,7 +141,7 @@ export default {
     },
     textanalysisParams() {
       return {
-        query: { watchedFolderId: this.watchedFolder.id }
+        query: { event: 'found_file', sourceId: this.watchedFolder.id }
       }
     }
   },
@@ -157,7 +157,8 @@ export default {
       let configName = this.$refs['analysis-config-select'].value
       const { TextAnalysis } = this.$FeathersVuex.api
       let textAnalysis = new TextAnalysis()
-      textAnalysis.watchedFolderId = this.watchedFolder.id
+      textAnalysis.sourceId = this.watchedFolder.id
+      textAnalysis.event = 'found_file'
       textAnalysis.config = configName
       textAnalysis.save()
     },

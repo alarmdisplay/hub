@@ -10,7 +10,8 @@ class TextAnalysis extends BaseModel {
   static instanceDefaults() {
     return {
       config: '',
-      watchedFolderId: null
+      event: '',
+      sourceId: null,
     }
   }
 }
