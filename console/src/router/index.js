@@ -8,6 +8,7 @@ import Display from '@/views/output/Display'
 import Input from '@/views/Input'
 import ResourceForm from '@/views/processing/ResourceForm'
 import ResourceList from '@/views/processing/ResourceList'
+import SerialMonitorForm from '@/views/input/SerialMonitorForm'
 import UserList from '../views/admin/UserList'
 import UserForm from '@/views/admin/UserForm'
 import WatchedFolderForm from '@/views/input/WatchedFolderForm'
@@ -29,6 +30,11 @@ Vue.use(VueRouter)
       path: '/input',
       name: 'input',
       component: Input
+    },
+    {
+      path: '/input/serial-monitors/:id',
+      name: 'serial-monitor-form',
+      component: SerialMonitorForm
     },
     {
       path: '/input/watched-folders/:id',

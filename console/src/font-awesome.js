@@ -40,6 +40,7 @@ import {
   faUserPlus,
   faUsers,
   faUserTag,
+  faWaveSquare,
   faWrench,
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
@@ -85,6 +86,7 @@ library.add(
   faUserPlus,
   faUsers,
   faUserTag,
+  faWaveSquare,
   faWrench,
 )
 

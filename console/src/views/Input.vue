@@ -12,12 +12,21 @@
                     <span class="icon"><font-awesome-icon icon="plus"/></span>
                     <span>Ordner überwachen</span>
                 </router-link>
+                <router-link tag="button" type="button" class="button" :to="{ name: 'serial-monitor-form', params: { id: 'new' } }" append>
+                    <span class="icon"><font-awesome-icon icon="plus"/></span>
+                    <span>Serielle Schnittstelle überwachen</span>
+                </router-link>
             </div>
 
             <div class="columns is-multiline">
                 <template v-for="watchedFolder in watchedFolders">
-                    <div class="column is-3" :key="watchedFolder.id">
+                    <div class="column is-3" :key="`watchedFolder-${watchedFolder.id}`">
                         <WatchedFolder :watched-folder="watchedFolder" @edit-step="onEditStep"/>
+                    </div>
+                </template>
+                <template v-for="serialMonitor in serialMonitors">
+                    <div class="column is-3" :key="`serialMonitor-${serialMonitor.id}`">
+                        <SerialMonitor :serial-monitor="serialMonitor"/>
                     </div>
                 </template>
             </div>
@@ -30,14 +39,20 @@
 <script>
 import { makeFindMixin } from 'feathers-vuex'
 import InputStepFormModal from '@/components/input/InputStepFormModal'
+import SerialMonitor from '@/components/input/SerialMonitor'
 import WatchedFolder from '@/components/input/WatchedFolder'
 
 const knownStepTypes = ['PrintTask']
 
 export default {
   name: "Input",
-  components: { InputStepFormModal, WatchedFolder },
+  components: { SerialMonitor, InputStepFormModal, WatchedFolder },
   computed: {
+    serialMonitorsParams() {
+      return {
+        query: {}
+      }
+    },
     watchedfoldersParams() {
       return {
         query: {}
@@ -70,7 +85,10 @@ export default {
       this.stepType = args.type
     }
   },
-  mixins: [ makeFindMixin({ service: 'watchedfolders', items: 'watchedFolders' })],
+  mixins: [
+    makeFindMixin({ service: 'watchedfolders', items: 'watchedFolders' }),
+    makeFindMixin({ service: 'serial-monitors' }),
+  ],
 }
 </script>
 
