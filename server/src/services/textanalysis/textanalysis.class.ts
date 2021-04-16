@@ -1,4 +1,4 @@
-import { Application, AlarmContext, FoundFileContext, ResourceData, ResourceIdentifierData, TextAnalysisData } from '../../declarations'
+import { AlertContext, Application, FoundFileContext, ResourceData, ResourceIdentifierData, SerialDataContext, TextAnalysisData, TextAnalysisResult } from '../../declarations'
 import logger from '../../logger'
 import { Ocr } from "./ocr.class";
 import configs from "./configs";
@@ -23,22 +23,23 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     const watchedFoldersService = app.service('watchedfolders');
     watchedFoldersService.on('found_file', (context: FoundFileContext) => this.onNewFile(context.path, context.watchedFolderId))
     const serialMonitorsService = app.service('serial-monitors');
-    serialMonitorsService.on('pager_alarm', (context: AlarmContext) => this.onNewSerialAlarm(context.pager_id, context.alarmText, context.port))
+    serialMonitorsService.on('serial_data', (context: SerialDataContext) => this.onSerialData(context.serialMonitorId, context.data))
   }
 
-  private async onNewSerialAlarm(pagerID: number, alarmText: string, port: string){
+  private async onSerialData(serialMonitorId: number, data: Buffer){
     const textAnalysisJobs = await this.find({
       query: {
-        event: 'pager_alarm',
-        sourceID: pagerID,
+        event: 'serial_data',
+        sourceID: serialMonitorId,
         $limit: 1,
       },
       paginate: false
     }) as TextAnalysisData[];
     if (textAnalysisJobs.length === 0) {
-      //logger.warn('Did not find a textanalysis job for watched folder %d, aborting ...', watchedFolderId)
+      logger.warn('Did not find a textanalysis job for serial monitor %d, aborting ...', serialMonitorId)
       return
     }
+
     let configName = textAnalysisJobs[0].config;
     let configIndex = Object.keys(configs).indexOf(configName);
     if (configIndex === -1) {
@@ -49,13 +50,11 @@ export class TextAnalysis extends Service<TextAnalysisData> {
 
     let alertContext = {
       processingStarted: new Date(),
-      rawContent: '',
+      rawContent: data.toString(),
       source: {
         type: AlertSourceType.PAGER
       }
     }
-
-    alertContext.rawContent = alarmText
 
     let result
     try {
@@ -68,7 +67,7 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     logger.debug('Text analysis completed')
 
     // Determine the requested resources
-    this.analyzeAlarmResults(result, alertContext)
+    await this.analyzeAlarmResults(result, alertContext)
   }
 
   private async onNewFile(filePath: string, watchedFolderId: number) {
@@ -114,10 +113,11 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     logger.debug('Text analysis completed')
 
     // Determine the requested resources
-    this.analyzeAlarmResults(result, alertContext)
+    await this.analyzeAlarmResults(result, alertContext)
   }
 
-  private async analyzeAlarmResults(result: any, alertContext: any ){
+  private async analyzeAlarmResults(result: TextAnalysisResult, alertContext: AlertContext) {
+    // TODO move resource detection into incidents service
     const resourceIds = new Set();
     const ResourceIdentifierService = this.app.service('resource-identifiers');
     for (const name of result.resources) {

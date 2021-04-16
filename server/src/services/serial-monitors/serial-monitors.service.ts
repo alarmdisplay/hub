@@ -11,10 +11,9 @@ declare module '../../declarations' {
     'serial-monitors': SerialMonitors & ServiceAddons<any>;
   }
 
-  interface AlarmContext {
-    pager_id: number
-    alarmText: string
-    port: string
+  interface SerialDataContext {
+    serialMonitorId: number
+    data: Buffer
   }
 }
 

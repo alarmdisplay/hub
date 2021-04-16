@@ -83,7 +83,7 @@ export default {
     },
     textanalysisParams() {
       return {
-        query: { event: 'serial_input', sourceId: this.serialMonitor.id }
+        query: { event: 'serial_data', sourceId: this.serialMonitor.id }
       }
     }
   },
@@ -93,7 +93,7 @@ export default {
       const { TextAnalysis } = this.$FeathersVuex.api
       let textAnalysis = new TextAnalysis()
       textAnalysis.sourceId = this.serialMonitor.id
-      textAnalysis.event = 'serial_input'
+      textAnalysis.event = 'serial_data'
       textAnalysis.config = configName
       textAnalysis.save()
     },

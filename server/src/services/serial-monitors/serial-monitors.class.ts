@@ -1,5 +1,5 @@
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
-import { Application, AlarmContext } from '../../declarations';
+import { Application, SerialDataContext } from '../../declarations';
 import SerialPort from "serialport";
 import logger from '../../logger';
 import { Params, NullableId } from '@feathersjs/feathers';
@@ -66,6 +66,16 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
     }
   }
 
+  private onSerialData(data: Buffer, serialMonitor: SerialMonitorsData) {
+    // For debugging purposes, include a code that tells if the data is surrounded by STX and ETX
+    let diagnosticCode = (data.length > 0 && data[0] === 0x2 ? 'Y' : 'N') + (data.length > 0 && data[data.length - 1] === 0x3 ? 'Y' : 'N');
+    logger.debug('Serial data on %s [%s]: "%s"', serialMonitor.port, diagnosticCode, data.toString())
+
+    let context: SerialDataContext = { serialMonitorId: serialMonitor.id, data: data };
+    // @ts-ignore TypeScript does not know that this is an EventEmitter
+    this.emit('serial_data', context)
+  }
+
   private async startMonitoring(serialMonitor: SerialMonitorsData): Promise<SerialMonitorsData> {
     // If the port is already monitored, stop that first
     if (this.isMonitorRunning(serialMonitor)) {
@@ -80,7 +90,7 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
       // Register for the open event
       port.on('open', () => {
         let parser = port.pipe(new InterByteTimeout({ interval: serialMonitor.timeout }))
-        parser.on('data', (data: any) => this.notifyListeners(data, serialMonitor))
+        parser.on('data', (data: Buffer) => this.onSerialData(data, serialMonitor))
 
         resolve(serialMonitor)
       })
@@ -133,13 +143,6 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
         resolve(serialMonitor)
       })
     })
-  }
-
-  private async notifyListeners(alarmText: string, portToWatch: SerialMonitorsData) {
-    logger.info('Recieved alarm: %s', alarmText)
-    let context: AlarmContext = {pager_id: portToWatch.id, alarmText: alarmText, port: portToWatch.port};
-    // @ts-ignore TypeScript does not know that this is an EventEmitter
-    this.emit('pager_alarm', context)
   }
 
   async _create(data: Partial<SerialMonitorsData> | Array<Partial<SerialMonitorsData>>, params?: Params): Promise<SerialMonitorsData[] | SerialMonitorsData> {
