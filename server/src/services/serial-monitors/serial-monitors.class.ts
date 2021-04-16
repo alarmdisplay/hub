@@ -49,9 +49,26 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
     }
   }
 
+  private isMonitorRunning(serialMonitor: SerialMonitorsData) {
+    return this.monitors.has(serialMonitor.id)
+  }
+
+  private async onMonitorUpdated(serialMonitor: SerialMonitorsData) {
+    // If the serial port is currently monitored, stop monitoring
+    if (this.isMonitorRunning(serialMonitor) && serialMonitor) {
+      await this.stopMonitoring(serialMonitor)
+    }
+
+    // If the serial port should be monitored, start monitoring (again) with the updated parameters
+    if (serialMonitor.active) {
+      await this.startMonitoring(serialMonitor)
+      logger.info('Started monitoring %s', serialMonitor.port)
+    }
+  }
+
   private async startMonitoring(serialMonitor: SerialMonitorsData): Promise<SerialMonitorsData> {
     // If the port is already monitored, stop that first
-    if (this.monitors.has(serialMonitor.id)) {
+    if (this.isMonitorRunning(serialMonitor)) {
       logger.warn('Serial monitor for port %s already running, stopping the old one first ...', serialMonitor.port)
       await this.stopMonitoring(serialMonitor)
     }
@@ -92,7 +109,7 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
 
   private async stopMonitoring(serialMonitor: SerialMonitorsData): Promise<SerialMonitorsData> {
     return new Promise((resolve, reject) => {
-      if (!this.monitors.has(serialMonitor.id)) {
+      if (!this.isMonitorRunning(serialMonitor)) {
         // No monitor seems to be running for this port
         resolve(serialMonitor)
         return
@@ -137,6 +154,18 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
     await this.bulkStartMonitoring(activeSerialMonitors)
 
     return result;
+  }
+
+  async _update(id: NullableId, data: SerialMonitorsData, params?: Params): Promise<SerialMonitorsData> {
+    const serialMonitor = await super._update(id, data, params);
+    await this.onMonitorUpdated(serialMonitor)
+    return serialMonitor;
+  }
+
+  async _patch(id: NullableId, data: Partial<SerialMonitorsData>, params?: Params): Promise<SerialMonitorsData> {
+    const serialMonitor = await super._patch(id, data, params);
+    await this.onMonitorUpdated(serialMonitor)
+    return serialMonitor;
   }
 
   async _remove(id: NullableId, params?: Params): Promise<SerialMonitorsData> {
