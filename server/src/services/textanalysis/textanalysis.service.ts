@@ -25,14 +25,14 @@ declare module '../../declarations' {
     name: string
 
     /**
-     * Text before this mark is ignored
+     * Text before this mark is ignored. Can be omitted to process the text from the first character.
      */
-    beginningMark: RegExp
+    beginningMark?: RegExp
 
     /**
-     * Text after this mark is ignored
+     * Text after this mark is ignored. Can be omitted to process the text until the last character.
      */
-    endMark: RegExp
+    endMark?: RegExp
 
     /**
      * List of words that should reliably be recognized by OCR. They are passed to the OCR process as a reference which

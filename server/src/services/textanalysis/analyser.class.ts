@@ -22,8 +22,11 @@ export class Analyser {
       }
     }
 
+    // Remove unneeded text
+    let shortenedText = this.shortenText(text, config)
+
     // Break the text into sections
-    let sections = this.splitIntoSections(text, config);
+    let sections = this.splitIntoSections(shortenedText, config);
 
     // Analyse each section
     let matches = new Map<string, string|string[]>()
@@ -74,6 +77,41 @@ export class Analyser {
     return foundTriggerWords
   }
 
+  /**
+   * Shortens the text based on the given beginningMark and endMark of the config.
+   *
+   * @param text
+   * @param config
+   * @private
+   */
+  private shortenText (text: string, config: TextAnalysisConfig): string {
+    let startIndex: number|undefined = undefined
+    if (config.beginningMark) {
+      let index = text.search(config.beginningMark)
+      if (index === -1) {
+        logger.warn('Beginning mark could not be found')
+      } else {
+        startIndex = index;
+      }
+    }
+
+    let endIndex: number|undefined = undefined
+    if (config.endMark) {
+      let index = text.search(config.endMark)
+      if (index === -1) {
+        logger.warn('End mark could not be found')
+      } else {
+        endIndex = index;
+      }
+    }
+
+    if (!startIndex && !endIndex) {
+      return text
+    }
+
+    return text.slice(startIndex, endIndex)
+  }
+
   private splitIntoSections (text: string, config: TextAnalysisConfig) : Map<SectionDefinition, string> {
     const map = new Map<SectionDefinition, string>()
     const sections: string[] = []
@@ -97,9 +135,8 @@ export class Analyser {
       sections.push(previousSection)
     })
 
-    // Everything until the end mark is the last section
-    let [lastSection] = textToSplit.split(config.endMark, 1)
-    sections.push(lastSection)
+    // Everything until the end is the last section
+    sections.push(textToSplit)
 
     if (config.sections.length !== sections.length) {
       logger.warn('Found %d sections, but expected to find %d sections', sections.length, config.sections.length)
