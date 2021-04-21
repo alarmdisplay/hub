@@ -3,6 +3,7 @@ import { Application, SerialDataContext } from '../../declarations';
 import SerialPort from "serialport";
 import logger from '../../logger';
 import { Params, NullableId } from '@feathersjs/feathers';
+import util from 'util';
 
 // @ts-ignore The types for serialport are incomplete
 const InterByteTimeout = SerialPort.parsers.InterByteTimeout;
@@ -67,9 +68,7 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
   }
 
   private onSerialData(data: Buffer, serialMonitor: SerialMonitorsData) {
-    // For debugging purposes, include a code that tells if the data is surrounded by STX and ETX
-    let diagnosticCode = (data.length > 0 && data[0] === 0x2 ? 'Y' : 'N') + (data.length > 0 && data[data.length - 1] === 0x3 ? 'Y' : 'N');
-    logger.debug('Serial data on %s [%s]: "%s"', serialMonitor.port, diagnosticCode, data.toString())
+    logger.debug('Serial data on %s: %s', serialMonitor.port, util.inspect(data.toString()))
 
     let context: SerialDataContext = { serialMonitorId: serialMonitor.id, data: data };
     // @ts-ignore TypeScript does not know that this is an EventEmitter
