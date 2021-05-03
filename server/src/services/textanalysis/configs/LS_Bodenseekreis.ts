@@ -2,27 +2,21 @@ import {TextAnalysisConfig} from '../../../declarations'
 
 export default {
   name: 'LS Bodensee-Oberschwaben',
-  beginningMark: /\u0002/,
-  endMark: /\u0003/,
-  importantWords: [
-    'MSG',
-  ],
+  importantWords: [],
   sections: [
-    {beginningMark: /\u0002/,
+    {
+      beginningMark: /ENR/,
       regexps: [
-        /(?<reason>(\s((.+?)\s){2}))/,
-        /(?<loc_city>\w+,)/,
-        /(?<loc_detail>,\s\w+)/,
-        /(?<=(,\s\w+){1})(?<loc_street>,\s\w+)/,
-        /(?<=(,\s\w+){2})(?<loc_streetnumber>,\s\w+)/,
-        /(?<loc_gk_x>\d+\?\d+'\d+[,.]\d+"),\s.*(?<loc_gk_y>\d+\?\d+'\d+[,.]\d+")/
-
-      ]},
-    {beginningMark: /MSG:/,
+        /:(?<ref>\d+) (?<reason>\S+\s\S+) [^,]+, (?<loc_city>[^,]+), (?<loc_street>[^,]+), (?<loc_streetnumber>[^,]+)/,
+        /, L=(?<loc_wgs84_lon>\d+)\?(?<loc_wgs84_lon_min>\d+)’(?<loc_wgs84_lon_sec>\d+\.\d+)",\sB=(?<loc_wgs84_lat>\d+)\?(?<loc_wgs84_lat_min>\d+)’(?<loc_wgs84_lat_sec>\d+\.\d+)"/
+      ]
+    },
+    {
+      beginningMark: /MSG:/,
       regexps: [
         /(?<description>(?:.|\n)*)/m
-      ]}
-      
+      ]
+    }
   ],
-  triggerWords: ['\u0002']
+  triggerWords: ['ENR']
 } as TextAnalysisConfig
