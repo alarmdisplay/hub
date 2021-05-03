@@ -43,6 +43,15 @@ export class Analyser {
       y: matches.get('loc_gk_y') as string || ''
     }: undefined
 
+    let wgs84 = matches.has('loc_wgs84_lon') && matches.has('loc_wgs84_lat') ? {
+      lon: matches.get('loc_wgs84_lon') as string || '',
+      lon_min: matches.get('loc_wgs84_lon_min') as string || '',
+      lon_sec: matches.get('loc_wgs84_lon_sec') as string || '',
+      lat: matches.get('loc_wgs84_lat') as string || '',
+      lat_min: matches.get('loc_wgs84_lat_min') as string || '',
+      lat_sec: matches.get('loc_wgs84_lat_sec') as string || ''
+    } : undefined
+
     // There might be a more elegant way, but that's for later
     return {
       sender: matches.get('sender') as string || '',
@@ -57,7 +66,8 @@ export class Analyser {
         detail: matches.get('loc_detail') as string || '',
         zip: matches.get('loc_zip') as string || '',
         city: matches.get('loc_city') as string || '',
-        gk: gk
+        gk: gk,
+        wgs84: wgs84
       },
       reason: matches.get('reason') as string || '',
       keyword: matches.get('keyword') as string || '',
