@@ -13,7 +13,7 @@
         <div class="card-content">
             <div class="media">
                 <div class="media-left">
-                    <font-awesome-icon icon="folder" size="3x"/>
+                    <font-awesome-icon icon="folder" style="font-size: 2.5em"/>
                 </div>
                 <div class="media-content">
                     <p class="title is-4">{{ watchedFolder.path }}</p>
@@ -141,7 +141,7 @@ export default {
     },
     textanalysisParams() {
       return {
-        query: { watchedFolderId: this.watchedFolder.id }
+        query: { event: 'found_file', sourceId: this.watchedFolder.id }
       }
     }
   },
@@ -157,7 +157,8 @@ export default {
       let configName = this.$refs['analysis-config-select'].value
       const { TextAnalysis } = this.$FeathersVuex.api
       let textAnalysis = new TextAnalysis()
-      textAnalysis.watchedFolderId = this.watchedFolder.id
+      textAnalysis.sourceId = this.watchedFolder.id
+      textAnalysis.event = 'found_file'
       textAnalysis.config = configName
       textAnalysis.save()
     },

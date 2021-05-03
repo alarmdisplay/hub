@@ -14,7 +14,8 @@ declare module '../../declarations' {
   interface TextAnalysisData {
     id: number
     config: string
-    watchedFolderId: number
+    event: string
+    sourceID: number
   }
 
   interface TextAnalysisConfig {
@@ -24,14 +25,14 @@ declare module '../../declarations' {
     name: string
 
     /**
-     * Text before this mark is ignored
+     * Text before this mark is ignored. Can be omitted to process the text from the first character.
      */
-    beginningMark: RegExp
+    beginningMark?: RegExp
 
     /**
-     * Text after this mark is ignored
+     * Text after this mark is ignored. Can be omitted to process the text until the last character.
      */
-    endMark: RegExp
+    endMark?: RegExp
 
     /**
      * List of words that should reliably be recognized by OCR. They are passed to the OCR process as a reference which
@@ -74,6 +75,12 @@ declare module '../../declarations' {
      * - loc_gk_y: Y component of a Gauss Krueger coordinate of the incident location
      * - loc_street: The street name of the incident location
      * - loc_streetnumber: The street number of the incident location
+     * - loc_wgs84_lat: Latitude of WGS84 coordinate, either as decimal number on its own or as integer if combined with loc_wgs84_lat_min and loc_wgs84_lat_sec
+     * - loc_wgs84_lat_min: Arc minutes in addition to loc_wgs84_lat
+     * - loc_wgs84_lat_sec: Arc seconds in addition to loc_wgs84_lat_min
+     * - loc_wgs84_lon: Longitude of WGS84 coordinate, either as decimal number on its own or as integer if combined with loc_wgs84_lon_min and loc_wgs84_lon_sec
+     * - loc_wgs84_lon_min: Arc minutes in addition to loc_wgs84_lon
+     * - loc_wgs84_lon_sec: Arc seconds in addition to loc_wgs84_lon_min
      * - loc_zip: Postal code of the incident location
      * - reason: Reason for the incident, usually a refinement of `keyword`
      * - ref: A unique identifier or reference number for the incident
@@ -113,11 +120,21 @@ declare module '../../declarations' {
     zip: string
     city: string
     gk?: GaussKruegerText
+    wgs84?: WGS84Text
   }
 
   interface GaussKruegerText {
     x: string
     y: string
+  }
+
+  interface WGS84Text {
+    lon: string
+    lon_min: string
+    lon_sec: string
+    lat: string
+    lat_min: string
+    lat_sec: string
   }
 }
 

@@ -22,8 +22,11 @@ export class Analyser {
       }
     }
 
+    // Remove unneeded text
+    let shortenedText = this.shortenText(text, config)
+
     // Break the text into sections
-    let sections = this.splitIntoSections(text, config);
+    let sections = this.splitIntoSections(shortenedText, config);
 
     // Analyse each section
     let matches = new Map<string, string|string[]>()
@@ -40,6 +43,15 @@ export class Analyser {
       y: matches.get('loc_gk_y') as string || ''
     }: undefined
 
+    let wgs84 = matches.has('loc_wgs84_lon') && matches.has('loc_wgs84_lat') ? {
+      lon: matches.get('loc_wgs84_lon') as string || '',
+      lon_min: matches.get('loc_wgs84_lon_min') as string || '',
+      lon_sec: matches.get('loc_wgs84_lon_sec') as string || '',
+      lat: matches.get('loc_wgs84_lat') as string || '',
+      lat_min: matches.get('loc_wgs84_lat_min') as string || '',
+      lat_sec: matches.get('loc_wgs84_lat_sec') as string || ''
+    } : undefined
+
     // There might be a more elegant way, but that's for later
     return {
       sender: matches.get('sender') as string || '',
@@ -54,7 +66,8 @@ export class Analyser {
         detail: matches.get('loc_detail') as string || '',
         zip: matches.get('loc_zip') as string || '',
         city: matches.get('loc_city') as string || '',
-        gk: gk
+        gk: gk,
+        wgs84: wgs84
       },
       reason: matches.get('reason') as string || '',
       keyword: matches.get('keyword') as string || '',
@@ -74,10 +87,45 @@ export class Analyser {
     return foundTriggerWords
   }
 
+  /**
+   * Shortens the text based on the given beginningMark and endMark of the config.
+   *
+   * @param text
+   * @param config
+   * @private
+   */
+  private shortenText (text: string, config: TextAnalysisConfig): string {
+    let startIndex: number|undefined = undefined
+    if (config.beginningMark) {
+      let index = text.search(config.beginningMark)
+      if (index === -1) {
+        logger.warn('Beginning mark could not be found')
+      } else {
+        startIndex = index;
+      }
+    }
+
+    let endIndex: number|undefined = undefined
+    if (config.endMark) {
+      let index = text.search(config.endMark)
+      if (index === -1) {
+        logger.warn('End mark could not be found')
+      } else {
+        endIndex = index;
+      }
+    }
+
+    if (!startIndex && !endIndex) {
+      return text
+    }
+
+    return text.slice(startIndex, endIndex)
+  }
+
   private splitIntoSections (text: string, config: TextAnalysisConfig) : Map<SectionDefinition, string> {
     const map = new Map<SectionDefinition, string>()
     const sections: string[] = []
-    let textToSplit = text
+    let textToSplit = text + ''
     config.sections.forEach((section, index) => {
       const [previousSection, rest] = textToSplit.split(section.beginningMark, 2)
 
@@ -97,9 +145,8 @@ export class Analyser {
       sections.push(previousSection)
     })
 
-    // Everything until the end mark is the last section
-    let [lastSection] = textToSplit.split(config.endMark, 1)
-    sections.push(lastSection)
+    // Everything until the end is the last section
+    sections.push(textToSplit)
 
     if (config.sections.length !== sections.length) {
       logger.warn('Found %d sections, but expected to find %d sections', sections.length, config.sections.length)

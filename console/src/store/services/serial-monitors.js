@@ -1,24 +1,25 @@
 import feathersClient, { makeServicePlugin, BaseModel } from '../../feathers-client'
 
-class TextAnalysis extends BaseModel {
+class SerialMonitor extends BaseModel {
   constructor(data, options) {
     super(data, options)
   }
 
-  static modelName = 'TextAnalysis'
+  static modelName = 'SerialMonitor'
 
   static instanceDefaults() {
     return {
-      config: '',
-      event: '',
-      sourceId: null,
+      port: '',
+      baudRate: 9600,
+      active: true,
+      timeout: 1000
     }
   }
 }
 
-const servicePath = 'textanalysis'
+const servicePath = 'serial-monitors'
 const servicePlugin = makeServicePlugin({
-  Model: TextAnalysis,
+  Model: SerialMonitor,
   service: feathersClient.service(servicePath),
   servicePath
 })
