@@ -134,7 +134,7 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     logger.debug('Checked for known resources, found %d', resources.length)
 
     let IncidentsService = this.app.service('incidents')
-    let incident = await IncidentsService.processAlert({
+    await IncidentsService.processAlert({
       caller_name: result.caller.name,
       caller_number: result.caller.number,
       description: result.description,
@@ -145,6 +145,5 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       resources: resources,
       sender: result.sender
     }, alertContext)
-    logger.debug(incident)
   }
 }
