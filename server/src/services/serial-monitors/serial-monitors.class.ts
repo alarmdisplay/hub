@@ -70,6 +70,14 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
   private onSerialData(data: Buffer, serialMonitor: SerialMonitorsData) {
     logger.debug('Serial data on %s: %s', serialMonitor.port, util.inspect(data.toString()))
 
+    // Strip STX and ETX characters, if any
+    if (data[0] === 0x2) {
+      data = data.slice(1)
+    }
+    if (data[data.length - 1] === 0x3) {
+      data = data.slice(0, -1)
+    }
+
     let context: SerialDataContext = { serialMonitorId: serialMonitor.id, data: data };
     // @ts-ignore TypeScript does not know that this is an EventEmitter
     this.emit('serial_data', context)
