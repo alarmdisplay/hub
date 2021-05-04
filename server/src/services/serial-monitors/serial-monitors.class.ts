@@ -19,11 +19,13 @@ interface SerialMonitorsData {
 export class SerialMonitors extends Service<SerialMonitorsData> {
   private app: Application
   private monitors: Map<Number, SerialPort>
+  private refuseNewMonitors: boolean
 
   constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
     super(options);
     this.app = app
     this.monitors = new Map<Number, SerialPort>()
+    this.refuseNewMonitors = false
   }
 
   setup (app: Application) {
@@ -34,6 +36,18 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
       .catch(reason => {
         logger.error('Could not query serial ports to monitor: ', reason.message)
       })
+  }
+
+  onExit() {
+    this.refuseNewMonitors = true
+
+    if (this.monitors.size > 0) {
+      logger.debug('Closing all serial ports ...')
+      for (const monitor of this.monitors.values()) {
+        // Best effort: Close monitors without callback, as asynchronous events will not run in the 'exit' phase
+        monitor.close()
+      }
+    }
   }
 
   private async bulkStartMonitoring(serialMonitors: SerialMonitorsData[]) {
@@ -84,6 +98,10 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
   }
 
   private async startMonitoring(serialMonitor: SerialMonitorsData): Promise<SerialMonitorsData> {
+    if (this.refuseNewMonitors) {
+      throw new Error('New serial monitors may not be started at this point in time')
+    }
+
     // If the port is already monitored, stop that first
     if (this.isMonitorRunning(serialMonitor)) {
       logger.warn('Serial monitor for port %s already running, stopping the old one first ...', serialMonitor.port)
