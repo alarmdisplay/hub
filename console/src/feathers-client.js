@@ -9,7 +9,7 @@ const socket = io({transports: ['websocket']})
 
 const feathersClient = feathers()
   .configure(socketio(socket))
-  .configure(auth({ storage: window.localStorage }))
+  .configure(auth({ storage: window.localStorage, storageKey: 'hub-console-jwt' }))
   /*.hooks({
     before: {
       all: [
