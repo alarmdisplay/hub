@@ -1,0 +1,27 @@
+FROM ubuntu:20.04
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    git \
+    imagemagick \
+    nodejs \
+    npm \
+    tesseract-ocr-deu \
+    && rm -rf /var/lib/apt/lists/*
+
+# allow ImageMagick to process PDFs
+RUN sed -i '$i\ \ <policy domain="coder" rights="read" pattern="PDF" />' /etc/ImageMagick-6/policy.xml
+
+RUN groupadd --gid 1000 node \
+  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+
+WORKDIR /home/node/app
+COPY ./build/package.json ./build/package-lock.json /home/node/app/
+RUN npm ci --only=production --no-audit
+
+COPY ./build /home/node/app
+
+EXPOSE 3030
+ENV NODE_ENV production
+ENV NODE_CONFIG_ENV docker
+USER node
+CMD [ "node", "index.js" ]
