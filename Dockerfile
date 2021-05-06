@@ -30,7 +30,7 @@ RUN npm run compile
 FROM prebuilder
 
 RUN groupadd --gid 1000 node \
-  && useradd --uid 1000 --gid node --shell /bin/bash --create-home node
+  && useradd --uid 1000 --gid node -G dialout --shell /bin/bash --create-home node
 
 WORKDIR /home/node/app
 COPY ./server/package.json ./server/package-lock.json /home/node/app/
