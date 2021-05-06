@@ -81,8 +81,8 @@ export default {
       let errorToShow = this.loginError ? this.loginError : this.$store.state.auth.errorOnAuthenticate
 
       if (errorToShow) {
-        if (errorToShow.message === 'No accessToken found in storage') {
-          // Not really an error, this is just the first login
+        if (errorToShow.message === 'No accessToken found in storage' || errorToShow.message.includes('expired')) {
+          // Not really an error, there is just no valid session token in local storage
           return undefined
         } else if (errorToShow.message === 'Invalid login') {
           errorToShow.message = 'Zugangsdaten ungültig'
