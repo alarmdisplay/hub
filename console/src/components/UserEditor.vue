@@ -42,7 +42,7 @@ export default {
   },
   computed: {
     isNewItem: function () {
-      return this.item.id !== undefined
+      return this.item.id === undefined
     }
   },
   methods: {
