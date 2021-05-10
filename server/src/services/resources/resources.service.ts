@@ -17,7 +17,7 @@ declare module '../../declarations' {
     type: ResourceType
     createdAt: Date
     updatedAt: Date
-    resources: ResourceIdentifierData[]
+    identifiers: ResourceIdentifierData[]
   }
 
   enum ResourceType {

@@ -21,6 +21,12 @@ class Resource extends BaseModel {
     }
     return data
   }
+
+  clone (data) {
+    let clone = super.clone(data)
+    clone.identifiers = clone.identifiers.map(identifier => identifier.clone())
+    return clone
+  }
 }
 
 const servicePath = 'resources'
