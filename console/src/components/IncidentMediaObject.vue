@@ -5,14 +5,19 @@
             <IncidentSummary v-else :incident="incident"/>
         </div>
         <div class="media-right">
-            <button type="button" class="button" @click="showDetails = !showDetails">
+            <div class="buttons">
+                <button type="button" class="button" @click="showDetails = !showDetails">
                 <span>
                     {{ showDetails ? 'Verstecke Details' : 'Zeige Details' }}
                 </span>
-                <span class="icon">
+                    <span class="icon">
                     <font-awesome-icon :icon="showDetails ? 'chevron-up' : 'chevron-down'"/>
                 </span>
-            </button>
+                </button>
+                <router-link tag="button" class="button" :to="{ name: 'incident-form', params: { id: incident.id } }" title="Einsatz bearbeiten">
+                    <span class="icon"><font-awesome-icon icon="edit"/></span>
+                </router-link>
+            </div>
         </div>
     </div>
 </template>

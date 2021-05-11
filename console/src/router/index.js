@@ -12,6 +12,8 @@ import SerialMonitorForm from '@/views/input/SerialMonitorForm'
 import UserList from '../views/admin/UserList'
 import UserForm from '@/views/admin/UserForm'
 import WatchedFolderForm from '@/views/input/WatchedFolderForm'
+import IncidentList from '@/views/IncidentList'
+import IncidentForm from '@/views/IncidentForm'
 
 Vue.use(VueRouter)
 
@@ -25,6 +27,16 @@ Vue.use(VueRouter)
       path: '/about',
       name: 'About',
       component: About
+    },
+    {
+      path: '/incidents',
+      name: 'incident-list',
+      component: IncidentList
+    },
+    {
+      path: '/incidents/:id',
+      name: 'incident-form',
+      component: IncidentForm
     },
     {
       path: '/input',
