@@ -16,6 +16,7 @@
                     <tr>
                         <th>Einsatzgrund</th>
                         <th>Stichwort</th>
+                        <th>Einsatzort</th>
                         <th class="has-text-right">Alarmzeitpunkt</th>
                         <th>Aktionen</th>
                     </tr>
@@ -25,6 +26,7 @@
                         <tr :key="incident.id">
                             <th>{{ incident.reason }}</th>
                             <td>{{ incident.keyword }}</td>
+                            <td class="incident-location">{{ incident.location ? [incident.location.locality, incident.location.street].join('\n') : '' }}</td>
                             <td class="has-text-right">{{ incident.time | moment('LLL') }}</td>
                             <td class="is-narrow">
                                 <div class="field is-grouped">
@@ -55,4 +57,7 @@
 </script>
 
 <style scoped>
+.incident-location {
+    white-space: pre-line;
+}
 </style>
