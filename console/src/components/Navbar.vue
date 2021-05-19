@@ -12,7 +12,7 @@
             <div class="navbar-start">
                 <router-link tag="a" class="navbar-item is-tab" to="/" active-class="is-active" exact>
                     <span class="icon"><font-awesome-icon icon="home"/></span>
-                    <span>Home</span>
+                    <span>&Uuml;bersicht</span>
                 </router-link>
 
                 <router-link tag="a" class="navbar-item is-tab" :to="{ name: 'input' }" active-class="is-active">

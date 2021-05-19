@@ -116,6 +116,7 @@ export class Locations extends Service<LocationData> {
       throw new Error('No results were given')
     }
 
+    // TODO determine best result based on scores or by looking for buildings/addresses with least deviation
     return results[0]
   }
 

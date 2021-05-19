@@ -21,12 +21,7 @@ export default {
     all: [ allowApiKey(), authenticate('jwt', 'api-key') ],
     find: [],
     get: [],
-    create: [ (context: HookContext) => {
-      const sequelize = context.app.get('sequelizeClient');
-      const ResourceIdentifier  = sequelize.models.resource_identifier;
-      context.params.sequelize = { include: [ { model: ResourceIdentifier, as: 'identifiers' } ] };
-      return context
-    }],
+    create: [ includeIdentifiers ],
     update: [],
     patch: [],
     remove: []
@@ -52,3 +47,14 @@ export default {
     remove: []
   }
 };
+
+/**
+ * Automatically create nested resource identifiers when creating a resource
+ * @param context
+ */
+function includeIdentifiers(context: HookContext): HookContext {
+  const sequelize = context.app.get('sequelizeClient');
+  const ResourceIdentifier = sequelize.models.resource_identifier;
+  context.params.sequelize = { include: [ { model: ResourceIdentifier, as: 'identifiers' } ] };
+  return context
+}
