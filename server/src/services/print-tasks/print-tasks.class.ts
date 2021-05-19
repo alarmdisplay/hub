@@ -35,6 +35,8 @@ export class PrintTasks extends Service<PrintTaskData> {
         }
       }
 
+      command += '-o fit-to-page '
+
       // If the number of copies is a valid parameter, add it to the command
       if (Number.isInteger(printTask.numberCopies) && printTask.numberCopies > 0 && printTask.numberCopies < 128) {
         command += `-n ${printTask.numberCopies} `
