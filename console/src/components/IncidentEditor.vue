@@ -63,8 +63,6 @@
             </div>
         </div>
 
-        <hr class="has-background-grey-light">
-
         <div class="field is-horizontal">
             <div class="field-label is-normal">
                 <label class="label" for="caller_name">Meldende Person</label>
@@ -105,6 +103,85 @@
             </div>
         </div>
 
+        <fieldset v-if="item.location">
+            <legend>Einsatzort</legend>
+            <button type="button" class="button" @click.prevent="item.location = null">Einsatzort entfernen</button>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label" for="sender">Adresse</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" type="text" id="street" v-model="item.location.street">
+                        </div>
+                        <p class="help">Straße</p>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" type="text" id="street-number" size="5" v-model="item.location.number">
+                        </div>
+                        <p class="help">Hausnummer</p>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" type="text" id="detail" v-model="item.location.detail">
+                        </div>
+                        <p class="help">Detaillierte Angabe, z.&nbsp;B. Stockwerk</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label" for="locality">Ort</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" type="text" id="post-code" size="5" v-model="item.location.postCode">
+                        </div>
+                        <p class="help">Postleitzahl</p>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" type="text" id="locality" v-model="item.location.locality">
+                        </div>
+                        <p class="help">Stadt, Ort oder Ortsteil</p>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" type="text" id="country" v-model="item.location.country">
+                        </div>
+                        <p class="help">Land</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label class="label" for="locality">Koordinaten (WGS84)</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" type="text" id="longitude" v-model.number="item.location.longitude">
+                        </div>
+                        <p class="help">Längengrad (dezimal)</p>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" type="text" id="latitude" v-model.number="item.location.latitude">
+                        </div>
+                        <p class="help">Breitengrad (dezimal)</p>
+                    </div>
+                </div>
+            </div>
+        </fieldset>
+        <button v-else type="button" class="button" @click="addLocation">
+            Einsatzort hinzufügen
+        </button>
+
         <div class="level mt-5">
             <div class="level-left">
                 <div class="buttons">
@@ -142,6 +219,10 @@ export default {
     return {}
   },
   methods: {
+    addLocation () {
+      const { Location } = this.$FeathersVuex.api
+      this.item.location = new Location()
+    },
     isValid: function () {
       // For now the form is also valid if it is completely empty
       return true
@@ -161,4 +242,13 @@ export default {
 </script>
 
 <style scoped>
+fieldset {
+    border: 1px solid gray;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+fieldset > legend {
+    padding: 0 0.5em;
+}
 </style>
