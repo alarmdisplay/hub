@@ -9,7 +9,7 @@ class Incident extends BaseModel {
 
   static instanceDefaults() {
     return {
-      time: new Date(),
+      time: undefined,
       sender: '',
       ref: '',
       caller_name: '',
