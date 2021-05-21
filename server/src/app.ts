@@ -27,9 +27,8 @@ const app: Application = express(feathers());
 // Load app configuration
 app.configure(configuration());
 app.set('devMode', !process.env.NODE_ENV || process.env.NODE_ENV === 'development');
-if (app.get('devMode')) {
-  logger.level = 'debug';
-}
+logger.level = app.get('logging').level;
+logger.info('Logging level is \'%s\'', logger.level);
 
 // Enable security, CORS, compression, favicon and body parsing
 app.use(helmet());
