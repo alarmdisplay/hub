@@ -10,12 +10,12 @@
 
         <div ref="navbarmenu" class="navbar-menu">
             <div class="navbar-start">
-                <router-link tag="a" class="navbar-item is-tab" to="/" active-class="is-active" exact>
+                <router-link tag="a" class="navbar-item is-tab" to="/" exact>
                     <span class="icon"><font-awesome-icon icon="home"/></span>
                     <span>&Uuml;bersicht</span>
                 </router-link>
 
-                <router-link tag="a" class="navbar-item is-tab" :to="{ name: 'input' }" active-class="is-active">
+                <router-link tag="a" class="navbar-item is-tab" :to="{ name: 'input' }">
                     <span class="icon"><font-awesome-icon icon="inbox"/></span>
                     <span>Eingang</span>
                 </router-link>
@@ -27,7 +27,7 @@
                     </a>
 
                     <div class="navbar-dropdown">
-                        <router-link tag="a" class="navbar-item" :to="{ name: 'resource-list' }" active-class="is-active">
+                        <router-link tag="a" class="navbar-item" :to="{ name: 'resource-list' }">
                             <span class="icon"><font-awesome-icon icon="truck"/></span>
                             <span>Einsatzmittel</span>
                         </router-link>
