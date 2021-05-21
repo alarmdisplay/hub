@@ -10,7 +10,7 @@
                 </router-link>
             </div>
 
-            <FeathersVuexFind service="incidents" :query="{ $sort: { time: -1 } }" qid="incidentList" watch="query">
+            <FeathersVuexFind service="incidents" :query="{ $sort: { time: -1 }, $limit: 30 }" qid="incidentList" watch="query">
                 <table class="table is-fullwidth" slot-scope="{ items: incidents }">
                     <thead>
                     <tr>
