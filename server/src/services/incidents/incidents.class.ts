@@ -1,11 +1,8 @@
-import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
+import { Service } from 'feathers-sequelize';
 import {AlertContext, AlertData, Application, IncidentData, LocationData} from '../../declarations';
 import logger from "../../logger";
 import {IncidentCategory, IncidentStatus} from "./incidents.service";
 import { NullableId, Params } from "@feathersjs/feathers";
-
-// Maximum age of an incident, before a new one gets created
-const MAX_AGE = process.env.NODE_ENV && process.env.NODE_ENV === 'production' ? 15 * 60 * 1000 : 60 * 1000;
 
 /**
  * The properties of an incident, that can be updated or filled by later alerts
@@ -13,10 +10,22 @@ const MAX_AGE = process.env.NODE_ENV && process.env.NODE_ENV === 'production' ? 
 const updatableProperties = ['ref', 'sender', 'caller_name', 'caller_number', 'reason', 'keyword', 'description'];
 
 export class Incidents extends Service<IncidentData> {
-  private app: Application;
-  constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
-    super(options);
+  private app!: Application;
+
+  /**
+   * A duration in milliseconds, during which a new incident may be updated by a new alert that has no unique identifier.
+   * @private
+   */
+  private maxAge!: number;
+
+  async setup(app: Application) {
+    let fallbackConfig = {
+      minutesBeforeNewIncident: 15
+    };
+
     this.app = app;
+    let config = app.get('incidents') || fallbackConfig;
+    this.maxAge = config.minutesBeforeNewIncident * 60 * 1000;
   }
 
   async _patch(id: NullableId, data: Partial<IncidentData>, params?: Params): Promise<IncidentData> {
@@ -138,7 +147,7 @@ export class Incidents extends Service<IncidentData> {
     // Find the most recent incident that is not yet too old
     const recentIncidents = await this.find({
       query: {
-        time: { $gt: new Date().getTime() - MAX_AGE },
+        time: { $gt: new Date().getTime() - this.maxAge },
         $limit: 1,
         $sort: { time: -1 }
       },

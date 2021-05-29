@@ -1,4 +1,7 @@
 {
+  "incidents": {
+    "minutesBeforeNewIncident": 1
+  },
   "logging": {
     "level": "debug"
   }
