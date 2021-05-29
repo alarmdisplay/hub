@@ -68,7 +68,7 @@ export class Incidents extends Service<IncidentData> {
     }
 
     // Process the location if it is a new incident or the existing one does not have a location record
-    let locationData
+    let locationData = null
     if (alert.location && (incidentToUpdate === false || !existingIncidentHasLocation)) {
       locationData = await LocationsService.processRawLocation(alert.location)
       logger.debug('Processed location')
