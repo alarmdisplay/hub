@@ -95,7 +95,7 @@ export default function (app: Application): void {
   };
 
   // Initialize our service with any options it requires
-  app.use('/incidents', new Incidents(options, app));
+  app.use('/incidents', new Incidents(options));
 
   // Get our initialized service so that we can register hooks
   const service = app.service('incidents');
