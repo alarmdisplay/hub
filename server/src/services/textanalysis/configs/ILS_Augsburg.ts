@@ -55,7 +55,7 @@ export default {
       ]
     },
     {
-      beginningMark: /EINSATZMITTEL/,
+      beginningMark: /EINSATZMITI?TEL/,
       regexps: [
         /(?<resources>.*) \(Ausger/
       ]
