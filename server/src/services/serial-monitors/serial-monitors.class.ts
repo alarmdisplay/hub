@@ -51,15 +51,12 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
   }
 
   private async bulkStartMonitoring(serialMonitors: SerialMonitorsData[]) {
-    let serialMonitorPromises = serialMonitors.map(serialMonitor => this.startMonitoring(serialMonitor));
-    // @ts-ignore Function allSettled() seems to be unknown
-    let results = await Promise.allSettled(serialMonitorPromises);
-
-    for (const result of results) {
-      if (result.status === "fulfilled") {
-        logger.info('Started monitoring %s', result.value.port)
-      } else {
-        logger.error('Could not start monitoring: ', result.reason.message)
+    for (const serialMonitor of serialMonitors) {
+      try {
+        await this.startMonitoring(serialMonitor);
+        logger.info('Started monitoring %s', serialMonitor.port)
+      } catch (error) {
+        logger.error('Could not start monitoring: ', error.message)
       }
     }
   }
