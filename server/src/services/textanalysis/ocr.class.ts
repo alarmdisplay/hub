@@ -5,6 +5,9 @@ import * as os from 'os'
 import * as path from 'path'
 import { Application, TextAnalysisConfig } from '../../declarations'
 import logger from '../../logger'
+import util from 'util';
+
+const execAsync = util.promisify(cp.exec);
 
 export class Ocr {
   app: Application;
@@ -44,14 +47,14 @@ export class Ocr {
     await this.generateUserWords(workDir, textAnalysisConfig)
 
     // Convert the PDF file into a TIF image
-    cp.execSync('convert -density 204x196 in.pdf -type Grayscale -compress lzw -background white in.tif', { cwd: workDir })
+    await execAsync('convert -density 204x196 in.pdf -type Grayscale -compress lzw -background white in.tif', { cwd: workDir });
 
     logger.debug('PDF converted, starting OCR')
     let text: string = ''
     try {
-      text = this.doOcr(workDir);
+      text = await this.doOcr(workDir);
     } catch (error) {
-      logger.error('OCR error:', error)
+      logger.error('OCR error:', error.message)
     } finally {
       // In order to use a file multiple times during development, remove the working directory so it can be recreated
       if (this.app.get('devMode')) {
@@ -62,12 +65,15 @@ export class Ocr {
     return text
   }
 
-  private doOcr(workDir: string): string {
-    let buffer = cp.execSync(
+  private async doOcr(workDir: string): Promise<string> {
+    const result = await execAsync(
       'tesseract in.tif stdout --psm 6 -l deu --user-words words.txt',
-      { cwd: workDir, stdio: [undefined, undefined, this.app.get('devMode') ? 2 : 'ignore'] }
+      { cwd: workDir }
     );
-    return buffer.toString();
+    if (result.stderr) {
+      logger.debug('tesseract stderr:', result.stderr)
+    }
+    return result.stdout;
   }
 
   /**
