@@ -1,6 +1,10 @@
 <template>
     <nav class="navbar is-dark" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
+            <span class="navbar-item has-text-weight-bold">
+                Zentrale
+            </span>
+
             <a role="button" ref="hamburger" class="navbar-burger burger" aria-label="menu" aria-expanded="false" @click.prevent="toggleMenu">
                 <span aria-hidden="true"></span>
                 <span aria-hidden="true"></span>
@@ -43,7 +47,7 @@
                     <div class="navbar-dropdown">
                         <router-link class="navbar-item" :to="{ name: 'display' }">
                             <span class="icon"><font-awesome-icon icon="desktop"/></span>
-                            <span>Alarmanzeige</span>
+                            <span>Anzeige</span>
                         </router-link>
                     </div>
                 </div>
