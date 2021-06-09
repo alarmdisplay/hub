@@ -11,10 +11,11 @@ class User extends BaseModel {
     return {
       name: '',
       email: '',
-      get displayName() {
-        return this.name || this.email
-      }
     }
+  }
+
+  get displayName() {
+    return this.name || this.email
   }
 }
 

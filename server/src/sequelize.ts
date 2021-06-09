@@ -1,8 +1,18 @@
-import { Sequelize } from 'sequelize';
-import { Application } from './declarations';
+import {Sequelize} from 'sequelize';
+import {Application} from './declarations';
+import Umzug from 'umzug';
+import * as path from 'path';
+import logger from "./logger";
 
 export default function (app: Application) {
   const connectionString = app.get('mysql');
+  if (!connectionString || connectionString === '') {
+    throw new Error('The config \'mysql\' has not been set');
+  }
+  if (connectionString === 'MYSQL_URI') {
+    throw new Error('The environment variable MYSQL_URI has not been set');
+  }
+
   const sequelize = new Sequelize(connectionString, {
     dialect: 'mysql',
     logging: false,
@@ -13,6 +23,11 @@ export default function (app: Application) {
   const oldSetup = app.setup;
 
   app.set('sequelizeClient', sequelize);
+
+  // Set up a global Promise to check if the database is ready
+  app.set('databaseReady', new Promise(resolve => {
+    app.set('databaseReadyResolve', resolve);
+  }));
 
   app.setup = function (...args) {
     const result = oldSetup.apply(this, args);
@@ -25,8 +40,36 @@ export default function (app: Application) {
       }
     });
 
-    // Sync to the database
-    app.set('sequelizeSync', sequelize.sync());
+    // Initialize Umzug, used for database migrations
+    const umzug = new Umzug({
+      migrations: {
+        // indicates the folder containing the migration .js files
+        path: path.join(__dirname, './migrations'),
+        // inject sequelize's QueryInterface in the migrations
+        params: [
+          sequelize.getQueryInterface(),
+          app
+        ]
+      },
+      storage: 'sequelize',
+      storageOptions: { sequelize }
+    });
+
+    // Migrate and sync to the database
+    app.set('sequelizeSync', sequelize.authenticate().then(() => {
+      logger.info('Connected to database');
+      return umzug.up();
+    }, (reason: Error) => {
+      logger.error('Database connection failed:', reason.message);
+      process.exit(1);
+    }).then(() => {
+      logger.info('Database migration successful');
+      // Resolve the databaseReady Promise
+      app.get('databaseReadyResolve')();
+    }).catch((reason: Error) => {
+      logger.error('Database migration failed:', reason.message);
+      process.exit(2);
+    }));
 
     return result;
   };

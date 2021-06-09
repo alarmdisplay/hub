@@ -11,7 +11,7 @@ class Resource extends BaseModel {
     return {
       identifiers: [],
       name: '',
-      type: 'VEHICLE'
+      type: 'vehicle'
     }
   }
 
@@ -20,6 +20,12 @@ class Resource extends BaseModel {
       data.identifiers = data.identifiers.map(identifier => new models.api.ResourceIdentifier(identifier))
     }
     return data
+  }
+
+  clone (data) {
+    let clone = super.clone(data)
+    clone.identifiers = clone.identifiers.map(identifier => identifier.clone())
+    return clone
   }
 }
 

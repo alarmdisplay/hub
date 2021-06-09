@@ -1,11 +1,11 @@
 // See http://docs.sequelizejs.com/en/latest/docs/models-definition/
 // for more of what you can do here.
-import { Sequelize, DataTypes } from 'sequelize';
+import { DataTypes, Sequelize } from 'sequelize';
 import { Application } from '../declarations';
 
 export default function (app: Application) {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  const watchedFolders = sequelizeClient.define('watchedfolders', {
+  return sequelizeClient.define('watched_folder', {
     path: {
       type: DataTypes.STRING,
       allowNull: false
@@ -28,12 +28,4 @@ export default function (app: Application) {
     },
     tableName: [app.get('db_prefix'), 'watched_folders'].join('_')
   });
-
-  // eslint-disable-next-line no-unused-vars
-  (watchedFolders as any).associate = function (models: any) {
-    // Define associations here
-    // See http://docs.sequelizejs.com/en/latest/docs/associations/
-  };
-
-  return watchedFolders;
 }

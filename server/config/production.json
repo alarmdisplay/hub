@@ -1,5 +1,3 @@
 {
-  "port": "PORT",
-  "mysql": "",
   "validate_location": false
 }

@@ -26,9 +26,18 @@
             </p>
             <p class="help">Regelmäßig den Inhalt des Ordners abfragen, anstatt auf Benachrichtigungen des Betriebssystems zu warten. Dies kann für eingebundene Netzlaufwerke erforderlich sein.</p>
         </div>
-        <div class="buttons is-right">
-            <button class="button" type="button" @click="$emit('reset')">Zur&uuml;cksetzen</button>
-            <button class="button is-success" type="submit" :disabled="!isValid()">Speichern</button>
+        <div class="level">
+            <div class="level-left">
+                <div class="buttons">
+                    <button class="button level-item is-danger is-outlined" v-if="!isNewItem" type="button" @click="$emit('remove')">Überwachung beenden</button>
+                </div>
+            </div>
+            <div class="level-right">
+                <div class="buttons">
+                    <button class="button level-item" type="button" @click="$emit('reset')">Zur&uuml;cksetzen</button>
+                    <button class="button level-item is-success" type="submit" :disabled="!isValid()">Speichern</button>
+                </div>
+            </div>
         </div>
     </form>
 </template>
@@ -40,6 +49,11 @@ export default {
     item: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    isNewItem: function () {
+      return this.item.id === undefined
     }
   },
   methods: {

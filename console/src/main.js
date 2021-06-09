@@ -11,25 +11,42 @@ import VueMoment from 'vue-moment'
 require('moment/locale/de')
 Vue.use(VueMoment, { moment })
 
-// Import Font Awesome
-import { library } from '@fortawesome/fontawesome-svg-core'
-import {
-  faBell, faBuilding, faCheck, faChevronLeft, faChevronRight, faCogs, faDesktop, faEdit, faEnvelope, faFileAlt, faFolder, faHome,
-  faInbox, faInfoCircle, faKey, faLock, faPaperPlane, faPause, faPlay, faPlus, faQuestionCircle, faSignOutAlt, faStop,
-  faTimes, faTools, faTrashAlt, faTruck, faUser, faUserEdit, faUserMinus, faUserPlus, faUsers, faUserTag, faWrench
-} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
-// Configure Font Awesome
-library.add(faBell, faBuilding, faCheck, faChevronLeft, faChevronRight, faCogs, faDesktop, faEdit, faEnvelope, faFileAlt, faFolder,
-  faHome, faInbox, faInfoCircle, faKey, faLock, faPaperPlane, faPause, faPlay, faPlus, faQuestionCircle, faSignOutAlt,
-  faStop, faTimes, faTrashAlt, faTools,faTruck, faUser, faUserEdit, faUserMinus, faUserPlus, faUsers,faUserTag, faWrench)
+// Load Font Awesome
+import FontAwesomeIcon from './font-awesome'
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
 
+Vue.filter('durationAsDigits', function (seconds) {
+  function twoDigits (value) {
+    let strValue = String(value)
+    if (strValue.length === 1) {
+      strValue = `0${value}`
+    }
+    return strValue
+  }
+
+  if (seconds < 3600) {
+    return `${twoDigits(Math.trunc(seconds / 60))}:${twoDigits(seconds % 60)}`
+  } else {
+    const secondsOfHour = seconds % 3600
+    return `${twoDigits(Math.trunc(seconds / 3600))}:${twoDigits(Math.trunc(secondsOfHour / 60))}:${twoDigits(secondsOfHour % 60)}`
+  }
+})
+
 new Vue({
   router,
   store,
+  data: {
+    seconds: Math.floor(Date.now() / 1000)
+  },
+  mounted () {
+    setInterval(this.updateSeconds, 1000)
+  },
+  methods: {
+    updateSeconds () {
+      this.seconds = Math.floor(Date.now() / 1000)
+    }
+  },
   render: h => h(App)
 }).$mount('#app')

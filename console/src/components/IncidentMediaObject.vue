@@ -1,22 +1,35 @@
 <template>
-    <div class="media-content">
-        <div class="content">
-            <p class="is-size-4">
-                <span :class="['tag', 'is-warning is-medium', incident.keyword ? '' : 'is-light']">{{ incident.keyword || '?' }}</span>&nbsp;
-                <strong>{{ incident.reason || 'Grund unbekannt' }}</strong>
-            </p>
-            <p v-if="incident.description !== ''">{{ incident.description }}</p>
-            <small :class="[isRecent ? 'has-text-danger has-text-weight-bold' : '']">{{ incident.time | moment("from", 'now') }}</small>
+    <div class="media">
+        <div class="media-content">
+            <IncidentDetails v-if="showDetails" :incident="incident"/>
+            <IncidentSummary v-else :incident="incident"/>
+        </div>
+        <div class="media-right">
+            <div class="buttons">
+                <button type="button" class="button" @click="showDetails = !showDetails">
+                <span>
+                    {{ showDetails ? 'Verstecke Details' : 'Zeige Details' }}
+                </span>
+                    <span class="icon">
+                    <font-awesome-icon :icon="showDetails ? 'chevron-up' : 'chevron-down'"/>
+                </span>
+                </button>
+                <router-link tag="button" class="button" :to="{ name: 'incident-form', params: { id: incident.id } }" title="Einsatz bearbeiten">
+                    <span class="icon"><font-awesome-icon icon="edit"/></span>
+                </router-link>
+            </div>
         </div>
     </div>
 </template>
 <script>
+import IncidentSummary from '@/components/IncidentSummary'
+import IncidentDetails from '@/components/IncidentDetails'
 export default {
   name: 'IncidentMediaObject',
-  computed: {
-    isRecent: function () {
-      // Check if the incident began within the last hour
-      return Date.now() - this.incident.time.getTime() < 3600000
+  components: { IncidentDetails, IncidentSummary },
+  data() {
+    return {
+      showDetails: false
     }
   },
   props: {

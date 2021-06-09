@@ -10,23 +10,34 @@
                         <p class="has-text-weight-bold">
                             <EditableText :item="resource" prop="name"/>
                         </p>
-                        <p v-show="resource.identifiers.length">
-                            Alternative Namen:
-                            <span class="tags">
-
-                            <template v-for="identifier in resource.identifiers">
-                                <span class="tag" :key="identifier.id">{{ identifier.value }}</span>
-                            </template>
-                            </span>
-                        </p>
+                        <div class="level">
+                            <div class="level-left">
+                                <div class="level-item" title="Anzahl hinterlegter Schleifen">
+                                    <span :class="['icon-text', selcalls.length ? '' : 'has-text-grey-light']">
+                                        <span class="icon">
+                                            <font-awesome-icon icon="pager"/>
+                                        </span>
+                                        <span>{{ selcalls.length }}</span>
+                                    </span>
+                                </div>
+                                <div class="level-item" title="Anzahl hinterlegter alternativer Bezeichnungen">
+                                    <span :class="['icon-text', altNames.length ? '' : 'has-text-grey-light']">
+                                        <span class="icon">
+                                            <font-awesome-icon icon="tag"/>
+                                        </span>
+                                        <span>{{ altNames.length }}</span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="media-right">
-                    <button class="button is-small is-danger is-outlined" title="Einsatzmittel entfernen" @click="resource.remove()">
+                    <router-link tag="button" class="button" :to="{ name: 'resource-form', params: { id: resource.id } }" title="Einsatzmittel bearbeiten">
                         <span class="icon">
-                            <font-awesome-icon icon="trash-alt"/>
+                            <font-awesome-icon icon="edit"/>
                         </span>
-                    </button>
+                    </router-link>
                 </div>
             </article>
         </div>
@@ -35,11 +46,30 @@
 <script>
 import ResourceIcon from '@/components/ResourceIcon'
 import EditableText from '@/components/EditableText'
+import { makeFindMixin } from 'feathers-vuex'
 export default {
   name: 'ResourceCard',
   components: { EditableText, ResourceIcon },
+  computed: {
+    altNamesParams() {
+      return { query: { resourceId: this.resource.id, type: "name" } }
+    },
+    selcallsParams() {
+      return { query: { resourceId: this.resource.id, type: "selcall" } }
+    },
+  },
+  mixins: [
+    makeFindMixin({ service: 'resource-identifiers', name: "altNames", local: true }),
+    makeFindMixin({ service: 'resource-identifiers', name: "selcalls", local: true }),
+  ],
   props: {
-    resource: {}
+    resource: Object
   }
 }
 </script>
+<style>
+.media-left {
+    text-align: center;
+    width: 40px;
+}
+</style>

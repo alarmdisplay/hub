@@ -1,15 +1,18 @@
-import {Id, NullableId, Paginated, Params, ServiceMethods} from '@feathersjs/feathers';
 import {Application, ResourceData, ResourceIdentifierData} from '../../../declarations';
-import {MethodNotAllowed, NotFound} from "@feathersjs/errors";
+import {NotFound} from "@feathersjs/errors";
 import {AlertSourceType} from "../../incidents/incidents.service";
 
 interface PagerData {
   selcall: string
 }
 
+interface PagerResponse {
+  incidentId: number
+}
+
 interface ServiceOptions {}
 
-export class Pager implements ServiceMethods<PagerData> {
+export class Pager {
   app: Application;
   options: ServiceOptions;
 
@@ -18,15 +21,7 @@ export class Pager implements ServiceMethods<PagerData> {
     this.app = app;
   }
 
-  async find (params?: Params): Promise<PagerData[] | Paginated<PagerData>> {
-    throw new MethodNotAllowed()
-  }
-
-  async get (id: Id, params?: Params): Promise<PagerData> {
-    throw new MethodNotAllowed()
-  }
-
-  async create (data: PagerData, params?: Params): Promise<PagerData> {
+  async create (data: PagerData): Promise<PagerResponse> {
     // Find the resources associated with this selcall
     const resourceIdentifierService = this.app.service('resource-identifiers')
     const resourceIdentifiers = await resourceIdentifierService.find({ query: { type: 'selcall', value: data.selcall }, paginate: false }) as ResourceIdentifierData[]
@@ -36,12 +31,12 @@ export class Pager implements ServiceMethods<PagerData> {
 
     // Do not process the alert if there is no resource associated with this selcall
     if (resources.length === 0) {
-      throw new NotFound()
+      throw new NotFound('No resources are associated with this selcall')
     }
 
     // Forward the alert
     const incidentService = this.app.service('incidents')
-    await incidentService.processAlert({
+    let incidentData = await incidentService.processAlert({
       resources: resources
     }, {
       processingStarted: new Date(),
@@ -49,20 +44,10 @@ export class Pager implements ServiceMethods<PagerData> {
       source: {
         type: AlertSourceType.PAGER
       }
-    })
+    });
 
-    return data;
-  }
-
-  async update (id: NullableId, data: PagerData, params?: Params): Promise<PagerData> {
-    throw new MethodNotAllowed()
-  }
-
-  async patch (id: NullableId, data: PagerData, params?: Params): Promise<PagerData> {
-    throw new MethodNotAllowed()
-  }
-
-  async remove (id: NullableId, params?: Params): Promise<PagerData> {
-    throw new MethodNotAllowed()
+    return {
+      incidentId: incidentData.id
+    };
   }
 }

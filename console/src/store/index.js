@@ -5,8 +5,12 @@ import auth from './store.auth'
 
 import apiKeys from './services/api-keys'
 import incidents from './services/incidents'
+import locations from './services/locations'
+import printTasks from './services/print-tasks'
 import resourceIdentifiers from './services/resource-identifiers'
 import resources from './services/resources'
+import serialMonitors from './services/serial-monitors'
+import textAnalysis from './services/text-analysis'
 import users from './services/users'
 import watchedFolders from './services/watched-folders'
 import socket, { createSocketPlugin } from '@/store/socket'
@@ -33,8 +37,12 @@ export default new Vuex.Store({
     createSocketPlugin(feathersClient.io),
     apiKeys,
     incidents,
+    locations,
+    printTasks,
     resourceIdentifiers,
     resources,
+    serialMonitors,
+    textAnalysis,
     users,
     watchedFolders
   ]

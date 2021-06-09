@@ -12,12 +12,12 @@ declare module '../../declarations' {
   }
 
   interface ResourceIdentifierData {
-    id: Number
+    id: number
     type: IdentifierType
     value: string
     createdAt: Date
     updatedAt: Date
-    resourceId: Number
+    resourceId: number
   }
 
   enum IdentifierType {
@@ -28,6 +28,7 @@ declare module '../../declarations' {
 export default function (app: Application): void {
   const options = {
     Model: createModel(app),
+    multi: ['remove'],
     paginate: app.get('paginate')
   };
 

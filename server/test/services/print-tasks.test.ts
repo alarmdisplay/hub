@@ -1,8 +1,8 @@
 import app from '../../src/app';
 
-describe('\'uploads\' service', () => {
+describe('\'print-tasks\' service', () => {
   it('registered the service', () => {
-    const service = app.service('uploads');
+    const service = app.service('print-tasks');
     expect(service).toBeTruthy();
   });
 });

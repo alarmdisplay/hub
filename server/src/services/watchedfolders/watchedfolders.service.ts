@@ -10,11 +10,17 @@ declare module '../../declarations' {
   interface ServiceTypes {
     'watchedfolders': WatchedFolders & ServiceAddons<any>;
   }
+
+  interface FoundFileContext {
+    watchedFolderId: number
+    path: string
+  }
 }
 
 export default function (app: Application) {
   const options = {
-    Model: createModel(app)
+    Model: createModel(app),
+    paginate: app.get('paginate')
   };
 
   // Initialize our service with any options it requires

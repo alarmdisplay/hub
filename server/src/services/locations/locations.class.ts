@@ -29,8 +29,14 @@ export class Locations extends Service<LocationData> {
       country: ''
     };
 
-    // If we have Gauss-Krueger coordinates, try to convert them to WGS coordinates
-    if (rawLocation.gk) {
+    // If there are WGS84 coordinates present, try to use them first
+    if (rawLocation.wgs84) {
+      location.latitude = this.convertToDecimalNumber(rawLocation.wgs84.lat, rawLocation.wgs84.lat_min, rawLocation.wgs84.lat_sec)
+      location.longitude = this.convertToDecimalNumber(rawLocation.wgs84.lon, rawLocation.wgs84.lon_min, rawLocation.wgs84.lon_sec)
+    }
+
+    // If we have Gauss-Krueger coordinates, try to convert them to WGS coordinates, if not already present in the result
+    if (rawLocation.gk && !(location.latitude && location.longitude)) {
       try {
         let gkCoordinates = { x: Number(rawLocation.gk.x), y: Number(rawLocation.gk.y) }
         let wgsCoordinates = gk.toWGS(gkCoordinates)
@@ -110,6 +116,42 @@ export class Locations extends Service<LocationData> {
       throw new Error('No results were given')
     }
 
+    // TODO determine best result based on scores or by looking for buildings/addresses with least deviation
     return results[0]
+  }
+
+  convertToDecimalNumber(degrees: string, minutes: string, seconds: string): number|undefined {
+    let decDegrees = Number.parseFloat(degrees);
+
+    // If the first parameter isn't a number, the rest doesn't make sense
+    if (isNaN(decDegrees)) {
+      return undefined
+    }
+
+    // If the minutes and seconds are empty, we are done
+    if (minutes.trim() === '' && seconds.trim() === '') {
+      return decDegrees
+    }
+
+    let minutesFloat = Number.parseFloat(minutes);
+    if (isNaN(minutesFloat)) {
+      // The minutes input wasn't empty but invalid
+      return undefined
+    }
+    decDegrees += minutesFloat / 60
+
+    // If the seconds are empty, we are done
+    if (seconds.trim() === '') {
+      return decDegrees
+    }
+
+    let secondsFloat = Number.parseFloat(seconds);
+    if (isNaN(secondsFloat)) {
+      // The seconds input wasn't empty but invalid
+      return undefined
+    }
+    decDegrees += secondsFloat / 3600
+
+    return decDegrees
   }
 }

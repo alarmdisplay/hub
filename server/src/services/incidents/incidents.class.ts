@@ -1,10 +1,8 @@
-import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
+import { Service } from 'feathers-sequelize';
 import {AlertContext, AlertData, Application, IncidentData, LocationData} from '../../declarations';
 import logger from "../../logger";
 import {IncidentCategory, IncidentStatus} from "./incidents.service";
-
-// Maximum age of an incident, before a new one gets created
-const MAX_AGE = process.env.NODE_ENV && process.env.NODE_ENV === 'production' ? 15 * 60 * 1000 : 60 * 1000;
+import { NullableId, Params } from "@feathersjs/feathers";
 
 /**
  * The properties of an incident, that can be updated or filled by later alerts
@@ -12,10 +10,52 @@ const MAX_AGE = process.env.NODE_ENV && process.env.NODE_ENV === 'production' ? 
 const updatableProperties = ['ref', 'sender', 'caller_name', 'caller_number', 'reason', 'keyword', 'description'];
 
 export class Incidents extends Service<IncidentData> {
-  private app: Application;
-  constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
-    super(options);
+  private app!: Application;
+
+  /**
+   * A duration in milliseconds, during which a new incident may be updated by a new alert that has no unique identifier.
+   * @private
+   */
+  private maxAge!: number;
+
+  async setup(app: Application) {
+    let fallbackConfig = {
+      minutesBeforeNewIncident: 15
+    };
+
     this.app = app;
+    let config = app.get('incidents') || fallbackConfig;
+    this.maxAge = config.minutesBeforeNewIncident * 60 * 1000;
+  }
+
+  async _patch(id: NullableId, data: Partial<IncidentData>, params?: Params): Promise<IncidentData> {
+    if (Object.keys(data).includes('location')) {
+      let LocationsService = this.app.service("locations");
+      if (data.location && data.location.id) {
+        // Existing location submitted, try to patch it
+        data.location.incidentId = id as number
+        await LocationsService.patch(data.location.id, data.location)
+      } else if (data.location) {
+        // New location submitted, create it and remove any locations that might belong to this incident beforehand
+        await LocationsService.remove(null, { query: { incidentId: id } })
+        data.location.incidentId = id as number
+        await LocationsService.create(data.location)
+      } else {
+        // The location is intentionally left empty, remove all existing ones
+        await LocationsService.remove(null, { query: { incidentId: id } })
+      }
+    }
+    return await super._patch(id, data, params);
+  }
+
+  async _update(id: NullableId, data: IncidentData, params?: Params): Promise<IncidentData> {
+    if (data.location) {
+      await this.app.service("locations").update(data.location.id, data.location)
+    } else {
+      // The location is intentionally left empty, remove all existing ones
+      await this.app.service("locations").remove(null, { query: { incidentId: id } })
+    }
+    return super._update(id, data, params);
   }
 
   /**
@@ -37,7 +77,7 @@ export class Incidents extends Service<IncidentData> {
     }
 
     // Process the location if it is a new incident or the existing one does not have a location record
-    let locationData
+    let locationData = null
     if (alert.location && (incidentToUpdate === false || !existingIncidentHasLocation)) {
       locationData = await LocationsService.processRawLocation(alert.location)
       logger.debug('Processed location')
@@ -107,7 +147,7 @@ export class Incidents extends Service<IncidentData> {
     // Find the most recent incident that is not yet too old
     const recentIncidents = await this.find({
       query: {
-        time: { $gt: new Date().getTime() - MAX_AGE },
+        time: { $gt: new Date().getTime() - this.maxAge },
         $limit: 1,
         $sort: { time: -1 }
       },

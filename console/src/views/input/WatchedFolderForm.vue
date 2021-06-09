@@ -10,17 +10,25 @@
             <ErrorMessage :form-error="formError"/>
 
             <FeathersVuexFormWrapper :item="item" watch>
-                <template v-slot="{ clone, save, reset }">
+                <template v-slot="{ clone, save, reset, remove }">
                     <WatchedFolderEditor
                         :item="clone"
                         @save="
                         () => {
                           $data.formError = null
                           save()
-                            .then(() => $router.push({name: 'watched-folder-list'}))
+                            .then(() => $router.push({name: 'input'}))
                             .catch(reason => { $data.formError = reason })
                         }"
                         @reset="reset"
+                        @remove="
+                        () => {
+                            $data.formError = null
+                            remove()
+                              .then(() => $router.push({name: 'input'}))
+                              .catch(reason => { $data.formError = reason })
+                        }
+                        "
                     ></WatchedFolderEditor>
                 </template>
             </FeathersVuexFormWrapper>

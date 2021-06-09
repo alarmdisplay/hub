@@ -5,13 +5,15 @@ import Home from '../views/Home.vue'
 import ApiKeyList from '@/views/admin/ApiKeyList'
 import ApiKeyForm from '@/views/admin/ApiKeyForm'
 import Display from '@/views/output/Display'
-import OCR from '@/views/input/OCR'
+import Input from '@/views/Input'
 import ResourceForm from '@/views/processing/ResourceForm'
 import ResourceList from '@/views/processing/ResourceList'
+import SerialMonitorForm from '@/views/input/SerialMonitorForm'
 import UserList from '../views/admin/UserList'
 import UserForm from '@/views/admin/UserForm'
-import WatchedFolderList from '@/views/input/WatchedFolderList'
 import WatchedFolderForm from '@/views/input/WatchedFolderForm'
+import IncidentList from '@/views/IncidentList'
+import IncidentForm from '@/views/IncidentForm'
 
 Vue.use(VueRouter)
 
@@ -27,19 +29,29 @@ Vue.use(VueRouter)
       component: About
     },
     {
-      path: '/input/watched-folders',
-      name: 'watched-folder-list',
-      component: WatchedFolderList
+      path: '/incidents',
+      name: 'incident-list',
+      component: IncidentList
+    },
+    {
+      path: '/incidents/:id',
+      name: 'incident-form',
+      component: IncidentForm
+    },
+    {
+      path: '/input',
+      name: 'input',
+      component: Input
+    },
+    {
+      path: '/input/serial-monitors/:id',
+      name: 'serial-monitor-form',
+      component: SerialMonitorForm
     },
     {
       path: '/input/watched-folders/:id',
       name: 'watched-folder-form',
       component: WatchedFolderForm
-    },
-    {
-      path: '/input/ocr',
-      name: 'ocr',
-      component: OCR
     },
     {
       path: '/processing/resources',
@@ -81,7 +93,8 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes
+  routes,
+  linkActiveClass: 'is-active'
 })
 
 export default router
