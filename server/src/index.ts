@@ -17,5 +17,5 @@ process.on('exit', () => {
 })
 
 server.on('listening', () =>
-  logger.info('Feathers application started on http://%s:%d', app.get('host'), port)
+  logger.info('Hub Backend started on http://%s:%d', app.get('host'), port)
 );
