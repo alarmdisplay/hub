@@ -253,6 +253,12 @@ export default {
   setup(props, context) {
     function handleSubmit() {
       if (this.isValid()) {
+        if (this.item.location.latitude === '') {
+          this.item.location.latitude = null
+        }
+        if (this.item.location.longitude === '') {
+          this.item.location.longitude = null
+        }
         context.emit('save')
       } else {
         // TODO show validation result
