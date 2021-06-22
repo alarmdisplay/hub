@@ -62,7 +62,7 @@ export class Ocr {
       }
     }
 
-    return text
+    return this.fixCommonOcrErrors(text)
   }
 
   private async doOcr(workDir: string): Promise<string> {
@@ -87,5 +87,17 @@ export class Ocr {
     let words: string[] = textAnalysisConfig.triggerWords || []
     words = words.concat(textAnalysisConfig.importantWords || [])
     await fs.promises.writeFile(path.join(workDir, 'words.txt'), words.join('\n'))
+  }
+
+  /**
+   * Fixes OCR errors that commonly happen and would throw off the text analysis
+   * @param text
+   * @private
+   */
+  private fixCommonOcrErrors(text: string): string {
+    return text.replace('MITITEILER', 'MITTEILER')
+      .replace('EINSATZMITITEL', 'EINSATZMITTEL')
+      .replace('EINSATAGRUND', 'EINSATZGRUND')
+      .replace('EINSATZAGRUND', 'EINSATZGRUND')
   }
 }

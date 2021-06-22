@@ -48,14 +48,14 @@ export default {
       regexps: []
     },
     {
-      beginningMark: /EINSAT[AZ]GRUND/,
+      beginningMark: /EINSATZGRUND/,
       regexps: [
         /Schlagw\.[:;=]\s(?<reason>.*)$/,
         /Stichwort[:;=]\s(?<keyword>.*)$/
       ]
     },
     {
-      beginningMark: /EINSATZMITI?TEL/,
+      beginningMark: /EINSATZMITTEL/,
       regexps: [
         /(?<resources>.*) \(Ausger/
       ]
