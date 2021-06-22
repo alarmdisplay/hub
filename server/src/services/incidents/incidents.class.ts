@@ -106,9 +106,14 @@ export class Incidents extends Service<IncidentData> {
     // Otherwise update the existing incident
     logger.debug('Updating incident %d...', incidentToUpdate.id)
     const incidentDiff = this.getIncidentDiff(incidentToUpdate, alert);
-    // Always include the resources and the location, the difference is calculated in the hooks
-    // @ts-ignore
-    incidentDiff.location = locationData
+
+    // Do not include an empty location as that might remove an existing one
+    if (locationData) {
+      // @ts-ignore
+      incidentDiff.location = locationData
+    }
+
+    // Always include the resources, the difference is calculated in the hooks
     incidentDiff.resources = alert.resources
     return await this.patch(incidentToUpdate.id, incidentDiff) as IncidentData
   }
