@@ -33,7 +33,8 @@
                             <label class="label">Alarmzeit</label>
                         </div>
                         <div class="field-body">
-                            <span>{{ isNewItem ? 'wird beim Anlegen gesetzt' : item.time | moment('L LTS') }}</span>
+                            <span v-if="isNewItem">wird beim Anlegen gesetzt</span>
+                            <span v-else>{{ item.time | moment('L LTS') }}</span>
                         </div>
                     </div>
 
