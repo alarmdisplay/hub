@@ -100,7 +100,12 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       }
     }
 
-    alertContext.rawContent = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
+    try {
+      alertContext.rawContent = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
+    } catch (error) {
+      logger.error('Could not get text from file:', error.message)
+      return
+    }
 
     let result
     try {
