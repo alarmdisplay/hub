@@ -266,7 +266,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
     return super._remove(id, params)
       .then(async watchedFolderData => {
         // If the folder is currently watched, stop watching
-        if (this.watchers.has(watchedFolderData.id)) {
+        if (this.watchers.has(watchedFolderData.id) || this.intervals.has(watchedFolderData.id)) {
           await this.stopWatching(watchedFolderData)
         }
         return watchedFolderData
