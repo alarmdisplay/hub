@@ -40,15 +40,17 @@ export class WatchedFolders extends Service<WatchedFolderData> {
       .then(folders => {
         if (!Array.isArray(folders)) {
           logger.error('Query for watched folders did not return an Array')
-          return
+          return []
         }
 
-        Promise.all(folders.map(folder => this.startWatching(folder)))
-          .catch(reason => {
-            logger.error('Could not start to watch folders', reason)
-          })
-      }).catch(reason => {
+        return folders
+      }, reason => {
         logger.error('Could not query folders to watch', reason)
+        return []
+      })
+      .then(folders => this.bulkStartWatching(folders))
+      .catch(reason => {
+        logger.error('Could not start to watch folders:', reason.message)
       })
   }
 
@@ -63,6 +65,17 @@ export class WatchedFolders extends Service<WatchedFolderData> {
       normalizedPath = path.join(normalizedPath, path.sep)
     }
     return normalizedPath;
+  }
+
+  private async bulkStartWatching(foldersToWatch: WatchedFolderData[]) {
+    for (const folderToWatch of foldersToWatch) {
+      try {
+        await this.startWatching(folderToWatch);
+      } catch (error) {
+        let normalizedPath = WatchedFolders.getNormalizedPath(folderToWatch)
+        logger.error('Could not start to watch folder %s:', normalizedPath, error.message)
+      }
+    }
   }
 
   /**
@@ -85,7 +98,14 @@ export class WatchedFolders extends Service<WatchedFolderData> {
 
       const interval = setInterval(async () => {
         // Compare the known file list to the current folder contents
-        const files = await this.getMatchingFilesFromFolder(normalizedPath)
+        let files: string[];
+        try {
+          files = await this.getMatchingFilesFromFolder(normalizedPath);
+        } catch (error) {
+          logger.error('Could not read files from watched folder:', error.message)
+          return
+        }
+
         const knownFilesSet = this.knownFiles.get(folderToWatch.id);
         const knownFileNames = Array.from(knownFilesSet?.values() || []);
         const newFiles = files.filter(filename => !knownFileNames.includes(filename));
@@ -221,11 +241,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
     return super._create(data, params)
       .then(async watchedFolderData => {
         if (Array.isArray(watchedFolderData)) {
-          for (const folder of watchedFolderData) {
-            if (folder.active) {
-              await this.startWatching(folder)
-            }
-          }
+          await this.bulkStartWatching(watchedFolderData.filter(folder => folder.active))
         } else {
           if (watchedFolderData.active) {
             await this.startWatching(watchedFolderData)
