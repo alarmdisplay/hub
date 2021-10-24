@@ -32,11 +32,5 @@ export default function (app: Application) {
     tableName: [app.get('db_prefix'), 'users'].join('_')
   });
 
-  // eslint-disable-next-line no-unused-vars
-  (users as any).associate = function (models: any) {
-    // Define associations here
-    // See http://docs.sequelizejs.com/en/latest/docs/associations/
-  };
-
   return users;
 }

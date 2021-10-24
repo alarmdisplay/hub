@@ -5,6 +5,7 @@ import logger from '../../logger';
 import { Params, NullableId } from '@feathersjs/feathers';
 import util from 'util';
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore The types for serialport are incomplete
 const InterByteTimeout = SerialPort.parsers.InterByteTimeout;
 
@@ -90,6 +91,7 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
     }
 
     const context: SerialDataContext = { serialMonitorId: serialMonitor.id, data: data };
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore TypeScript does not know that this is an EventEmitter
     this.emit('serial_data', context);
   }

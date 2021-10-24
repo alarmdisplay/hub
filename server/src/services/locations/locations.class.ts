@@ -13,10 +13,10 @@ export class Locations extends Service<LocationData> {
     this.nominatim = new Nominatim();
   }
 
-  async processRawLocation(rawLocation: RawLocation): Promise<Partial<LocationData>> {
+  async processRawLocation(rawLocation: RawLocation): Promise<LocationData> {
     const fallbackAddress = this.getFallbackAddress(rawLocation);
 
-    const location: Partial<LocationData> = {
+    const location: LocationData = {
       rawText: fallbackAddress,
       latitude: undefined,
       longitude: undefined,

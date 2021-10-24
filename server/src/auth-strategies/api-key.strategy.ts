@@ -1,5 +1,4 @@
 import {AuthenticationBaseStrategy, AuthenticationRequest, AuthenticationResult} from '@feathersjs/authentication';
-import { Params } from '@feathersjs/feathers';
 import {NotAuthenticated} from '@feathersjs/errors';
 import bcrypt from 'bcryptjs';
 
@@ -7,9 +6,8 @@ export class ApiKeyStrategy extends AuthenticationBaseStrategy {
   /**
    * Authenticate
    * @param authentication
-   * @param params
    */
-  async authenticate(authentication: AuthenticationRequest, params: Params): Promise<AuthenticationResult> {
+  async authenticate(authentication: AuthenticationRequest): Promise<AuthenticationResult> {
     if (authentication.strategy !== 'api-key') {
       throw new Error(`Cannot handle authentication strategy ${authentication.strategy}`);
     }

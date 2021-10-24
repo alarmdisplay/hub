@@ -298,6 +298,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
     await fs.promises.copyFile(filePath, destination);
 
     const context: FoundFileContext = { watchedFolderId: watcherId, path: destination };
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore TypeScript does not know that this is an EventEmitter
     this.emit('found_file', context);
   }

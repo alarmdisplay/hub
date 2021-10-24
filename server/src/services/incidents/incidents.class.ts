@@ -5,9 +5,17 @@ import {IncidentCategory, IncidentStatus} from './incidents.service';
 import { NullableId, Params } from '@feathersjs/feathers';
 
 /**
- * The properties of an incident, that can be updated or filled by later alerts
+ * The properties of an incident, that can be updated or filled by later alerts. Keyed by their AlertData counterpart
  */
-const updatableProperties = ['ref', 'sender', 'caller_name', 'caller_number', 'reason', 'keyword', 'description'];
+const updatableProperties: Map<keyof AlertData, keyof IncidentData> = new Map([
+  ['ref', 'ref'],
+  ['sender', 'sender'],
+  ['caller_name', 'caller_name'],
+  ['caller_number', 'caller_number'],
+  ['reason', 'reason'],
+  ['keyword', 'keyword'],
+  ['description', 'description']
+]);
 
 export class Incidents extends Service<IncidentData> {
   private app!: Application;
@@ -49,7 +57,7 @@ export class Incidents extends Service<IncidentData> {
   }
 
   async _update(id: NullableId, data: IncidentData, params?: Params): Promise<IncidentData> {
-    if (data.location) {
+    if (data.location && data.location.id) {
       await this.app.service('locations').update(data.location.id, data.location);
     } else {
       // The location is intentionally left empty, remove all existing ones
@@ -77,7 +85,7 @@ export class Incidents extends Service<IncidentData> {
     }
 
     // Process the location if it is a new incident or the existing one does not have a location record
-    let locationData = null;
+    let locationData = undefined;
     if (alert.location && (incidentToUpdate === false || !existingIncidentHasLocation)) {
       locationData = await LocationsService.processRawLocation(alert.location);
       logger.debug('Processed location');
@@ -99,7 +107,7 @@ export class Incidents extends Service<IncidentData> {
         status: IncidentStatus.Actual, // TODO Add a mechanism to detect Test and Exercise status by keywords or date/time
         category: IncidentCategory.Other // TODO Define the category according to reason or keyword
       };
-      // @ts-ignore Ignore that LocationData is only partial
+
       return await this.create(newIncident) as IncidentData;
     }
 
@@ -109,7 +117,6 @@ export class Incidents extends Service<IncidentData> {
 
     // Do not include an empty location as that might remove an existing one
     if (locationData) {
-      // @ts-ignore
       incidentDiff.location = locationData;
     }
 
@@ -184,18 +191,17 @@ export class Incidents extends Service<IncidentData> {
    * @param alert
    */
   getIncidentDiff(incident: IncidentData, alert: AlertData): Partial<IncidentData> {
-    const newData = {};
+    const newData: Partial<IncidentData> = {};
 
     // Check for properties that the incident is missing and the alert can provide
-    for (const property of updatableProperties) {
-      // @ts-ignore
-      const incidentValue = incident[property];
-      // @ts-ignore
-      const alertValue = alert[property];
+    for (const [alertProperty, incidentProperty] of updatableProperties.entries()) {
+      const incidentValue = incident[incidentProperty];
+      const alertValue = alert[alertProperty] as string;
 
       if ((incidentValue === undefined || incidentValue === '') && alertValue && alertValue !== '') {
-        // @ts-ignore
-        newData[property] = alertValue;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore The target property is always a string
+        newData[incidentProperty] = alertValue;
       }
     }
 

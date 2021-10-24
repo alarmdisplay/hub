@@ -19,7 +19,7 @@ export default function(app: Application) {
         const authResult = await apiKeyStrategy.authenticate({
           strategy: 'api-key',
           'api-key': connection.headers['x-api-key']
-        }, {});
+        });
         if (authResult['api-key']) {
           app.channel('authenticated').join(connection);
           return;

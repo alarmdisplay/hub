@@ -1,5 +1,4 @@
 import * as authentication from '@feathersjs/authentication';
-// @ts-ignore
 import { shallowPopulate } from 'feathers-shallow-populate';
 import {allowApiKey} from '../../hooks/allowApiKey';
 import { HookContext } from '@feathersjs/feathers';

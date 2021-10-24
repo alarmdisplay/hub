@@ -3,14 +3,13 @@ import {HookContext} from '@feathersjs/feathers';
 import {Sequelize} from 'sequelize';
 import {ResourceData} from '../../declarations';
 import {BadRequest} from '@feathersjs/errors';
-// @ts-ignore
-import { shallowPopulate } from 'feathers-shallow-populate';
+import { shallowPopulate, PopulateOptions } from 'feathers-shallow-populate';
 import {allowApiKey} from '../../hooks/allowApiKey';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
 
-const populateOptions = {
+const populateOptions : PopulateOptions = {
   include: {
     service: 'locations',
     nameAs: 'location',
@@ -57,9 +56,11 @@ export default {
  * @param context
  */
 function includeLocation(context: HookContext): HookContext {
-  const sequelize = context.app.get('sequelizeClient');
-  const Location = sequelize.models.locations;
-  context.params.sequelize = { include: [ { model: Location } ] };
+  if (context.data.location) {
+    const sequelize = context.app.get('sequelizeClient');
+    const Location = sequelize.models.locations;
+    context.params.sequelize = { include: [ { model: Location } ] };
+  }
   return context;
 }
 
@@ -88,16 +89,17 @@ async function updateDispatchedResources(context: HookContext) {
     return;
   }
 
+  // Validate resources array
+  if (resources.some(resource => !resource.id)) {
+    throw new BadRequest('Resources must have an id field');
+  }
+
   // Get the currently associated resources
   const dispatchedResources = await model.findAll({ where: { incidentId: context.result.id } });
   const associatedIds = dispatchedResources.map(r => r.get('resourceId') as number);
 
   // Determine, which resources have to be added or removed
   const submittedResourceIds = resources.map(resource => resource.id);
-  // @ts-ignore
-  if (submittedResourceIds.includes(undefined)) {
-    throw new BadRequest('Resources must have an id field');
-  }
 
   // Associate new resources
   const addedResources = submittedResourceIds.filter(resourceId => !associatedIds.includes(resourceId));
