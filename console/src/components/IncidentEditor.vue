@@ -131,7 +131,7 @@
             <button type="button" class="button" @click.prevent="item.location = null">Einsatzort entfernen</button>
             <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                    <label class="label" for="sender">Adresse</label>
+                    <label class="label" for="street">Adresse</label>
                 </div>
                 <div class="field-body">
                     <div class="field">
@@ -157,7 +157,7 @@
 
             <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                    <label class="label" for="locality">Ort</label>
+                    <label class="label" for="post-code">Ort</label>
                 </div>
                 <div class="field-body">
                     <div class="field">
@@ -183,7 +183,7 @@
 
             <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                    <label class="label" for="locality">Koordinaten (WGS84)</label>
+                    <label class="label" for="longitude">Koordinaten (WGS84)</label>
                 </div>
                 <div class="field-body">
                     <div class="field">

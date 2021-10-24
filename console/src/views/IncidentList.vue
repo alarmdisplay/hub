@@ -26,7 +26,7 @@
                         <tr :key="incident.id">
                             <th>{{ incident.reason }}</th>
                             <td>{{ incident.keyword }}</td>
-                            <td class="incident-location">{{ incident.location ? [incident.location.locality, incident.location.street].join('\n') : '' }}</td>
+                            <td class="incident-location">{{ incident.location ? [incident.location.locality, incident.location.street].join('\n').trim() : '' }}</td>
                             <td class="has-text-right">{{ incident.time | moment('LLL') }}</td>
                             <td class="is-narrow">
                                 <div class="field is-grouped">
