@@ -11,49 +11,49 @@ export class Resources extends Service<ResourceData> {
 
   async _update(id: NullableId, data: ResourceData, params?: Params): Promise<ResourceData> {
     if (data.identifiers && data.identifiers.length) {
-      await this.diffIdentifiers(id as number, data.identifiers)
+      await this.diffIdentifiers(id as number, data.identifiers);
     } else {
       // The identifiers are intentionally left empty, remove all existing ones
-      await this.app.service("resource-identifiers").remove(null, { query: { resourceId: id } })
+      await this.app.service('resource-identifiers').remove(null, { query: { resourceId: id } });
     }
 
     return await super._update(id, data, params);
   }
 
   async _patch(id: NullableId, data: Partial<ResourceData>, params?: Params): Promise<ResourceData> {
-    await this.diffIdentifiers(id as number, data.identifiers)
-    return await super._patch(id, data, params)
+    await this.diffIdentifiers(id as number, data.identifiers);
+    return await super._patch(id, data, params);
   }
 
   private async diffIdentifiers(id: number, submittedIdentifiers: ResourceIdentifierData[] | undefined) {
-    const ResourceIdentifiersService = this.app.service("resource-identifiers")
+    const ResourceIdentifiersService = this.app.service('resource-identifiers');
 
     if (submittedIdentifiers && submittedIdentifiers.length === 0) {
       // Shortcut: No identifiers should be assigned, so delete any that belong to this resource
-      await ResourceIdentifiersService.remove(null, {query: {resourceId: id}})
+      await ResourceIdentifiersService.remove(null, {query: {resourceId: id}});
     } else if (submittedIdentifiers && submittedIdentifiers.length > 0) {
       // Get the currently assigned identifiers
       const currentIdentifiers = await ResourceIdentifiersService.find({
         query: {resourceId: id},
         paginate: false
-      }) as ResourceIdentifierData[]
-      const currentIds = currentIdentifiers.map(identifier => identifier.id)
+      }) as ResourceIdentifierData[];
+      const currentIds = currentIdentifiers.map(identifier => identifier.id);
 
       // Patch identifiers with IDs, create the others
-      let patchedIds: number[] = []
+      const patchedIds: number[] = [];
       for (const submittedIdentifier of submittedIdentifiers) {
-        submittedIdentifier.resourceId = id as number
+        submittedIdentifier.resourceId = id as number;
         if (submittedIdentifier.id) {
-          let patchedIdentifier = await ResourceIdentifiersService.patch(submittedIdentifier.id, submittedIdentifier) as ResourceIdentifierData
-          patchedIds.push(patchedIdentifier.id)
+          const patchedIdentifier = await ResourceIdentifiersService.patch(submittedIdentifier.id, submittedIdentifier) as ResourceIdentifierData;
+          patchedIds.push(patchedIdentifier.id);
         } else {
-          await ResourceIdentifiersService.create(submittedIdentifier)
+          await ResourceIdentifiersService.create(submittedIdentifier);
         }
       }
 
       // Remove all assigned identifiers that were not patched
-      let removedIds = currentIds.filter(id => !patchedIds.includes(id));
-      await ResourceIdentifiersService.remove(null, {query: {id: {$in: removedIds}}})
+      const removedIds = currentIds.filter(id => !patchedIds.includes(id));
+      await ResourceIdentifiersService.remove(null, {query: {id: {$in: removedIds}}});
     }
   }
 }

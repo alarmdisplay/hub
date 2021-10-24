@@ -10,8 +10,8 @@ export default function(app: Application) {
     return;
   }
 
-  const apiKeyStrategy = new ApiKeyStrategy
-  apiKeyStrategy.setApplication(app)
+  const apiKeyStrategy = new ApiKeyStrategy;
+  apiKeyStrategy.setApplication(app);
 
   app.on('connection', async (connection: any) => {
     if (connection.headers && connection.headers['x-api-key']) {
@@ -19,13 +19,13 @@ export default function(app: Application) {
         const authResult = await apiKeyStrategy.authenticate({
           strategy: 'api-key',
           'api-key': connection.headers['x-api-key']
-        }, {})
+        }, {});
         if (authResult['api-key']) {
           app.channel('authenticated').join(connection);
-          return
+          return;
         }
       } catch (e) {
-        logger.warn('Socket connected, API key not accepted:', e.message || e)
+        logger.warn('Socket connected, API key not accepted:', e.message || e);
       }
     }
 
@@ -87,4 +87,4 @@ export default function(app: Application) {
   //     app.channel(`emails/${data.recipientEmail}`)
   //   ];
   // });
-};
+}

@@ -6,4 +6,4 @@ export default {
   'ils_augsburg': ILS_Augsburg,
   'ils_bamberg': ILS_Bamberg,
   'ls_bodenseekreis': LS_Bodenseekreis
-}
+};

@@ -1,4 +1,4 @@
-import {TextAnalysisConfig} from '../../../declarations'
+import {TextAnalysisConfig} from '../../../declarations';
 
 export default {
   name: 'LS Bodensee-Oberschwaben',
@@ -19,4 +19,4 @@ export default {
     }
   ],
   triggerWords: ['ENR']
-} as TextAnalysisConfig
+} as TextAnalysisConfig;

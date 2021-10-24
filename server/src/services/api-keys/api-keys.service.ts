@@ -34,6 +34,6 @@ export default function (app: Application): void {
   // Prevent publishing of any newly created token
   service.publish('created', () => {
     // Do not return a channel to publish to
-    return
-  })
+    return;
+  });
 }

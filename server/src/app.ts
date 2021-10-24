@@ -19,7 +19,7 @@ import appHooks from './app.hooks';
 import channels from './channels';
 import authentication from './authentication';
 import sequelize from './sequelize';
-import fs from "fs";
+import fs from 'fs';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers());

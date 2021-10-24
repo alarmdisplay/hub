@@ -82,7 +82,7 @@ export enum IncidentCategory {
   Health = 'Health',
   Env = 'Env',
   Transport = 'Transport',
-  Infra = "Infra",
+  Infra = 'Infra',
   CBRNE = 'CBRNE',
   Other = 'Other'
 }

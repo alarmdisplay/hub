@@ -1,7 +1,7 @@
 import * as feathersAuthentication from '@feathersjs/authentication';
 import * as local from '@feathersjs/authentication-local';
-import {HookContext} from "@feathersjs/feathers";
-import {BadRequest} from "@feathersjs/errors";
+import {HookContext} from '@feathersjs/feathers';
+import {BadRequest} from '@feathersjs/errors';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = feathersAuthentication.hooks;
@@ -9,11 +9,11 @@ const { hashPassword, protect } = local.hooks;
 
 function preventEmptyPassword (context: HookContext) {
   if ((context.method === 'create' || context.method === 'update') && !context.data.password) {
-    throw new BadRequest('Password must not be empty')
+    throw new BadRequest('Password must not be empty');
   }
 
   if (context.data.password && context.data.password === '') {
-    throw new BadRequest('Password must not be empty')
+    throw new BadRequest('Password must not be empty');
   }
 }
 

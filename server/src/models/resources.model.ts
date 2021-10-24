@@ -26,8 +26,8 @@ export default function (app: Application) {
     models.resource.hasMany(models.resource_identifier, {
       foreignKey: { allowNull: false },
       as: 'identifiers'
-    })
-    models.resource.belongsToMany(models.incident, { through: [app.get('db_prefix'), 'dispatched_resources'].join('_') })
+    });
+    models.resource.belongsToMany(models.incident, { through: [app.get('db_prefix'), 'dispatched_resources'].join('_') });
   };
 
   return resources;

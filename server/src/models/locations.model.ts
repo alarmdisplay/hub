@@ -67,7 +67,7 @@ export default function (app: Application): typeof Model {
     models.locations.belongsTo(models.incident, {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
-    })
+    });
   };
 
   return locations;

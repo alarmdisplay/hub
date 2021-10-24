@@ -22,7 +22,7 @@ export default {
     await query.renameColumn(tableName, 'watchedFolderId', 'sourceId');
   },
   async down(query: QueryInterface, app: Application): Promise<void> {
-    let tableName = [app.get('db_prefix'), 'textanalysis'].join('_');
+    const tableName = [app.get('db_prefix'), 'textanalysis'].join('_');
 
     // Transform general sourceId column back to watchedFolderId column
     await query.renameColumn(tableName, 'sourceId', 'watchedFolderId');

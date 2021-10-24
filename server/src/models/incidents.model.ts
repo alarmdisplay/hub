@@ -70,8 +70,8 @@ export default function (app: Application): typeof Model {
     models.incident.belongsToMany(models.resource, {
       through: [app.get('db_prefix'), 'dispatched_resources'].join('_'),
       as: 'resources'
-    })
-    models.incident.hasOne(models.locations)
+    });
+    models.incident.hasOne(models.locations);
   };
 
   return Incident;

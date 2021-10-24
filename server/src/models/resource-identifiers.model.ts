@@ -24,7 +24,7 @@ export default function (app: Application): typeof Model {
   });
 
   (ResourceIdentifier as any).associate = function (models: any): void {
-    models.resource_identifier.belongsTo(models.resource, { as: 'resource' })
+    models.resource_identifier.belongsTo(models.resource, { as: 'resource' });
   };
 
   return ResourceIdentifier;

@@ -9,12 +9,12 @@ process.on('unhandledRejection', (reason, p) =>
 );
 
 process.on('exit', () => {
-  logger.info('Shutting down ...')
-  let SerialMonitorsService = app.service('serial-monitors');
+  logger.info('Shutting down ...');
+  const SerialMonitorsService = app.service('serial-monitors');
   if (SerialMonitorsService) {
-    SerialMonitorsService.onExit()
+    SerialMonitorsService.onExit();
   }
-})
+});
 
 server.on('listening', () =>
   logger.info('Hub Backend started on http://%s:%d', app.get('host'), port)

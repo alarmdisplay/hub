@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 import logger from '../../logger';
 
 export interface NominatimResult {
@@ -38,10 +38,10 @@ export interface NominatimResult {
 }
 
 export class Nominatim {
-  private baseUrl: URL
+  private baseUrl: URL;
 
   constructor(baseUrl?: URL) {
-    this.baseUrl = baseUrl || new URL('https://nominatim.openstreetmap.org')
+    this.baseUrl = baseUrl || new URL('https://nominatim.openstreetmap.org');
   }
 
   geocode(street: string, city: string, postalCode: string): Promise<NominatimResult[]> {
@@ -62,8 +62,8 @@ export class Nominatim {
       responseType: 'json'
     })
       .then(result => {
-        logger.debug(result.data)
-        return result.data as NominatimResult[]
-      })
+        logger.debug(result.data);
+        return result.data as NominatimResult[];
+      });
   }
 }

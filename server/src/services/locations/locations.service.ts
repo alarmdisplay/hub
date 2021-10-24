@@ -4,7 +4,7 @@ import { Application } from '../../declarations';
 import { Locations } from './locations.class';
 import createModel from '../../models/locations.model';
 import hooks from './locations.hooks';
-import {DataTypes} from "sequelize";
+import {DataTypes} from 'sequelize';
 
 // Add this service to the service type index
 declare module '../../declarations' {

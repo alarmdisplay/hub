@@ -1,8 +1,8 @@
 import * as authentication from '@feathersjs/authentication';
 // @ts-ignore
-import { shallowPopulate } from 'feathers-shallow-populate'
-import {allowApiKey} from "../../hooks/allowApiKey";
-import { HookContext } from "@feathersjs/feathers";
+import { shallowPopulate } from 'feathers-shallow-populate';
+import {allowApiKey} from '../../hooks/allowApiKey';
+import { HookContext } from '@feathersjs/feathers';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const { authenticate } = authentication.hooks;
@@ -14,7 +14,7 @@ const populateOptions = {
     keyHere: 'id',
     keyThere: 'resourceId',
   }
-}
+};
 
 export default {
   before: {
@@ -56,5 +56,5 @@ function includeIdentifiers(context: HookContext): HookContext {
   const sequelize = context.app.get('sequelizeClient');
   const ResourceIdentifier = sequelize.models.resource_identifier;
   context.params.sequelize = { include: [ { model: ResourceIdentifier, as: 'identifiers' } ] };
-  return context
+  return context;
 }
