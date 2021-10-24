@@ -1,3 +1,9 @@
 {
+  "logging": {
+    "level": "error"
+  },
+  "port": 8999,
+  "mysql": "mysql://root:@mariadb:3306/hub_backend",
+  "dbMaxRetries": 10,
   "db_prefix": "test"
 }
