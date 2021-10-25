@@ -123,6 +123,19 @@
                         </div>
                     </div>
                 </fieldset>
+
+                <fieldset>
+                    <legend>Einsatzmittel</legend>
+                    <div class="field" id="resources">
+                        <span class="control" v-for="resource of $store.getters['resources/list']" :key="resource.id">
+                            <label class="checkbox">
+                                <input type="checkbox" :value="resource.id" v-model="item.resourceIds">
+                                <ResourceIcon :resource="resource"/>
+                                {{ resource.name }}
+                            </label>
+                        </span>
+                    </div>
+                </fieldset>
             </div>
         </div>
 
@@ -224,9 +237,11 @@
 </template>
 
 <script>
+import ResourceIcon from '@/components/ResourceIcon'
+
 export default {
   name: 'IncidentEditor',
-  components: {},
+  components: { ResourceIcon },
   props: {
     item: {
       type: Object,
@@ -237,6 +252,11 @@ export default {
     isNewItem: function () {
       return this.item.id === undefined
     }
+  },
+  async created () {
+    const { Resource } = this.$FeathersVuex.api
+    // Make sure all resources are loaded and up-to-date
+    Resource.find()
   },
   data() {
     return {}
@@ -279,5 +299,17 @@ fieldset {
 
 fieldset > legend {
     padding: 0 0.5em;
+}
+
+fieldset + fieldset {
+    margin-top: 0.75rem;
+}
+
+span.control {
+    margin-right: 1em;
+}
+
+#resources .checkbox input {
+    margin-right: 0.3em;
 }
 </style>

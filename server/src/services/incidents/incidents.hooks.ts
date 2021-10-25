@@ -1,7 +1,7 @@
 import * as authentication from '@feathersjs/authentication';
 import {HookContext} from '@feathersjs/feathers';
 import {Sequelize} from 'sequelize';
-import {ResourceData} from '../../declarations';
+import {ResourceData, IncidentData} from '../../declarations';
 import {BadRequest} from '@feathersjs/errors';
 import { shallowPopulate, PopulateOptions } from 'feathers-shallow-populate';
 import {allowApiKey} from '../../hooks/allowApiKey';
@@ -10,13 +10,42 @@ import {allowApiKey} from '../../hooks/allowApiKey';
 const { authenticate } = authentication.hooks;
 
 const populateOptions : PopulateOptions = {
-  include: {
+  include: [{
     service: 'locations',
     nameAs: 'location',
     keyHere: 'id',
     keyThere: 'incidentId',
     asArray: false
-  }
+  }, {
+    service: 'resources',
+    nameAs: 'resources',
+    asArray: true,
+    params: async function (params, context) {
+      if (!context) {
+        return undefined;
+      }
+
+      // Find out, which resources are dispatched for this incident
+      const sequelizeClient: Sequelize = context.app.get('sequelizeClient');
+      const tableName = [context.app.get('db_prefix'), 'dispatched_resources'].join('_');
+      const relations = await sequelizeClient.getQueryInterface().select(null, tableName, {
+        where: {
+          incidentId: (this as unknown as IncidentData).id // TypeScript assumes the wrong type for 'this'
+        }
+      }) as { resourceId: number, incidentId: number }[];
+
+      // Query for those resources
+      return {
+        query: {
+          id: {
+            $in: relations.map(relation => relation.resourceId)
+          }
+        },
+        paginate: false,
+        skipPopulate: true // Custom parameter, prevents inclusion of resource identifiers
+      };
+    }
+  }]
 };
 
 export default {
@@ -109,8 +138,8 @@ async function updateDispatchedResources(context: HookContext) {
     }));
   }
 
-  // Only associate new resources when patching, but don't remove any
-  if (context.method === 'patch') {
+  // If requested, only associate new resources when patching, but don't remove any
+  if (context.method === 'patch' && context.params.appendResources) {
     return context;
   }
 

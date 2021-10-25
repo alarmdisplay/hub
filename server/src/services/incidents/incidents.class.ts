@@ -122,7 +122,7 @@ export class Incidents extends Service<IncidentData> {
 
     // Always include the resources, the difference is calculated in the hooks
     incidentDiff.resources = alert.resources;
-    return await this.patch(incidentToUpdate.id, incidentDiff) as IncidentData;
+    return await this.patch(incidentToUpdate.id, incidentDiff, { appendResources: true }) as IncidentData;
   }
 
   /**
