@@ -45,7 +45,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="control">
-                                    <input class="input" type="text" id="reason" placeholder="Grund unbekannt"
+                                    <input class="input" type="text" id="reason" :placeholder="reasonPlaceholder"
                                            v-model="item.reason">
                                 </div>
                             </div>
@@ -251,6 +251,16 @@ export default {
   computed: {
     isNewItem: function () {
       return this.item.id === undefined
+    },
+    reasonPlaceholder () {
+      switch (this.item.status) {
+        case 'Exercise':
+          return 'Übung'
+        case 'Test':
+          return  'Probealarm'
+        default:
+          return 'Einsatzgrund unbekannt'
+      }
     }
   },
   async created () {
