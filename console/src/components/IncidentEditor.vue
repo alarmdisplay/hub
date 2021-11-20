@@ -127,7 +127,7 @@
                 <fieldset>
                     <legend>Einsatzmittel</legend>
                     <div class="field" id="resources">
-                        <span class="control" v-for="resource of $store.getters['resources/list']" :key="resource.id">
+                        <span class="control" v-for="resource of resources" :key="resource.id">
                             <label class="checkbox">
                                 <input type="checkbox" :value="resource.id" v-model="item.resourceIds">
                                 <ResourceIcon :resource="resource"/>
@@ -238,6 +238,7 @@
 
 <script>
 import ResourceIcon from '@/components/ResourceIcon'
+import { makeFindMixin } from 'feathers-vuex'
 
 export default {
   name: 'IncidentEditor',
@@ -261,6 +262,15 @@ export default {
         default:
           return 'Einsatzgrund unbekannt'
       }
+    },
+    resourcesParams () {
+      return {
+        query: {
+          $sort: {
+            name: 1
+          }
+        }
+      }
     }
   },
   async created () {
@@ -281,6 +291,9 @@ export default {
       return true
     }
   },
+  mixins: [
+    makeFindMixin({ service: 'resources', local: true }),
+  ],
   setup(props, context) {
     function handleSubmit() {
       if (this.isValid()) {
