@@ -31,7 +31,7 @@ logger.level = app.get('logging').level;
 logger.info('Logging level is \'%s\'', logger.level);
 
 // Enable security, CORS, compression, favicon and body parsing
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors<Request>());
 app.use(compress());
 app.use(express.json());
