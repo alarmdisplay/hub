@@ -42,7 +42,7 @@ export class Pager {
       processingStarted: new Date(),
       rawContent: data.selcall,
       source: {
-        type: AlertSourceType.PAGER
+        type: AlertSourceType.PLAIN
       }
     });
 

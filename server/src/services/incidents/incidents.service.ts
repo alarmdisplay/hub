@@ -63,7 +63,7 @@ declare module '../../declarations' {
 
 export enum AlertSourceType {
   OCR,
-  PAGER
+  PLAIN
 }
 
 export enum IncidentStatus {
