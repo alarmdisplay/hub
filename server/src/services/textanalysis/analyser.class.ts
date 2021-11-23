@@ -44,10 +44,10 @@ export class Analyser {
     }: undefined;
 
     const wgs84 = matches.has('loc_wgs84_lon') && matches.has('loc_wgs84_lat') ? {
-      lon: matches.get('loc_wgs84_lon') as string || '',
+      lon: this.getMatchWithoutNewlines(matches, 'loc_wgs84_lon'),
       lon_min: matches.get('loc_wgs84_lon_min') as string || '',
       lon_sec: matches.get('loc_wgs84_lon_sec') as string || '',
-      lat: matches.get('loc_wgs84_lat') as string || '',
+      lat: this.getMatchWithoutNewlines(matches, 'loc_wgs84_lat'),
       lat_min: matches.get('loc_wgs84_lat_min') as string || '',
       lat_sec: matches.get('loc_wgs84_lat_sec') as string || ''
     } : undefined;
@@ -254,5 +254,18 @@ export class Analyser {
     });
 
     return matches;
+  }
+
+  /**
+   * This method looks up a match by its key and returns it with all newline characters stripped.
+   * Returns an empty string if the key does not exist.
+   *
+   * @param matches
+   * @param key
+   * @private
+   */
+  private getMatchWithoutNewlines (matches: Map<string, string|string[]>, key: string): string {
+    const value = matches.get(key) as string || '';
+    return value.replace(/\n/, '');
   }
 }
