@@ -128,6 +128,7 @@ export default {
     textAnalysisConfigs() {
       // TODO This should be retrieved from the backend
       return {
+        'ils_biberach': 'Alarmdruck ILS Biberach',
         'ils_augsburg': 'Alarmfax ILS Augsburg',
         'ils_bamberg': 'Alarmfax ILS Bamberg',
       }
