@@ -1,6 +1,22 @@
-FROM ubuntu:20.04 as prebuilder
+FROM node as build-console
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+WORKDIR /home/node/app/console
+COPY ./console/package.json ./console/package-lock.json /home/node/app/console/
+RUN npm ci --no-audit
+COPY ./console /home/node/app/console
+RUN npm run build
+
+FROM node as build-server
+
+WORKDIR /home/node/app
+COPY ./server/package.json ./server/package-lock.json /home/node/app/
+RUN npm ci --no-audit
+COPY ./server /home/node/app
+RUN npm run compile
+
+FROM ubuntu:20.04
+
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -o "APT::Acquire::Retries=3" \
     git \
     imagemagick \
     nodejs \
@@ -10,24 +26,6 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 # allow ImageMagick to process PDFs
 RUN sed -i '$i\ \ <policy domain="coder" rights="read" pattern="PDF" />' /etc/ImageMagick-6/policy.xml
-
-FROM prebuilder as build-console
-
-WORKDIR /home/node/app/console
-COPY ./console/package.json ./console/package-lock.json /home/node/app/console/
-RUN npm ci
-COPY ./console /home/node/app/console
-RUN npm run build
-
-FROM prebuilder as build-server
-
-WORKDIR /home/node/app
-COPY ./server/package.json ./server/package-lock.json /home/node/app/
-RUN npm ci
-COPY ./server /home/node/app
-RUN npm run compile
-
-FROM prebuilder
 
 RUN groupadd --gid 1000 node \
   && useradd --uid 1000 --gid node -G dialout --shell /bin/bash --create-home node
