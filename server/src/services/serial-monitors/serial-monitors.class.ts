@@ -56,7 +56,7 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
       try {
         await this.startMonitoring(serialMonitor);
         logger.info('Started monitoring %s', serialMonitor.port);
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Could not start monitoring: ', error.message);
       }
     }
@@ -199,8 +199,8 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
     const serialMonitor = await super._remove(id, params);
     try {
       await this.stopMonitoring(serialMonitor);
-    } catch (e) {
-      logger.warn('Serial monitor has been removed, but closing the port gave an error:', e.message);
+    } catch (error: any) {
+      logger.warn('Serial monitor has been removed, but closing the port gave an error:', error.message);
     }
     return serialMonitor;
   }

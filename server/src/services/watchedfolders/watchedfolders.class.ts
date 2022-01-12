@@ -71,7 +71,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
     for (const folderToWatch of foldersToWatch) {
       try {
         await this.startWatching(folderToWatch);
-      } catch (error) {
+      } catch (error: any) {
         const normalizedPath = WatchedFolders.getNormalizedPath(folderToWatch);
         logger.error('Could not start to watch folder %s:', normalizedPath, error.message);
       }
@@ -101,7 +101,7 @@ export class WatchedFolders extends Service<WatchedFolderData> {
         let files: string[];
         try {
           files = await this.getMatchingFilesFromFolder(normalizedPath);
-        } catch (error) {
+        } catch (error: any) {
           logger.error('Could not read files from watched folder:', error.message);
           return;
         }
@@ -138,8 +138,8 @@ export class WatchedFolders extends Service<WatchedFolderData> {
       let watcher;
       try {
         watcher = fs.watch(normalizedPath);
-      } catch (e) {
-        logger.error('Not watching folder %s: %s', normalizedPath, e.message);
+      } catch (error: any) {
+        logger.error('Not watching folder %s: %s', normalizedPath, error.message);
         return;
       }
 
