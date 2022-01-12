@@ -51,24 +51,24 @@ steps:
       - cd server
       - npm ci
       - npm test
-#  - name: clean-database
-#    image: alpine
-#    commands:
-#      - apk add mariadb-client
-#      - echo "DROP DATABASE hub_backend;" > clean.sql
-#      - echo "CREATE DATABASE hub_backend;" >> clean.sql
-#      - mysql -h mariadb < clean.sql
-#  - name: hubserver
-#    image: node:lts
-#    detach: true
-#    commands:
-#      - cd server
-#      - 'echo ''{"mysql": "mysql://root:@mariadb:3306/hub_backend"}'' > config/local-production.json'
-#      - NODE_ENV=production npm start
-#  - name: test-api
-#    image: node:lts
-#    commands:
-#      - cd test-api
-#      - npm ci
-#      - sleep 10
-#      - SERVER_URL=hubserver:3030 npm start
+  - name: clean-database
+    image: alpine
+    commands:
+      - apk add mariadb-client
+      - echo "DROP DATABASE hub_backend;" > clean.sql
+      - echo "CREATE DATABASE hub_backend;" >> clean.sql
+      - mysql -h mariadb < clean.sql
+  - name: hubserver
+    image: node:lts
+    detach: true
+    commands:
+      - cd server
+      - 'echo ''{"mysql": "mysql://root:@mariadb:3306/hub_backend"}'' > config/local-production.json'
+      - NODE_ENV=production npm start
+  - name: test-api
+    image: node:lts
+    commands:
+      - cd test-api
+      - npm ci
+      - sleep 10
+      - SERVER_URL=hubserver:3030 npm start
