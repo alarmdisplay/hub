@@ -5,7 +5,7 @@ cd "$(dirname $0)/.."
 PROJECT_DIR=$PWD
 echo "Project root is $PROJECT_DIR"
 
-for subfolder in "server" "console"; do
+for subfolder in "server" "console" "test-api"; do
     cd "$PROJECT_DIR/$subfolder"
     echo "Updating $subfolder ..."
     npm update --dev
