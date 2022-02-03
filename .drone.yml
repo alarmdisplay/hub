@@ -11,13 +11,13 @@ trigger:
 
 steps:
   - name: lint-server
-    image: node
+    image: node:lts
     commands:
       - cd server
       - npm ci
       - npm run lint
   - name: lint-console
-    image: node
+    image: node:lts
     commands:
       - cd console
       - npm ci
