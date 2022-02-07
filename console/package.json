@@ -16,7 +16,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.10",
     "@vue/composition-api": "^0.6.7",
     "bulma": "^0.9.3",
-    "core-js": "^3.20.3",
+    "core-js": "^3.21.0",
     "feathers-hooks-common": "^5.0.6",
     "feathers-vuex": "^3.16.0",
     "moment": "^2.29.1",
