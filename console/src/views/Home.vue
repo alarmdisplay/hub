@@ -18,8 +18,8 @@
                     </div>
                 </div>
             </div>
-            <FeathersVuexFind service="incidents" :query="{ $limit: 3, $sort: { time: -1 } }" qid="recentIncidents" watch="query">
-                <ol class="" slot-scope="{ items: incidents }">
+            <FeathersVuexFind v-slot="{ items: incidents }" service="incidents" :query="{ $limit: 3, $sort: { time: -1 } }" qid="recentIncidents" watch="query">
+                <ol class="">
                     <li class="box" v-for="incident in incidents" :key="incident.id">
                         <IncidentMediaObject :incident="incident"/>
                     </li>
