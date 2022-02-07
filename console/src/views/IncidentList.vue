@@ -22,7 +22,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <IncidentListComponent v-for="incident in incidents" :key="incident.id" :incident="incident"/>
+                    <IncidentListRow v-for="incident in incidents" :key="incident.id" :incident="incident"/>
                     </tbody>
                 </table>
             </FeathersVuexFind>
@@ -31,11 +31,11 @@
 </template>
 
 <script>
-import IncidentListComponent from '@/components/IncidentListRow'
+import IncidentListRow from '@/components/IncidentListRow'
 
 export default {
     name: 'IncidentList',
-    components: { IncidentListComponent }
+    components: { IncidentListRow }
   }
 </script>
 
