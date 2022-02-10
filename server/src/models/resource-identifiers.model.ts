@@ -1,6 +1,6 @@
 import { Sequelize, DataTypes, Model } from 'sequelize';
+import { HookReturn } from 'sequelize/types/hooks';
 import { Application } from '../declarations';
-import { HookReturn } from 'sequelize/types/lib/hooks';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
@@ -24,7 +24,7 @@ export default function (app: Application): typeof Model {
   });
 
   (ResourceIdentifier as any).associate = function (models: any): void {
-    models.resource_identifier.belongsTo(models.resource, { as: 'resource' })
+    models.resource_identifier.belongsTo(models.resource, { as: 'resource' });
   };
 
   return ResourceIdentifier;

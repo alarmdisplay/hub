@@ -19,19 +19,24 @@ import appHooks from './app.hooks';
 import channels from './channels';
 import authentication from './authentication';
 import sequelize from './sequelize';
-import fs from "fs";
+import fs from 'fs';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 const app: Application = express(feathers());
 
 // Load app configuration
 app.configure(configuration());
+
+// Set log level from config
 app.set('devMode', !process.env.NODE_ENV || process.env.NODE_ENV === 'development');
-logger.level = app.get('logging').level;
+const level = app.get('logging').level || '';
+if (['ALL', 'MARK', 'TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL', 'OFF'].includes(level.toUpperCase())) {
+  logger.level = level;
+}
 logger.info('Logging level is \'%s\'', logger.level);
 
 // Enable security, CORS, compression, favicon and body parsing
-app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors<Request>());
 app.use(compress());
 app.use(express.json());
@@ -46,6 +51,11 @@ if (fs.existsSync('ext-console')) {
 } else if (process.env.NODE_ENV === 'production') {
   logger.warn('The static files for the console UI could not be found, the path /console will not work');
 }
+
+// Set up a global Promise to check if the database is ready
+app.set('databaseReady', new Promise(resolve => {
+  app.set('databaseReadyResolve', resolve);
+}));
 
 // Set up Plugins and providers
 app.configure(express.rest());

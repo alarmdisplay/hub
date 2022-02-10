@@ -1,4 +1,4 @@
-import {TextAnalysisConfig} from '../../../declarations'
+import {TextAnalysisConfig} from '../../../declarations';
 
 export default {
   name: 'ILS Bamberg',
@@ -72,4 +72,4 @@ export default {
     }
   ],
   triggerWords: ['Alarmfax']
-} as TextAnalysisConfig
+} as TextAnalysisConfig;

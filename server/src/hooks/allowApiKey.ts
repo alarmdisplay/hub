@@ -1,12 +1,12 @@
-import {HookContext} from '@feathersjs/feathers'
+import {HookContext} from '@feathersjs/feathers';
 
 export function allowApiKey(options = {}) {
   return async (context: HookContext): Promise<HookContext> => {
-    const { params } = context
+    const { params } = context;
 
     // Stop, if it is an internal call or another authentication has been performed already
     if (!params.provider || params.authentication) {
-      return context
+      return context;
     }
 
     // Extract the API key from the request
@@ -17,9 +17,9 @@ export function allowApiKey(options = {}) {
           strategy: 'api-key',
           'api-key': params.headers['x-api-key']
         }
-      }
+      };
     }
 
     return context;
-  }
+  };
 }

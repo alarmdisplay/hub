@@ -18,7 +18,7 @@ declare module '../../declarations' {
     ref: string
     caller_name: string
     caller_number: string
-    location: LocationData
+    location?: LocationData
     reason: string
     keyword: string
     resources: ResourceData[]
@@ -63,7 +63,7 @@ declare module '../../declarations' {
 
 export enum AlertSourceType {
   OCR,
-  PAGER
+  PLAIN
 }
 
 export enum IncidentStatus {
@@ -82,7 +82,7 @@ export enum IncidentCategory {
   Health = 'Health',
   Env = 'Env',
   Transport = 'Transport',
-  Infra = "Infra",
+  Infra = 'Infra',
   CBRNE = 'CBRNE',
   Other = 'Other'
 }

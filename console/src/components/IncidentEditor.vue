@@ -33,7 +33,8 @@
                             <label class="label">Alarmzeit</label>
                         </div>
                         <div class="field-body">
-                            <span>{{ isNewItem ? 'wird beim Anlegen gesetzt' : item.time | moment('L LTS') }}</span>
+                            <span v-if="isNewItem">wird beim Anlegen gesetzt</span>
+                            <span v-else>{{ item.time | moment('L LTS') }}</span>
                         </div>
                     </div>
 
@@ -44,7 +45,7 @@
                         <div class="field-body">
                             <div class="field">
                                 <div class="control">
-                                    <input class="input" type="text" id="reason" placeholder="Grund unbekannt"
+                                    <input class="input" type="text" id="reason" :placeholder="reasonPlaceholder"
                                            v-model="item.reason">
                                 </div>
                             </div>
@@ -122,6 +123,19 @@
                         </div>
                     </div>
                 </fieldset>
+
+                <fieldset>
+                    <legend>Einsatzmittel</legend>
+                    <div class="field" id="resources">
+                        <span class="control" v-for="resource of resources" :key="resource.id">
+                            <label class="checkbox">
+                                <input type="checkbox" :value="resource.id" v-model="item.resourceIds">
+                                <ResourceIcon :resource="resource"/>
+                                {{ resource.name }}
+                            </label>
+                        </span>
+                    </div>
+                </fieldset>
             </div>
         </div>
 
@@ -130,7 +144,7 @@
             <button type="button" class="button" @click.prevent="item.location = null">Einsatzort entfernen</button>
             <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                    <label class="label" for="sender">Adresse</label>
+                    <label class="label" for="street">Adresse</label>
                 </div>
                 <div class="field-body">
                     <div class="field">
@@ -156,7 +170,7 @@
 
             <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                    <label class="label" for="locality">Ort</label>
+                    <label class="label" for="post-code">Ort</label>
                 </div>
                 <div class="field-body">
                     <div class="field">
@@ -182,7 +196,7 @@
 
             <div class="field is-horizontal">
                 <div class="field-label is-normal">
-                    <label class="label" for="locality">Koordinaten (WGS84)</label>
+                    <label class="label" for="longitude">Koordinaten (WGS84)</label>
                 </div>
                 <div class="field-body">
                     <div class="field">
@@ -223,9 +237,12 @@
 </template>
 
 <script>
+import ResourceIcon from '@/components/ResourceIcon'
+import { makeFindMixin } from 'feathers-vuex'
+
 export default {
   name: 'IncidentEditor',
-  components: {},
+  components: { ResourceIcon },
   props: {
     item: {
       type: Object,
@@ -235,7 +252,31 @@ export default {
   computed: {
     isNewItem: function () {
       return this.item.id === undefined
+    },
+    reasonPlaceholder () {
+      switch (this.item.status) {
+        case 'Exercise':
+          return 'Übung'
+        case 'Test':
+          return  'Probealarm'
+        default:
+          return 'Einsatzgrund unbekannt'
+      }
+    },
+    resourcesParams () {
+      return {
+        query: {
+          $sort: {
+            name: 1
+          }
+        }
+      }
     }
+  },
+  async created () {
+    const { Resource } = this.$FeathersVuex.api
+    // Make sure all resources are loaded and up-to-date
+    Resource.find()
   },
   data() {
     return {}
@@ -250,9 +291,18 @@ export default {
       return true
     }
   },
+  mixins: [
+    makeFindMixin({ service: 'resources', local: true }),
+  ],
   setup(props, context) {
     function handleSubmit() {
       if (this.isValid()) {
+        if (this.item.location && this.item.location.latitude === '') {
+          this.item.location.latitude = null
+        }
+        if (this.item.location && this.item.location.longitude === '') {
+          this.item.location.longitude = null
+        }
         context.emit('save')
       } else {
         // TODO show validation result
@@ -272,5 +322,17 @@ fieldset {
 
 fieldset > legend {
     padding: 0 0.5em;
+}
+
+fieldset + fieldset {
+    margin-top: 0.75rem;
+}
+
+span.control {
+    margin-right: 1em;
+}
+
+#resources .checkbox input {
+    margin-right: 0.3em;
 }
 </style>

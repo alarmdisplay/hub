@@ -3,7 +3,7 @@ import { ServiceAddons } from '@feathersjs/feathers';
 import { Application } from '../../declarations';
 import { TextAnalysis } from './textanalysis.class';
 import hooks from './textanalysis.hooks';
-import createModel from "../../models/textanalysis.model";
+import createModel from '../../models/textanalysis.model';
 
 // Add this service to the service type index
 declare module '../../declarations' {

@@ -1,4 +1,4 @@
-import {TextAnalysisConfig} from '../../../declarations'
+import {TextAnalysisConfig} from '../../../declarations';
 
 export default {
   name: 'ILS Augsburg',
@@ -48,14 +48,14 @@ export default {
       regexps: []
     },
     {
-      beginningMark: /EINSAT[AZ]GRUND/,
+      beginningMark: /EINSATZGRUND/,
       regexps: [
         /Schlagw\.[:;=]\s(?<reason>.*)$/,
         /Stichwort[:;=]\s(?<keyword>.*)$/
       ]
     },
     {
-      beginningMark: /EINSATZMITI?TEL/,
+      beginningMark: /EINSATZMITTEL/,
       regexps: [
         /(?<resources>.*) \(Ausger/
       ]
@@ -68,4 +68,4 @@ export default {
     }
   ],
   triggerWords: ['Alarmfax']
-} as TextAnalysisConfig
+} as TextAnalysisConfig;

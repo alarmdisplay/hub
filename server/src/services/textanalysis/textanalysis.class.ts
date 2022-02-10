@@ -1,29 +1,40 @@
-import { AlertContext, Application, FoundFileContext, ResourceData, ResourceIdentifierData, SerialDataContext, TextAnalysisData, TextAnalysisResult } from '../../declarations'
-import logger from '../../logger'
-import { Ocr } from "./ocr.class";
-import configs from "./configs";
-import { AlertSourceType } from "../incidents/incidents.service";
-import { Analyser } from "./analyser.class";
-import { SequelizeServiceOptions, Service } from "feathers-sequelize";
+import {
+  AlertContext,
+  Application,
+  FoundFileContext,
+  ResourceData,
+  ResourceIdentifierData,
+  SerialDataContext,
+  TextAnalysisData,
+  TextAnalysisResult
+} from '../../declarations';
+import logger from '../../logger';
+import { Ocr } from './ocr.class';
+import configs from './configs';
+import { AlertSourceType } from '../incidents/incidents.service';
+import { Analyser } from './analyser.class';
+import { SequelizeServiceOptions, Service } from 'feathers-sequelize';
+import cp from 'child_process';
+import util from 'util';
 
 export class TextAnalysis extends Service<TextAnalysisData> {
-  app: Application
-  analyser: Analyser
-  ocr: Ocr
+  app: Application;
+  analyser: Analyser;
+  ocr: Ocr;
 
   constructor (options: Partial<SequelizeServiceOptions>, app: Application) {
-    super(options)
-    this.app = app
-    this.analyser = new Analyser()
-    this.ocr = new Ocr(app)
+    super(options);
+    this.app = app;
+    this.analyser = new Analyser();
+    this.ocr = new Ocr(app);
   }
 
   setup(app: Application): void {
     // Register to be notified of new files
     const watchedFoldersService = app.service('watchedfolders');
-    watchedFoldersService.on('found_file', (context: FoundFileContext) => this.onNewFile(context.path, context.watchedFolderId))
+    watchedFoldersService.on('found_file', (context: FoundFileContext) => this.onNewFile(context.path, context.watchedFolderId));
     const serialMonitorsService = app.service('serial-monitors');
-    serialMonitorsService.on('serial_data', (context: SerialDataContext) => this.onSerialData(context.serialMonitorId, context.data))
+    serialMonitorsService.on('serial_data', (context: SerialDataContext) => this.onSerialData(context.serialMonitorId, context.data));
   }
 
   private async onSerialData(serialMonitorId: number, data: Buffer){
@@ -36,38 +47,38 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       paginate: false
     }) as TextAnalysisData[];
     if (textAnalysisJobs.length === 0) {
-      logger.warn('Did not find a textanalysis job for serial monitor %d, aborting ...', serialMonitorId)
-      return
+      logger.warn('Did not find a textanalysis job for serial monitor %d, aborting ...', serialMonitorId);
+      return;
     }
 
-    let configName = textAnalysisJobs[0].config;
-    let configIndex = Object.keys(configs).indexOf(configName);
+    const configName = textAnalysisJobs[0].config;
+    const configIndex = Object.keys(configs).indexOf(configName);
     if (configIndex === -1) {
-      logger.error('Found textanalysis job, but there is no config by the name \'%s\'', configName)
-      return
+      logger.error('Found textanalysis job, but there is no config by the name \'%s\'', configName);
+      return;
     }
     const textAnalysisConfig = Object.values(configs)[configIndex];
 
-    let alertContext = {
+    const alertContext = {
       processingStarted: new Date(),
       rawContent: data.toString(),
       source: {
-        type: AlertSourceType.PAGER
+        type: AlertSourceType.PLAIN
       }
-    }
+    };
 
-    let result
+    let result;
     try {
-      result = this.analyser.analyse(alertContext.rawContent, textAnalysisConfig)
+      result = this.analyser.analyse(alertContext.rawContent, textAnalysisConfig);
     } catch (e) {
-      logger.error('Text analysis aborted:', e)
-      return
+      logger.error('Text analysis aborted:', e);
+      return;
     }
 
-    logger.debug('Text analysis completed')
+    logger.debug('Text analysis completed');
 
     // Determine the requested resources
-    await this.analyzeAlarmResults(result, alertContext)
+    await this.analyzeAlarmResults(result, alertContext);
   }
 
   private async onNewFile(filePath: string, watchedFolderId: number) {
@@ -80,40 +91,56 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       paginate: false
     }) as TextAnalysisData[];
     if (textAnalysisJobs.length === 0) {
-      logger.warn('Did not find a textanalysis job for watched folder %d, aborting ...', watchedFolderId)
-      return
+      logger.warn('Did not find a textanalysis job for watched folder %d, aborting ...', watchedFolderId);
+      return;
     }
-    let configName = textAnalysisJobs[0].config;
-    let configIndex = Object.keys(configs).indexOf(configName);
+    const configName = textAnalysisJobs[0].config;
+    const configIndex = Object.keys(configs).indexOf(configName);
     if (configIndex === -1) {
-      logger.error('Found textanalysis job, but there is no config by the name \'%s\'', configName)
-      return
+      logger.error('Found textanalysis job, but there is no config by the name \'%s\'', configName);
+      return;
     }
     const textAnalysisConfig = Object.values(configs)[configIndex];
 
     // Prepare the context to handle this alert
-    let alertContext = {
+    const alertContext = {
       processingStarted: new Date(),
       rawContent: '',
       source: {
-        type: AlertSourceType.OCR
+        type: AlertSourceType.PLAIN
+      }
+    };
+
+    try {
+      alertContext.rawContent = await this.getEmbeddedText(filePath);
+    } catch (error: any) {
+      logger.warn('Could not extract embedded text from file:', error.message);
+    }
+
+    if (!alertContext.rawContent) {
+      logger.debug('No embedded text found, continue with OCR...');
+      try {
+        alertContext.rawContent = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
+        alertContext.source.type = AlertSourceType.OCR;
+      } catch (error: any) {
+        logger.error('Could not get text from file:', error.message);
+        return;
       }
     }
 
-    alertContext.rawContent = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
-
-    let result
+    let result;
     try {
-      result = this.analyser.analyse(alertContext.rawContent, textAnalysisConfig)
+      logger.debug('Analysing the following text:', alertContext.rawContent);
+      result = this.analyser.analyse(alertContext.rawContent, textAnalysisConfig);
     } catch (e) {
-      logger.error('Text analysis aborted:', e)
-      return
+      logger.error('Text analysis aborted:', e);
+      return;
     }
 
-    logger.debug('Text analysis completed')
+    logger.debug('Text analysis completed:', result);
 
     // Determine the requested resources
-    await this.analyzeAlarmResults(result, alertContext)
+    await this.analyzeAlarmResults(result, alertContext);
   }
 
   private async analyzeAlarmResults(result: TextAnalysisResult, alertContext: AlertContext) {
@@ -121,29 +148,50 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     const resourceIds = new Set();
     const ResourceIdentifierService = this.app.service('resource-identifiers');
     for (const name of result.resources) {
-      const identifiers = await ResourceIdentifierService.find({ query: { type: 'name', value: name, $limit: 1 }, paginate: false }) as ResourceIdentifierData[]
+      const identifiers = await ResourceIdentifierService.find({ query: { type: 'name', value: name, $limit: 1 }, paginate: false }) as ResourceIdentifierData[];
       if (identifiers.length === 0) {
         continue;
       }
 
-      resourceIds.add(identifiers[0].resourceId)
+      resourceIds.add(identifiers[0].resourceId);
     }
 
-    let ResourceService = this.app.service('resources')
-    let resources = await ResourceService.find({ query: { id: { $in: Array.from(resourceIds.values()) } }, paginate: false }) as ResourceData[]
-    logger.debug('Checked for known resources, found %d', resources.length)
+    const ResourceService = this.app.service('resources');
+    const resources = await ResourceService.find({ query: { id: { $in: Array.from(resourceIds.values()) } }, paginate: false }) as ResourceData[];
+    logger.debug('Checked for known resources, found %d', resources.length);
 
-    let IncidentsService = this.app.service('incidents')
+    // Compress multiple consecutive spaces into a single one
+    const description = (result.description || '').replace(/\s{2,}/, ' ');
+
+    const IncidentsService = this.app.service('incidents');
     await IncidentsService.processAlert({
       caller_name: result.caller.name,
       caller_number: result.caller.number,
-      description: result.description,
+      description: description,
       keyword: result.keyword,
       location: result.location,
       reason: result.reason,
       ref: result.ref,
       resources: resources,
       sender: result.sender
-    }, alertContext)
+    }, alertContext);
+  }
+
+  /**
+   * Try to extract embedded text from PDFs.
+   *
+   * @param filePath
+   * @private
+   */
+  private async getEmbeddedText(filePath: string): Promise<string> {
+    const exec = util.promisify(cp.exec);
+
+    // Check if pdftotext is installed, will throw on error
+    await exec('pdftotext -v');
+
+    // Try to extract the text while preserving the layout
+    const { stdout } = await exec(`pdftotext -layout "${filePath}" -`);
+
+    return (stdout || '').trim();
   }
 }

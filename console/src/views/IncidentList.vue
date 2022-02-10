@@ -10,8 +10,8 @@
                 </router-link>
             </div>
 
-            <FeathersVuexFind service="incidents" :query="{ $sort: { time: -1 }, $limit: 30 }" qid="incidentList" watch="query">
-                <table class="table is-fullwidth" slot-scope="{ items: incidents }">
+            <FeathersVuexFind v-slot="{ items: incidents }" service="incidents" :query="{ $sort: { time: -1 }, $limit: 30 }" qid="incidentList" watch="query">
+                <table class="table is-fullwidth">
                     <thead>
                     <tr>
                         <th>Einsatzgrund</th>
@@ -22,26 +22,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <template v-for="incident in incidents">
-                        <tr :key="incident.id">
-                            <th>{{ incident.reason }}</th>
-                            <td>{{ incident.keyword }}</td>
-                            <td class="incident-location">{{ incident.location ? [incident.location.locality, incident.location.street].join('\n') : '' }}</td>
-                            <td class="has-text-right">{{ incident.time | moment('LLL') }}</td>
-                            <td class="is-narrow">
-                                <div class="field is-grouped">
-                                    <p class="control">
-                                        <button class="button is-outlined" title="Einsatz bearbeiten" @click="$router.push({ name: 'incident-form', params: { id: incident.id } })">
-                                            <span class="icon">
-                                                <font-awesome-icon icon="edit"/>
-                                            </span>
-                                            <span>Bearbeiten</span>
-                                        </button>
-                                    </p>
-                                </div>
-                            </td>
-                        </tr>
-                    </template>
+                    <IncidentListRow v-for="incident in incidents" :key="incident.id" :incident="incident"/>
                     </tbody>
                 </table>
             </FeathersVuexFind>
@@ -50,14 +31,11 @@
 </template>
 
 <script>
-  export default {
+import IncidentListRow from '@/components/IncidentListRow'
+
+export default {
     name: 'IncidentList',
-    components: {}
+    components: { IncidentListRow }
   }
 </script>
 
-<style scoped>
-.incident-location {
-    white-space: pre-line;
-}
-</style>

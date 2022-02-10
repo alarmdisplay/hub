@@ -1,10 +1,10 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { HookReturn } from 'sequelize/types/hooks';
 import { Application } from '../declarations';
-import { HookReturn } from 'sequelize/types/lib/hooks';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  return sequelizeClient.define('print_task', {
+  const PrintTask = sequelizeClient.define('print_task', {
     event: {
       type: DataTypes.STRING,
       allowNull: false
@@ -31,4 +31,5 @@ export default function (app: Application): typeof Model {
     },
     tableName: [app.get('db_prefix'), 'print_tasks'].join('_'),
   });
+  return PrintTask;
 }

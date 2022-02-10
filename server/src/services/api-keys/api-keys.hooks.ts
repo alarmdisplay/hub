@@ -53,13 +53,13 @@ export default {
 function enforceNameOnly(context: HookContext): HookContext {
   // Make sure a name was submitted
   if (!context.data.name || context.data.name === '') {
-    throw new BadRequest('A name for the token must be provided')
+    throw new BadRequest('A name for the token must be provided');
   }
 
   // Restrict the submitted data to only the name
-  context.data = { name: context.data.name }
+  context.data = { name: context.data.name };
 
-  return context
+  return context;
 }
 
 /**
@@ -70,13 +70,13 @@ function enforceNameOnly(context: HookContext): HookContext {
 function generateToken(context: HookContext): HookContext {
   // Generate a random token and add it to the submitted data. This will not be stored directly, but returned to the client once
   const hash = createHash('sha256');
-  hash.update(uuidv4())
-  context.data.token = hash.digest('hex')
+  hash.update(uuidv4());
+  context.data.token = hash.digest('hex');
 
   // Duplicate the value in the tokenHash field, which will be hashed and stored
-  context.data.tokenHash = context.data.token
+  context.data.tokenHash = context.data.token;
 
-  return context
+  return context;
 }
 
 /**
@@ -85,6 +85,6 @@ function generateToken(context: HookContext): HookContext {
  * @param context
  */
 function includeToken(context: HookContext): HookContext {
-  context.result.token = context.data.token
-  return context
+  context.result.token = context.data.token;
+  return context;
 }

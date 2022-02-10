@@ -1,12 +1,12 @@
 // See http://docs.sequelizejs.com/en/latest/docs/models-definition/
 // for more of what you can do here.
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { HookReturn } from 'sequelize/types/hooks';
 import { Application } from '../declarations';
-import { HookReturn } from 'sequelize/types/lib/hooks';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  return sequelizeClient.define('serial_monitor', {
+  const SerialMonitor = sequelizeClient.define('serial_monitor', {
     port: {
       type: DataTypes.STRING,
       allowNull: false
@@ -34,4 +34,5 @@ export default function (app: Application): typeof Model {
     },
     tableName: [app.get('db_prefix'), 'serial_monitors'].join('_')
   });
+  return SerialMonitor;
 }

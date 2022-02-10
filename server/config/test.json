@@ -1,3 +1,9 @@
 {
+  "logging": {
+    "level": "error"
+  },
+  "port": 8999,
+  "sqlite": "sqlite::memory:",
+  "dbMaxRetries": 10,
   "db_prefix": "test"
 }

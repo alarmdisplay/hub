@@ -19,6 +19,7 @@ class Incident extends BaseModel {
       description: '',
       status: 'Actual',
       category: 'Other',
+      resourceIds: [],
       location: null
     }
   }
@@ -54,6 +55,31 @@ class Incident extends BaseModel {
       enumerable: true
     })
 
+    // Add nested resource objects to the store
+    if (data.resources && Array.isArray(data.resources)) {
+      data.resourceIds = data.resources.map(resource => {
+        new models.api.Resource(resource);
+        return resource.id;
+      })
+    }
+
+    // Replace the nested resources with a getter
+    Object.defineProperty(data, 'resources', {
+      get: function () {
+        let resources = models.api.Resource.findInStore({
+          query: {
+            id: {
+              $in: data.resourceIds || []
+            }
+          },
+          paginate: false
+        })
+        return resources.data
+      },
+      configurable: true,
+      enumerable: true
+    })
+
     return data
   }
 }
@@ -71,9 +97,9 @@ feathersClient.service(servicePath).hooks({
     all: [],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
+    create: [ ensureResources ],
+    update: [ ensureResources ],
+    patch: [ ensureResources ],
     remove: []
   },
   after: {
@@ -95,5 +121,20 @@ feathersClient.service(servicePath).hooks({
     remove: []
   }
 })
+
+/**
+ * Translates the resourceIds field to the resources field, because the dynamic getter is not updated on clones.
+ *
+ * @param {HookContext} context
+ * @return {HookContext}
+ */
+function ensureResources(context) {
+  const resourceIds = context.data.resourceIds || []
+  context.data.resources = resourceIds.map(id => {
+    // The incidents endpoint only needs the id property
+    return { id: id }
+  })
+  return context;
+}
 
 export default servicePlugin

@@ -1,11 +1,11 @@
-import logger from "../../logger";
-import { TextAnalysisConfig, TextAnalysisResult, SectionDefinition } from "../../declarations";
+import logger from '../../logger';
+import { TextAnalysisConfig, TextAnalysisResult, SectionDefinition } from '../../declarations';
 
 export class Analyser {
-  multiValueKeys: string[]
+  multiValueKeys: string[];
 
   constructor() {
-    this.multiValueKeys = ['resources']
+    this.multiValueKeys = ['resources'];
   }
 
   analyse(text: string, config: TextAnalysisConfig): TextAnalysisResult {
@@ -13,44 +13,44 @@ export class Analyser {
       throw new Error('No valid config given');
     }
 
-    logger.debug('Starting text analysis with config %s', config.name || 'NONAME')
+    logger.debug('Starting text analysis with config %s', config.name || 'NONAME');
     // Check for certain trigger words to make sure we try to apply the correct config
     if (config.triggerWords.length > 0) {
-      let foundWords = this.checkForTriggerWords(text, config.triggerWords)
+      const foundWords = this.checkForTriggerWords(text, config.triggerWords);
       if (foundWords === 0) {
-        throw new Error('Did not find a single trigger word, aborting analysis')
+        throw new Error('Did not find a single trigger word, aborting analysis');
       }
     }
 
     // Remove unneeded text
-    let shortenedText = this.shortenText(text, config)
+    const shortenedText = this.shortenText(text, config);
 
     // Break the text into sections
-    let sections = this.splitIntoSections(shortenedText, config);
+    const sections = this.splitIntoSections(shortenedText, config);
 
     // Analyse each section
-    let matches = new Map<string, string|string[]>()
+    let matches = new Map<string, string|string[]>();
     for (const [sectionDefinition, sectionText] of sections.entries()) {
-      let data = this.processSection(sectionText, sectionDefinition)
+      const data = this.processSection(sectionText, sectionDefinition);
       if (data.size > 0) {
-        matches = this.mergeMatches(matches, data)
+        matches = this.mergeMatches(matches, data);
       }
     }
 
     // Pass a GaussKrueger object as soon as one of the coordinates has been recognized
-    let gk = matches.has('loc_gk_x') || matches.has('loc_gk_y') ? {
+    const gk = matches.has('loc_gk_x') || matches.has('loc_gk_y') ? {
       x: matches.get('loc_gk_x') as string || '',
       y: matches.get('loc_gk_y') as string || ''
-    }: undefined
+    }: undefined;
 
-    let wgs84 = matches.has('loc_wgs84_lon') && matches.has('loc_wgs84_lat') ? {
-      lon: matches.get('loc_wgs84_lon') as string || '',
+    const wgs84 = matches.has('loc_wgs84_lon') && matches.has('loc_wgs84_lat') ? {
+      lon: this.getMatchWithoutNewlines(matches, 'loc_wgs84_lon'),
       lon_min: matches.get('loc_wgs84_lon_min') as string || '',
       lon_sec: matches.get('loc_wgs84_lon_sec') as string || '',
-      lat: matches.get('loc_wgs84_lat') as string || '',
+      lat: this.getMatchWithoutNewlines(matches, 'loc_wgs84_lat'),
       lat_min: matches.get('loc_wgs84_lat_min') as string || '',
       lat_sec: matches.get('loc_wgs84_lat_sec') as string || ''
-    } : undefined
+    } : undefined;
 
     // There might be a more elegant way, but that's for later
     return {
@@ -73,18 +73,18 @@ export class Analyser {
       keyword: matches.get('keyword') as string || '',
       resources: matches.get('resources') as string[] || [],
       description: matches.get('description') as string || '',
-    }
+    };
   }
 
   private checkForTriggerWords (text: string, triggerWords: string[]) {
-    let foundTriggerWords = 0
+    let foundTriggerWords = 0;
     for (const word of triggerWords) {
       if (text.includes(word)) {
-        foundTriggerWords++
+        foundTriggerWords++;
       }
     }
 
-    return foundTriggerWords
+    return foundTriggerWords;
   }
 
   /**
@@ -95,102 +95,102 @@ export class Analyser {
    * @private
    */
   private shortenText (text: string, config: TextAnalysisConfig): string {
-    let startIndex: number|undefined = undefined
+    let startIndex: number|undefined = undefined;
     if (config.beginningMark) {
-      let index = text.search(config.beginningMark)
+      const index = text.search(config.beginningMark);
       if (index === -1) {
-        logger.warn('Beginning mark could not be found')
+        logger.warn('Beginning mark could not be found');
       } else {
         startIndex = index;
       }
     }
 
-    let endIndex: number|undefined = undefined
+    let endIndex: number|undefined = undefined;
     if (config.endMark) {
-      let index = text.search(config.endMark)
+      const index = text.search(config.endMark);
       if (index === -1) {
-        logger.warn('End mark could not be found')
+        logger.warn('End mark could not be found');
       } else {
         endIndex = index;
       }
     }
 
     if (!startIndex && !endIndex) {
-      return text
+      return text;
     }
 
-    return text.slice(startIndex, endIndex)
+    return text.slice(startIndex, endIndex);
   }
 
   private splitIntoSections (text: string, config: TextAnalysisConfig) : Map<SectionDefinition, string> {
-    const map = new Map<SectionDefinition, string>()
-    const sections: string[] = []
-    let textToSplit = text + ''
+    const map = new Map<SectionDefinition, string>();
+    const sections: string[] = [];
+    let textToSplit = text + '';
     config.sections.forEach((section, index) => {
-      const [previousSection, rest] = textToSplit.split(section.beginningMark, 2)
+      const [previousSection, rest] = textToSplit.split(section.beginningMark, 2);
 
       if (!rest) {
-        logger.warn('Could not find section start matching %s', section.beginningMark)
-        sections.push('')
-        return
+        logger.warn('Could not find section start matching %s', section.beginningMark);
+        sections.push('');
+        return;
       }
 
-      textToSplit = rest
+      textToSplit = rest;
 
       // Skip everything before the first section
       if (index === 0) {
-        return
+        return;
       }
 
-      sections.push(previousSection)
-    })
+      sections.push(previousSection);
+    });
 
     // Everything until the end is the last section
-    sections.push(textToSplit)
+    sections.push(textToSplit);
 
     if (config.sections.length !== sections.length) {
-      logger.warn('Found %d sections, but expected to find %d sections', sections.length, config.sections.length)
+      logger.warn('Found %d sections, but expected to find %d sections', sections.length, config.sections.length);
     }
 
     config.sections.forEach((section, index) => {
-      map.set(section, sections[index])
-    })
+      map.set(section, sections[index]);
+    });
 
-    return map
+    return map;
   }
 
   private processSection (text: string, sectionDefinition: SectionDefinition): Map<string, string|string[]> {
     let matches = new Map<string, string|string[]>();
 
     // Only use one kind of dash
-    text = text.replace(/[–—]/gi, '-')
+    text = text.replace(/[–—]/gi, '-');
 
     // If we have regular expressions that work over multiple lines, process the entire text
-    const multiLineRegExps = sectionDefinition.regexps.filter(regexp => regexp.multiline)
+    const multiLineRegExps = sectionDefinition.regexps.filter(regexp => regexp.multiline);
     if (multiLineRegExps.length > 0) {
-      let multiLineMatches = this.processText(text, multiLineRegExps)
-      matches = this.mergeMatches(matches, multiLineMatches)
+      const multiLineMatches = this.processText(text, multiLineRegExps);
+      matches = this.mergeMatches(matches, multiLineMatches);
     }
 
     // If we have regular expressions that work on single lines, process the text line by line
-    const singleLineRegExps = sectionDefinition.regexps.filter(regexp => !regexp.multiline)
+    const singleLineRegExps = sectionDefinition.regexps.filter(regexp => !regexp.multiline);
     if (singleLineRegExps.length > 0) {
-      let lines = text.split('\n')
+      const lines = text.split('\n');
       lines.forEach(line => {
         // Remove whitespace from beginning and end of the line
-        line = line.trim()
+        line = line.trim();
 
         // Empty lines can be skipped
         if (line === '') {
-          return
+          return;
         }
 
-        let singleLineMatches = this.processText(line, singleLineRegExps)
-        matches = this.mergeMatches(matches, singleLineMatches)
-      })
+        const singleLineMatches = this.processText(line, singleLineRegExps);
+        matches = this.mergeMatches(matches, singleLineMatches);
+      });
     }
 
-    return matches
+    return matches;
   }
 
   /**
@@ -202,57 +202,70 @@ export class Analyser {
    * @return A Map of named capture groups and their values
    */
   private processText (text: string, regexps: RegExp[]): Map<string, string> {
-    let matches = new Map<string, string>()
+    const matches = new Map<string, string>();
 
     for (const regex of regexps) {
-      let match = text.match(regex)
+      const match = text.match(regex);
       if (!match) {
-        continue
+        continue;
       }
 
       if (!match.groups) {
-        logger.warn('RegExp %s has no match groups', regex)
-        continue
+        logger.warn('RegExp %s has no match groups', regex);
+        continue;
       }
 
       for (const [key, value] of Object.entries(match.groups)) {
         if (matches.has(key)) {
-          logger.warn('We already have a match for %s', key)
-          continue
+          logger.warn('We already have a match for %s', key);
+          continue;
         }
 
         // Groups may be undefined
         if (!value) {
-          continue
+          continue;
         }
 
         // Collapse multiple newlines into one and remove whitespace and beginning and end
-        let sanitizedValue = value.replace(/\n{2,}/m, '\n')
-        sanitizedValue = sanitizedValue.trim()
-        matches.set(key, sanitizedValue)
+        let sanitizedValue = value.replace(/\n{2,}/m, '\n');
+        sanitizedValue = sanitizedValue.trim();
+        matches.set(key, sanitizedValue);
       }
     }
 
-    return matches
+    return matches;
   }
 
   private mergeMatches (matches: Map<string, string|string[]>, newMatches: Map<string, string|string[]>): Map<string, string|string[]> {
     newMatches.forEach((value, key) => {
       if (this.multiValueKeys.includes(key)) {
-        let array = (matches.get(key) || []) as string[]
-        Array.isArray(value) ? array = array.concat(value) : array.push(value)
-        matches.set(key, array)
-        return
+        let array = (matches.get(key) || []) as string[];
+        Array.isArray(value) ? array = array.concat(value) : array.push(value);
+        matches.set(key, array);
+        return;
       }
 
       if (matches.has(key)) {
-        logger.warn('We already have a value for key %s', key)
-        return
+        logger.warn('We already have a value for key %s', key);
+        return;
       }
 
-      matches.set(key, value)
-    })
+      matches.set(key, value);
+    });
 
-    return matches
+    return matches;
+  }
+
+  /**
+   * This method looks up a match by its key and returns it with all newline characters stripped.
+   * Returns an empty string if the key does not exist.
+   *
+   * @param matches
+   * @param key
+   * @private
+   */
+  private getMatchWithoutNewlines (matches: Map<string, string|string[]>, key: string): string {
+    const value = matches.get(key) as string || '';
+    return value.replace(/\n/, '');
   }
 }
