@@ -1,4 +1,7 @@
 {
   "mysql": "MYSQL_URI",
-  "validate_location": false
+  "validate_location": false,
+  "logging": {
+    "level": "LOG_LEVEL"
+  }
 }

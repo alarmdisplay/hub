@@ -24,8 +24,8 @@ export default function(app: Application) {
           app.channel('authenticated').join(connection);
           return;
         }
-      } catch (e) {
-        logger.warn('Socket connected, API key not accepted:', e.message || e);
+      } catch (error: any) {
+        logger.warn('Socket connected, API key not accepted:', error.message || error);
       }
     }
 

@@ -10,8 +10,8 @@
                 </router-link>
             </div>
 
-            <FeathersVuexFind service="incidents" :query="{ $sort: { time: -1 }, $limit: 30 }" qid="incidentList" watch="query">
-                <table class="table is-fullwidth" slot-scope="{ items: incidents }">
+            <FeathersVuexFind v-slot="{ items: incidents }" service="incidents" :query="{ $sort: { time: -1 }, $limit: 30 }" qid="incidentList" watch="query">
+                <table class="table is-fullwidth">
                     <thead>
                     <tr>
                         <th>Einsatzgrund</th>
@@ -22,7 +22,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <IncidentListComponent v-for="incident in incidents" :key="incident.id" :incident="incident"/>
+                    <IncidentListRow v-for="incident in incidents" :key="incident.id" :incident="incident"/>
                     </tbody>
                 </table>
             </FeathersVuexFind>
@@ -31,11 +31,11 @@
 </template>
 
 <script>
-import IncidentListComponent from '@/components/IncidentListRow'
+import IncidentListRow from '@/components/IncidentListRow'
 
 export default {
     name: 'IncidentList',
-    components: { IncidentListComponent }
+    components: { IncidentListRow }
   }
 </script>
 

@@ -113,7 +113,7 @@ export class TextAnalysis extends Service<TextAnalysisData> {
 
     try {
       alertContext.rawContent = await this.getEmbeddedText(filePath);
-    } catch (error) {
+    } catch (error: any) {
       logger.warn('Could not extract embedded text from file:', error.message);
     }
 
@@ -122,7 +122,7 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       try {
         alertContext.rawContent = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
         alertContext.source.type = AlertSourceType.OCR;
-      } catch (error) {
+      } catch (error: any) {
         logger.error('Could not get text from file:', error.message);
         return;
       }

@@ -43,7 +43,7 @@ export class Locations extends Service<LocationData> {
         logger.debug(wgsCoordinates);
         location.latitude = wgsCoordinates.latitude;
         location.longitude = wgsCoordinates.longitude;
-      } catch (error) {
+      } catch (error: any) {
         logger.warn('Could not convert Gauss-Krueger coordinates:', error.message || error);
       }
     }
@@ -53,7 +53,7 @@ export class Locations extends Service<LocationData> {
     if (this.app.get('validate_location')) {
       try {
         validatedLocation = await this.validateWithNominatim(location, rawLocation);
-      } catch (error) {
+      } catch (error: any) {
         logger.warn('Error while validating the location with Nominatim, using raw values', error.message || error);
       }
     }

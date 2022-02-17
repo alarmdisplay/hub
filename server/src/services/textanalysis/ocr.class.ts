@@ -27,12 +27,12 @@ export class Ocr {
       const tmpdir = os.tmpdir();
       workDir = path.join(tmpdir, digest);
       await fs.promises.mkdir(workDir);
-    } catch (e) {
-      if (e.code === 'EEXIST') {
+    } catch (error: any) {
+      if (error.code === 'EEXIST') {
         logger.warn('Temporary working directory already exists, file has been processed before. Aborting.');
         return '';
       } else {
-        throw new Error('Could not create temporary working directory: ' + e.message);
+        throw new Error('Could not create temporary working directory: ' + error.message);
       }
     }
 
@@ -40,8 +40,8 @@ export class Ocr {
     const fileName = path.join(workDir, 'in.pdf');
     try {
       await fs.promises.copyFile(filePath, fileName);
-    } catch (e) {
-      throw new Error('Could not write file in working directory: ' + e.message);
+    } catch (error: any) {
+      throw new Error('Could not write file in working directory: ' + error.message);
     }
 
     await this.generateUserWords(workDir, textAnalysisConfig);
@@ -53,7 +53,7 @@ export class Ocr {
     let text = '';
     try {
       text = await this.doOcr(workDir);
-    } catch (error) {
+    } catch (error: any) {
       logger.error('OCR error:', error.message);
     } finally {
       // In order to use a file multiple times during development, remove the working directory so it can be recreated

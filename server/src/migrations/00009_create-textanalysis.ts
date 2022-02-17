@@ -26,8 +26,7 @@ export default {
       },
       watchedFolderId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        unique: true
+        allowNull: false
       },
       createdAt: {
         type: Sequelize.DATE,
@@ -37,6 +36,12 @@ export default {
         type: Sequelize.DATE,
         allowNull: false
       }
+    });
+
+    await query.addConstraint(tableName, {
+      name: 'watchedFolderId',
+      type: 'unique',
+      fields: ['watchedFolderId']
     });
 
     await query.addConstraint(tableName, {

@@ -14,8 +14,8 @@
                 </router-link>
             </div>
 
-            <FeathersVuexFind service="resources" :query="{ $sort: { name: 1 }, $limit: 50 }" qid="resourceList" watch="query">
-                <ul slot-scope="{ items: resources }">
+            <FeathersVuexFind v-slot="{ items: resources }" service="resources" :query="{ $sort: { name: 1 }, $limit: 50 }" qid="resourceList" watch="query">
+                <ul>
                     <li v-for="resource in resources" :key="resource.id">
                         <ResourceCard :resource="resource"/>
                     </li>

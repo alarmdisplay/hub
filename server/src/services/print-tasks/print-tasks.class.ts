@@ -48,8 +48,8 @@ export class PrintTasks extends Service<PrintTaskData> {
       // Execute the command
       try {
         cp.execSync(command, { stdio: 'ignore' });
-      } catch (e) {
-        logger.error(e.message);
+      } catch (error: any) {
+        logger.error(error.message);
       }
     }
   }

@@ -6,25 +6,15 @@ import { Application } from '../declarations';
 
 export default function (app: Application): typeof Model {
   const sequelizeClient: Sequelize = app.get('sequelizeClient');
-  const SerialMonitor = sequelizeClient.define('serial_monitor', {
-    port: {
+  const Setting = sequelizeClient.define('setting', {
+    key: {
       type: DataTypes.STRING,
-      allowNull: false
-    },
-    baudRate: {
-      type: DataTypes.INTEGER,
       allowNull: false,
-      defaultValue: 9600
+      primaryKey: true
     },
-    active: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: true
-    },
-    timeout: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      defaultValue: 1000
+    value: {
+      type: DataTypes.JSON,
+      allowNull: true
     }
   }, {
     hooks: {
@@ -32,7 +22,7 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'serial_monitors'].join('_')
+    tableName: [app.get('db_prefix'), 'settings'].join('_')
   });
-  return SerialMonitor;
+  return Setting;
 }
