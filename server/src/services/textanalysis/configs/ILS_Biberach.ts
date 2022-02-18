@@ -15,7 +15,7 @@ export default {
       regexps: [
         /Meldebild\s+(?<reason>.*?)\s+Datum/,
         /Bemerkung\s+(?<description>(?:.|\n)*)^Stichwort/m,
-        /LAT:(?<loc_wgs84_lat>\d[.\d\n]+);LNG:(?<loc_wgs84_lon>\d[.\d\n]+);/m,
+        /LAT:(?<loc_wgs84_lat>\d[.\d\n\s]+);LNG:(?<loc_wgs84_lon>\d[.\d\n\s]+);/m,
         /Stichwort\s.+\sStichwort 2\s+(?<keyword>[^-\s].*)/,
         /Stichwort\s+(?<keyword>[^-\s].*?)\s+Stichwort 2\s/
       ]

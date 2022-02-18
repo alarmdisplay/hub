@@ -44,10 +44,10 @@ export class Analyser {
     }: undefined;
 
     const wgs84 = matches.has('loc_wgs84_lon') && matches.has('loc_wgs84_lat') ? {
-      lon: this.getMatchWithoutNewlines(matches, 'loc_wgs84_lon'),
+      lon: this.getMatchWithoutNewlinesAndIndentation(matches, 'loc_wgs84_lon'),
       lon_min: matches.get('loc_wgs84_lon_min') as string || '',
       lon_sec: matches.get('loc_wgs84_lon_sec') as string || '',
-      lat: this.getMatchWithoutNewlines(matches, 'loc_wgs84_lat'),
+      lat: this.getMatchWithoutNewlinesAndIndentation(matches, 'loc_wgs84_lat'),
       lat_min: matches.get('loc_wgs84_lat_min') as string || '',
       lat_sec: matches.get('loc_wgs84_lat_sec') as string || ''
     } : undefined;
@@ -257,15 +257,16 @@ export class Analyser {
   }
 
   /**
-   * This method looks up a match by its key and returns it with all newline characters stripped.
+   * This method looks up a match by its key and returns it with all newline characters and following whitespace
+   * characters stripped. It is useful to remove linebreaks and indentation from multiline matches.
    * Returns an empty string if the key does not exist.
    *
    * @param matches
    * @param key
    * @private
    */
-  private getMatchWithoutNewlines (matches: Map<string, string|string[]>, key: string): string {
+  private getMatchWithoutNewlinesAndIndentation (matches: Map<string, string|string[]>, key: string): string {
     const value = matches.get(key) as string || '';
-    return value.replace(/\n/, '');
+    return value.replace(/\n\s+/g, '');
   }
 }
