@@ -14,7 +14,7 @@ export default {
       beginningMark: /Einsatzanlass/,
       regexps: [
         /Meldebild\s+(?<reason>.*?)\s+Datum/,
-        /Bemerkung\s+(?<description>(?:.|\n)*)^Stichwort/m,
+        /Bemerkung\s+(?!GEBIET_UND_BEZEICHNUNG)(?<description>[^\s].*?)(?:^\s+Mit Sondersignal|^\w)/ms,
         /LAT:(?<loc_wgs84_lat>\d[.\d\n\s]+);LNG:(?<loc_wgs84_lon>\d[.\d\n\s]+);/m,
         /Stichwort\s.+\sStichwort 2\s+(?<keyword>[^-\s].*)/,
         /Stichwort\s+(?<keyword>[^-\s].*?)\s+Stichwort 2\s/
@@ -27,6 +27,7 @@ export default {
         /Ort\s+(?<loc_city>.+?)\s+\[(?<loc_zip>\d{5})]/,
         /Straße\s+(?<loc_street>\D+)(?<loc_streetnumber>.*)/,
         /Ortszusatz\s+(?<loc_detail>.+)$/,
+        /Bemerkung\s+(?<description>.+)$/,
       ]
     },
     {
