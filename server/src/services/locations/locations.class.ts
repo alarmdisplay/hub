@@ -66,6 +66,7 @@ export class Locations extends Service<LocationData> {
       location.locality = rawLocation.city;
     }
 
+    location.name = rawLocation.name;
     location.detail = rawLocation.detail;
 
     return location;

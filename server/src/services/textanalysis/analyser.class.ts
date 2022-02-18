@@ -61,6 +61,7 @@ export class Analyser {
         number: matches.get('caller_number') as string || ''
       },
       location: {
+        name: matches.get('loc_name') as string || '',
         street: matches.get('loc_street') as string || '',
         streetnumber: matches.get('loc_streetnumber') as string || '',
         detail: matches.get('loc_detail') as string || '',
