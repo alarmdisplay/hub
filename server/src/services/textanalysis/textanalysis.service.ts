@@ -73,6 +73,7 @@ declare module '../../declarations' {
      * - loc_detail: Additional detail for the incident location (e. g. 1st floor)
      * - loc_gk_x: X component of a Gauss Krueger coordinate of the incident location
      * - loc_gk_y: Y component of a Gauss Krueger coordinate of the incident location
+     * - loc_name: A well-known name of the incident location (e. g. a building or company name)
      * - loc_street: The street name of the incident location
      * - loc_streetnumber: The street number of the incident location
      * - loc_wgs84_lat: Latitude of WGS84 coordinate, either as decimal number on its own or as integer if combined with loc_wgs84_lat_min and loc_wgs84_lat_sec
@@ -114,6 +115,7 @@ declare module '../../declarations' {
   }
 
   interface RawLocation {
+    name: string
     street: string
     streetnumber: string
     detail: string
