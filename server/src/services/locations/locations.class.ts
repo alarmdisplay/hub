@@ -25,7 +25,8 @@ export class Locations extends Service<LocationData> {
       number: '',
       detail: '',
       postCode: '',
-      locality: '',
+      municipality: '',
+      district: '',
       country: ''
     };
 
@@ -63,7 +64,8 @@ export class Locations extends Service<LocationData> {
       location.street = rawLocation.street;
       location.number = rawLocation.streetnumber;
       location.postCode = rawLocation.zip;
-      location.locality = rawLocation.city;
+      location.municipality = rawLocation.city;
+      // TODO add district
     }
 
     location.name = rawLocation.name;
@@ -100,7 +102,7 @@ export class Locations extends Service<LocationData> {
     data.street = bestResult.address.road;
     data.number = bestResult.address.house_number;
     data.postCode = bestResult.address.postcode;
-    data.locality = bestResult.address.village || bestResult.address.town || bestResult.address.city || bestResult.address.municipality || '';
+    data.municipality = bestResult.address.village || bestResult.address.town || bestResult.address.city || bestResult.address.municipality || '';
     data.country = bestResult.address.country_code === 'de' ? 'Deutschland': '';
 
     // If the coordinates have not been supplied before, use the ones from Nominatim
