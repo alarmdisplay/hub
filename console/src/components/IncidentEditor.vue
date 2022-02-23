@@ -195,9 +195,15 @@
                     </div>
                     <div class="field">
                         <div class="control">
-                            <input class="input" type="text" id="locality" v-model="item.location.locality">
+                            <input class="input" type="text" id="municipality" v-model="item.location.municipality">
                         </div>
-                        <p class="help">Stadt, Ort oder Ortsteil</p>
+                        <p class="help">Stadt oder Gemeinde</p>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" type="text" id="district" v-model="item.location.district">
+                        </div>
+                        <p class="help">Stadt- oder Ortsteil</p>
                     </div>
                     <div class="field">
                         <div class="control">
