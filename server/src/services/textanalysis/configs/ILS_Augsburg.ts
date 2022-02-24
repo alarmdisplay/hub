@@ -39,7 +39,8 @@ export default {
       beginningMark: /EINSATZORT/,
       regexps: [
         /Straße\s*[:;=](?<loc_street>.*)Haus-Nr\.[:;=]\s*(?<loc_streetnumber>\d+(?:\s?[a-z])?)(?<loc_detail>\s+.*)?$/,
-        /Ort\s*[:;=]\s*(?<loc_zip>\d{5}) (?<loc_city>\w+)/,
+        /Ort\s*[:;=]\s*(?<loc_zip>\d{5}) (?<loc_district>.+)\s+-\s+(?<loc_municipality>.+)\s+\k<loc_municipality>/,
+        /Objekt\s*[:;=]\s*(?<loc_name>.+)$/,
         /Koordinate\s*[:;=]\s(?<loc_gk_x>\d+[,.]\d+) \/ (?<loc_gk_y>\d+[,.]\d+)$/
       ]
     },

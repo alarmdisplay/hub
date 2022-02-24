@@ -144,6 +144,20 @@
             <button type="button" class="button" @click.prevent="item.location = null">Einsatzort entfernen</button>
             <div class="field is-horizontal">
                 <div class="field-label is-normal">
+                    <label class="label" for="location_name">Objektname</label>
+                </div>
+                <div class="field-body">
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" type="text" id="location_name" v-model.trim="item.location.name">
+                        </div>
+                        <p class="help">Bezeichnung des Objekts oder der Örtlichkeit</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
                     <label class="label" for="street">Adresse</label>
                 </div>
                 <div class="field-body">
@@ -181,9 +195,15 @@
                     </div>
                     <div class="field">
                         <div class="control">
-                            <input class="input" type="text" id="locality" v-model="item.location.locality">
+                            <input class="input" type="text" id="municipality" v-model="item.location.municipality">
                         </div>
-                        <p class="help">Stadt, Ort oder Ortsteil</p>
+                        <p class="help">Stadt oder Gemeinde</p>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <input class="input" type="text" id="district" v-model="item.location.district">
+                        </div>
+                        <p class="help">Stadt- oder Ortsteil</p>
                     </div>
                     <div class="field">
                         <div class="control">

@@ -25,7 +25,8 @@ export class Locations extends Service<LocationData> {
       number: '',
       detail: '',
       postCode: '',
-      locality: '',
+      municipality: '',
+      district: '',
       country: ''
     };
 
@@ -63,9 +64,11 @@ export class Locations extends Service<LocationData> {
       location.street = rawLocation.street;
       location.number = rawLocation.streetnumber;
       location.postCode = rawLocation.zip;
-      location.locality = rawLocation.city;
+      location.municipality = rawLocation.municipality;
+      location.district = rawLocation.district;
     }
 
+    location.name = rawLocation.name;
     location.detail = rawLocation.detail;
 
     return location;
@@ -82,12 +85,12 @@ export class Locations extends Service<LocationData> {
     if (rawLocation.detail !== '') {
       line1 = `${line1}, ${rawLocation.detail}`;
     }
-    const line2 = `${rawLocation.zip || ''} ${rawLocation.city || ''}`;
+    const line2 = `${rawLocation.zip || ''} ${rawLocation.district || rawLocation.municipality || ''}`;
     return `${line1}\n${line2}`;
   }
 
   async validateWithNominatim(data: Partial<LocationData>, rawData: RawLocation): Promise<Partial<LocationData>> {
-    const results = await this.nominatim.geocode(`${rawData.streetnumber} ${rawData.street}`, rawData.city, rawData.zip);
+    const results = await this.nominatim.geocode(`${rawData.streetnumber} ${rawData.street}`, rawData.district || rawData.municipality, rawData.zip);
     const bestResult = await this.getBestResult(results);
 
     if (rawData.streetnumber !== '' && (!bestResult.address.house_number || bestResult.address.house_number === '')) {
@@ -99,7 +102,7 @@ export class Locations extends Service<LocationData> {
     data.street = bestResult.address.road;
     data.number = bestResult.address.house_number;
     data.postCode = bestResult.address.postcode;
-    data.locality = bestResult.address.village || bestResult.address.town || bestResult.address.city || bestResult.address.municipality || '';
+    data.municipality = bestResult.address.village || bestResult.address.town || bestResult.address.city || bestResult.address.municipality || '';
     data.country = bestResult.address.country_code === 'de' ? 'Deutschland': '';
 
     // If the coordinates have not been supplied before, use the ones from Nominatim

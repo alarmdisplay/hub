@@ -4,7 +4,6 @@ import { Application } from '../../declarations';
 import { Locations } from './locations.class';
 import createModel from '../../models/locations.model';
 import hooks from './locations.hooks';
-import {DataTypes} from 'sequelize';
 
 // Add this service to the service type index
 declare module '../../declarations' {
@@ -22,7 +21,8 @@ declare module '../../declarations' {
     number: string,
     detail: string,
     postCode: string,
-    locality: string,
+    municipality: string,
+    district: string
     country: string
     incidentId?: number
   }
