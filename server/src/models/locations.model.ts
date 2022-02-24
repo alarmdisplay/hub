@@ -44,7 +44,12 @@ export default function (app: Application): typeof Model {
       allowNull: false,
       defaultValue: ''
     },
-    locality: {
+    municipality: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: ''
+    },
+    district: {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: ''

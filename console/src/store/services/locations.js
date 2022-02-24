@@ -13,7 +13,8 @@ class Location extends BaseModel {
       number: '',
       detail: '',
       postCode: '',
-      locality: '',
+      municipality: '',
+      district: '',
       country: '',
       incidentId: undefined
     }

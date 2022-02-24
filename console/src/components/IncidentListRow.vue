@@ -3,7 +3,7 @@
         <th>{{ reasonText }}</th>
         <td>{{ incident.keyword }}</td>
         <td class="incident-location">
-            {{ incident.location ? [incident.location.locality, incident.location.street].join('\n').trim() : '' }}
+            {{ incident.location ? [incident.location.district || incident.location.municipality, incident.location.street].join('\n').trim() : '' }}
         </td>
         <td class="has-text-right">{{ incident.time | moment('LLL') }}</td>
         <td class="is-narrow">
