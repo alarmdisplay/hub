@@ -64,8 +64,8 @@ export class Locations extends Service<LocationData> {
       location.street = rawLocation.street;
       location.number = rawLocation.streetnumber;
       location.postCode = rawLocation.zip;
-      location.municipality = rawLocation.city;
-      // TODO add district
+      location.municipality = rawLocation.municipality;
+      location.district = rawLocation.district;
     }
 
     location.name = rawLocation.name;
@@ -85,12 +85,12 @@ export class Locations extends Service<LocationData> {
     if (rawLocation.detail !== '') {
       line1 = `${line1}, ${rawLocation.detail}`;
     }
-    const line2 = `${rawLocation.zip || ''} ${rawLocation.city || ''}`;
+    const line2 = `${rawLocation.zip || ''} ${rawLocation.district || rawLocation.municipality || ''}`;
     return `${line1}\n${line2}`;
   }
 
   async validateWithNominatim(data: Partial<LocationData>, rawData: RawLocation): Promise<Partial<LocationData>> {
-    const results = await this.nominatim.geocode(`${rawData.streetnumber} ${rawData.street}`, rawData.city, rawData.zip);
+    const results = await this.nominatim.geocode(`${rawData.streetnumber} ${rawData.street}`, rawData.district || rawData.municipality, rawData.zip);
     const bestResult = await this.getBestResult(results);
 
     if (rawData.streetnumber !== '' && (!bestResult.address.house_number || bestResult.address.house_number === '')) {

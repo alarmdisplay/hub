@@ -66,7 +66,8 @@ export class Analyser {
         streetnumber: matches.get('loc_streetnumber') as string || '',
         detail: matches.get('loc_detail') as string || '',
         zip: matches.get('loc_zip') as string || '',
-        city: matches.get('loc_city') as string || '',
+        municipality: matches.get('loc_municipality') as string || '',
+        district: matches.get('loc_district') as string || '',
         gk: gk,
         wgs84: wgs84
       },
