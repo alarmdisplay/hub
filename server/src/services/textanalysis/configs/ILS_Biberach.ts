@@ -22,8 +22,8 @@ export default {
     {
       beginningMark: /Einsatzort/,
       regexps: [
-        /Ortsteil\s+(?<loc_city>.+?)/,
-        /Ort\s+(?<loc_city>.+?)\s+\[(?<loc_zip>\d{5})]/,
+        /Ort\s+(?<loc_municipality>.+?)\s+\[(?<loc_zip>\d{5})]/,
+        /Ortsteil\s+(?<loc_district>.+)$/,
         /Straße\s+(?<loc_street>\D+)(?<loc_streetnumber>.*)/,
         /Ortszusatz\s+(?<loc_detail>.+)$/,
         /Bemerkung\s+(?<description>.+)$/,
