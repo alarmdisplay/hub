@@ -15,7 +15,7 @@ interface WatchedFolderData {
 }
 
 // Pattern to match files with the pdf extension, that begin with a letter or number
-const filePattern = /^[a-z0-9][\w-.]*\.pdf$/i;
+const filePattern = /^[a-z0-9].*\.pdf$/i;
 
 export class WatchedFolders extends Service<WatchedFolderData> {
   private app: Application;
