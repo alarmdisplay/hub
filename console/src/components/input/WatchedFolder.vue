@@ -130,6 +130,7 @@ export default {
       return {
         'ils_augsburg': 'Alarmfax ILS Augsburg',
         'ils_bamberg': 'Alarmfax ILS Bamberg',
+        'ils_rosenheim': 'Alarmfax ILS Rosenheim',
       }
     },
     textAnalysisJob () {
