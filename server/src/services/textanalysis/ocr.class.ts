@@ -1,11 +1,11 @@
 import * as cp from 'child_process';
-import * as crypto from 'crypto';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
 import { Application, TextAnalysisConfig } from '../../declarations';
 import logger from '../../logger';
 import util from 'util';
+import { v4 as uuidv4 } from 'uuid';
 
 const execAsync = util.promisify(cp.exec);
 
@@ -17,32 +17,15 @@ export class Ocr {
   }
 
   public async getTextFromFile(filePath: string, textAnalysisConfig: TextAnalysisConfig): Promise<string> {
-    // Create a temporary working directory for this file
     let workDir: string;
-    const buffer = await fs.promises.readFile(filePath);
-    const hash = crypto.createHash('sha256');
-    hash.update(buffer);
-    const digest = hash.digest('hex');
-    try {
-      const tmpdir = os.tmpdir();
-      workDir = path.join(tmpdir, digest);
-      logger.debug('Using working directory', workDir);
-      await fs.promises.mkdir(workDir);
-    } catch (error: any) {
-      if (error.code === 'EEXIST') {
-        logger.warn('Temporary working directory already exists, file has been processed before. Aborting.');
-        return '';
-      } else {
-        throw new Error('Could not create temporary working directory: ' + error.message);
-      }
-    }
 
-    // Copy the file into the working directory
-    const fileName = path.join(workDir, 'in.pdf');
+    // Copy the file into a working directory
     try {
+      workDir = await Ocr.createWorkingDirectory();
+      const fileName = path.join(workDir, 'in.pdf');
       await fs.promises.copyFile(filePath, fileName);
     } catch (error: any) {
-      throw new Error('Could not write file in working directory: ' + error.message);
+      throw new Error('Could not copy file to working directory: ' + error.message);
     }
 
     await this.generateUserWords(workDir, textAnalysisConfig);
@@ -57,13 +40,29 @@ export class Ocr {
     } catch (error: any) {
       logger.error('OCR error:', error.message);
     } finally {
-      // In order to use a file multiple times during development, remove the working directory so it can be recreated
-      if (this.app.get('devMode')) {
+      // Remove the temporary folder again, except during development
+      if (!this.app.get('devMode')) {
         await fs.promises.rm(workDir, { recursive: true, force: true });
       }
     }
 
     return this.fixCommonOcrErrors(text);
+  }
+
+  /**
+   * Create a temporary working directory for a file
+   *
+   * @private
+   */
+  private static async createWorkingDirectory(): Promise<string> {
+    const tmpdir = os.tmpdir();
+    const name = 'ocr_' + uuidv4();
+    const workDir = path.join(tmpdir, name);
+
+    logger.debug('Creating working directory', workDir);
+    await fs.promises.mkdir(workDir);
+
+    return workDir;
   }
 
   private async doOcr(workDir: string): Promise<string> {
