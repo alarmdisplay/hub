@@ -101,6 +101,11 @@ declare module '../../declarations' {
     regexps: RegExp[]
   }
 
+  interface TextExtractionResult {
+    content: string
+    method: 'plain' | 'ocr'
+  }
+
   interface TextAnalysisResult {
     sender: string
     ref: string

@@ -26,6 +26,7 @@ export class Ocr {
     try {
       const tmpdir = os.tmpdir();
       workDir = path.join(tmpdir, digest);
+      logger.debug('Using working directory', workDir);
       await fs.promises.mkdir(workDir);
     } catch (error: any) {
       if (error.code === 'EEXIST') {
