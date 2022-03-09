@@ -21,35 +21,54 @@ export class Extractor {
     };
 
     try {
-      result.content = await Extractor.getEmbeddedTextFromPDF(filePath);
+      result.content = await Extractor.getEmbeddedText(filePath);
     } catch (error: any) {
       logger.debug('Could not extract embedded text from file:', error.message);
     }
 
-    if (!result.content) {
-      logger.debug('No embedded text found, continue with OCR...');
-      result.method = 'ocr';
-      result.content = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
+    // If text got extracted, return it right away
+    if (result.content && result.content !== '') {
+      return result;
     }
+
+    logger.debug('No embedded text found, continue with OCR...');
+    result.method = 'ocr';
+    result.content = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
 
     return result;
   }
 
   /**
-   * Try to extract embedded text from PDFs.
+   * Determines if the file is a PDF.
+   * Currently, only the file name is taken into account
    *
    * @param filePath
    * @private
    */
-  private static async getEmbeddedTextFromPDF(filePath: string): Promise<string> {
-    const exec = util.promisify(cp.exec);
+  private static isFileOfTypePDF(filePath: string): boolean {
+    return /\.pdf$/i.test(filePath);
+  }
 
-    // Check if pdftotext is installed, will throw on error
-    await exec('pdftotext -v');
+  /**
+   * Try to extract embedded text from a file.
+   *
+   * @param filePath
+   * @private
+   */
+  private static async getEmbeddedText(filePath: string): Promise<string> {
+    if (Extractor.isFileOfTypePDF(filePath)) {
+      const exec = util.promisify(cp.exec);
 
-    // Try to extract the text while preserving the layout
-    const { stdout } = await exec(`pdftotext -layout "${filePath}" -`);
+      // Check if pdftotext is installed, will throw on error
+      await exec('pdftotext -v');
 
-    return (stdout || '').trim();
+      // Try to extract the text while preserving the layout
+      const { stdout } = await exec(`pdftotext -layout "${filePath}" -`);
+
+      return (stdout || '').trim();
+    }
+
+    // Return nothing for unknown file types
+    return '';
   }
 }
