@@ -33,7 +33,11 @@ export class Extractor {
 
     logger.debug('No embedded text found, continue with OCR...');
     result.method = 'ocr';
-    result.content = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
+    const userWords = new Array<string>().concat(
+      textAnalysisConfig.triggerWords || [],
+      textAnalysisConfig.importantWords || []
+    );
+    result.content = await this.ocr.getTextFromFile(filePath, userWords);
 
     return result;
   }
