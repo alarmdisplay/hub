@@ -298,14 +298,16 @@ export class WatchedFolders extends Service<WatchedFolderData> {
     const destination = path.join(tmpdir, fileName);
     await fs.promises.copyFile(filePath, destination);
 
-    // Ignore file, if it has been processed before
-    const hash = await WatchedFolders.getHash(filePath);
-    const processedFiles = await this.app.service('processed-files').find({ query: { hash }, paginate: false }) as ProcessedFilesData[];
-    if (processedFiles.length) {
-      logger.warn('Ignoring file %s, it has been processed before', path.basename(filePath));
-      return;
+    // Ignore file, if it has been processed before and the app does not run in development mode
+    if (!this.app.get('devMode')) {
+      const hash = await WatchedFolders.getHash(filePath);
+      const processedFiles = await this.app.service('processed-files').find({ query: { hash }, paginate: false }) as ProcessedFilesData[];
+      if (processedFiles.length) {
+        logger.warn('Ignoring file %s, it has been processed before', path.basename(filePath));
+        return;
+      }
+      await this.app.service('processed-files').create({ hash });
     }
-    await this.app.service('processed-files').create({ hash });
 
     const context: FoundFileContext = { watchedFolderId: watcherId, path: destination };
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
