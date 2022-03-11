@@ -1,11 +1,12 @@
 import {NullableId, Params} from '@feathersjs/feathers';
 import {SequelizeServiceOptions, Service} from 'feathers-sequelize';
-import {Application, FoundFileContext} from '../../declarations';
+import {Application, FoundFileContext, ProcessedFilesData} from '../../declarations';
 import * as fs from 'fs';
 import * as path from 'path';
 import logger from '../../logger';
 import os from 'os';
 import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 
 interface WatchedFolderData {
   id: number,
@@ -297,10 +298,31 @@ export class WatchedFolders extends Service<WatchedFolderData> {
     const destination = path.join(tmpdir, fileName);
     await fs.promises.copyFile(filePath, destination);
 
+    // Ignore file, if it has been processed before
+    const hash = await WatchedFolders.getHash(filePath);
+    const processedFiles = await this.app.service('processed-files').find({ query: { hash }, paginate: false }) as ProcessedFilesData[];
+    if (processedFiles.length) {
+      logger.warn('Ignoring file %s, it has been processed before', path.basename(filePath));
+      return;
+    }
+    await this.app.service('processed-files').create({ hash });
+
     const context: FoundFileContext = { watchedFolderId: watcherId, path: destination };
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore TypeScript does not know that this is an EventEmitter
     this.emit('found_file', context);
   }
-}
 
+  /**
+   * Calculates the hash of a given file.
+   *
+   * @param filePath
+   * @private
+   */
+  private static async getHash(filePath: string): Promise<string> {
+    const buffer = await fs.promises.readFile(filePath);
+    const hash = crypto.createHash('sha256');
+    hash.update(buffer);
+    return hash.digest('hex');
+  }
+}
