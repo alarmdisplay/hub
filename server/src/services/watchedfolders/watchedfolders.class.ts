@@ -1,6 +1,6 @@
-import {NullableId, Params} from '@feathersjs/feathers';
-import {SequelizeServiceOptions, Service} from 'feathers-sequelize';
-import {Application, FoundFileContext, ProcessedFilesData} from '../../declarations';
+import { NullableId, Params } from '@feathersjs/feathers';
+import { SequelizeServiceOptions, Service } from 'feathers-sequelize';
+import { Application, FoundFileContext, ProcessedFilesData } from '../../declarations';
 import * as fs from 'fs';
 import * as path from 'path';
 import logger from '../../logger';
@@ -298,8 +298,9 @@ export class WatchedFolders extends Service<WatchedFolderData> {
     const destination = path.join(tmpdir, fileName);
     await fs.promises.copyFile(filePath, destination);
 
-    // Ignore file, if it has been processed before and the app does not run in development mode
-    if (!this.app.get('devMode')) {
+    // Ignore file, if it has been processed before (and the user has not disabled the setting)
+    const ignoreProcessedFiles = await this.app.service('settings').getBooleanValue('ignore_processed_files');
+    if (ignoreProcessedFiles) {
       const hash = await WatchedFolders.getHash(filePath);
       const processedFiles = await this.app.service('processed-files').find({ query: { hash }, paginate: false }) as ProcessedFilesData[];
       if (processedFiles.length) {
