@@ -10,6 +10,7 @@ import printTasks from './services/print-tasks'
 import resourceIdentifiers from './services/resource-identifiers'
 import resources from './services/resources'
 import serialMonitors from './services/serial-monitors'
+import settings from './services/settings'
 import textAnalysis from './services/text-analysis'
 import users from './services/users'
 import watchedFolders from './services/watched-folders'
@@ -42,6 +43,7 @@ export default new Vuex.Store({
     resourceIdentifiers,
     resources,
     serialMonitors,
+    settings,
     textAnalysis,
     users,
     watchedFolders

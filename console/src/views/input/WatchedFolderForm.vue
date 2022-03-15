@@ -7,6 +7,17 @@
                 <BackButton/>
             </div>
 
+            <div class="content">
+                <p>
+                    Der Ordner wird auf neue Dateien mit den Endungen .pdf, .tif, .tiff, .jpg, .jpeg, .png und .bmp überwacht.
+                    Der Dateiname muss mit einem Buchstaben oder einer Ziffer beginnen, die Groß- und Kleinschreibung spielt keine Rolle.
+                </p>
+                <p>
+                    Für einmal erkannte Dateien wird eine Prüfsumme gespeichert, um eine erneute Verarbeitung zu unterbinden.
+                    Dieses Verhalten kann in den Einstellungen deaktiviert werden.
+                </p>
+            </div>
+
             <ErrorMessage :form-error="formError"/>
 
             <FeathersVuexFormWrapper :item="item" watch>

@@ -9,6 +9,7 @@ import Input from '@/views/Input'
 import ResourceForm from '@/views/processing/ResourceForm'
 import ResourceList from '@/views/processing/ResourceList'
 import SerialMonitorForm from '@/views/input/SerialMonitorForm'
+import Settings from '@/views/admin/Settings'
 import UserList from '../views/admin/UserList'
 import UserForm from '@/views/admin/UserForm'
 import WatchedFolderForm from '@/views/input/WatchedFolderForm'
@@ -67,6 +68,11 @@ Vue.use(VueRouter)
       path: '/output/display',
       name: 'display',
       component: Display
+    },
+    {
+      path: '/admin/settings',
+      name: 'settings',
+      component: Settings
     },
     {
       path: '/admin/users',
