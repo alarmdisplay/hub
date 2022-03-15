@@ -33,20 +33,11 @@ export class Ocr {
       throw new Error('Could not copy file to working directory: ' + error.message);
     }
 
-    // Place file with user words into the working directory
-    try {
-      await fs.promises.writeFile(path.join(workDir, 'words.txt'), userWords.join('\n'));
-    } catch (e) {
-      logger.warn('Could not write user words, continue OCR without them...', e);
-    }
-
-    // Convert the PDF file into a TIF image
-    await execAsync('convert -density 204x196 in.pdf -type Grayscale -compress lzw -background white in.tif', { cwd: workDir });
-
-    logger.debug('PDF converted, starting OCR');
     let text = '';
     try {
-      text = await this.doOcr(workDir);
+      const imagesToOcr = await this.prepareFileForOcr(workDir, 'in.pdf');
+      logger.debug('Starting OCR ...');
+      text = await this.doOcr(workDir, imagesToOcr, userWords);
     } catch (error: any) {
       logger.error('OCR error:', error.message);
     } finally {
@@ -75,13 +66,27 @@ export class Ocr {
     return workDir;
   }
 
-  private async doOcr(workDir: string): Promise<string> {
-    let command = 'tesseract in.tif stdout --psm 6 -l deu';
-    if (fs.existsSync(path.join(workDir, 'words.txt'))) {
-      command += ' --user-words words.txt';
+  private async doOcr(workDir: string, fileNames: string[], userWords: string[]): Promise<string> {
+    for (const fileName of fileNames) {
+      if (!Ocr.isFileWithinDirectory(fileName, workDir)) {
+        throw new Error(`Given file (${fileName}) is not within working directory`);
+      }
     }
 
-    logger.debug('Run', command);
+    // Place file with file paths into the working directory
+    await fs.promises.writeFile(path.join(workDir, 'files.txt'), fileNames.join('\n'));
+
+    let command = 'tesseract files.txt stdout --psm 6 -l deu';
+
+    // Place file with user words into the working directory
+    try {
+      await fs.promises.writeFile(path.join(workDir, 'words.txt'), userWords.join('\n'));
+      command += ' --user-words words.txt';
+    } catch (e) {
+      logger.warn('Could not write user words, continue OCR without them...', e);
+    }
+
+    logger.debug('Running command:', command);
     const result = await execAsync(
       command,
       { cwd: workDir }
@@ -90,6 +95,18 @@ export class Ocr {
       logger.debug('tesseract stderr:', result.stderr);
     }
     return result.stdout;
+  }
+
+  /**
+   * Can be used for security checks, to prevent passing random files to commands
+   *
+   * @param fileName
+   * @param directory
+   * @private
+   */
+  private static isFileWithinDirectory(fileName: string, directory: string): boolean {
+    const resolved = path.resolve(directory, fileName);
+    return path.dirname(resolved) === directory;
   }
 
   /**
@@ -102,5 +119,52 @@ export class Ocr {
       .replace('EINSATZMITITEL', 'EINSATZMITTEL')
       .replace('EINSATAGRUND', 'EINSATZGRUND')
       .replace('EINSATZAGRUND', 'EINSATZGRUND');
+  }
+
+  /**
+   * Makes sure, the input file is in a format that can be processed by tesseract.
+   *
+   * @param workDir
+   * @param fileName
+   * @private
+   */
+  private async prepareFileForOcr(workDir: string, fileName: string): Promise<string[]> {
+    if (!Ocr.isFileWithinDirectory(fileName, workDir)) {
+      throw new Error(`Given file (${fileName}) is not within working directory`);
+    }
+
+    // No action necessary, if the input file is an image
+    const extname = path.extname(fileName).toLowerCase();
+    if (['.tif', '.tiff', '.jpg', '.jpeg', '.png', '.bmp', '.gif'].includes(extname)) {
+      return [fileName];
+    }
+
+    if (extname !== '.pdf') {
+      throw new Error(`Cannot prepare file type ${extname} for OCR`);
+    }
+
+    // Try to extract images from a PDF file as TIFF
+    try {
+      await execAsync(
+        `pdfimages -tiff -p "${fileName}" extracted`,
+        {cwd: workDir}
+      );
+
+      // Find and return extracted images
+      const dirContent = await fs.promises.readdir(workDir);
+      const filePattern = /^extracted-\d+-\d+\.tif$/i;
+      return dirContent.filter(filename => filePattern.test(filename));
+    } catch (e) {
+      const message = (e instanceof Error) ? e.message : e;
+      logger.warn('Images could not be extracted from PDF (%s), try to convert it as a whole:', message);
+    }
+
+    // Convert the PDF file into a TIF image
+    await execAsync(
+      `convert -density 204x196 "${fileName}" -type Grayscale -compress lzw -background white in.tif`,
+      {cwd: workDir}
+    );
+
+    return ['in.tif'];
   }
 }
