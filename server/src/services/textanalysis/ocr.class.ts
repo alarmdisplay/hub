@@ -43,7 +43,7 @@ export class Ocr {
       logger.error('OCR error:', error.message);
     } finally {
       // Remove the temporary folder again, except during development
-      if (!this.app.get('devMode')) {
+      if (!this.app.get('devMode') && fs.promises?.rm) {
         await fs.promises.rm(workDir, { recursive: true, force: true });
       }
     }
