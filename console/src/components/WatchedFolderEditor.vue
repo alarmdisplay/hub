@@ -1,31 +1,54 @@
 <template>
     <form @submit.prevent="handleSubmit">
-        <div class="field">
-            <label class="label" for="path">
-                Pfad
-            </label>
-            <p class="control">
-                <input class="input" type="text" id="path" v-model="item.path">
-            </p>
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label is-normal">Status</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <label class="checkbox">
+                            <input type="checkbox" v-model="item.active">
+                            &Uuml;berwachung aktiv
+                        </label>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="field">
-            <p class="control">
-                <label class="checkbox">
-                    <input type="checkbox" v-model="item.active">
-                    &Uuml;berwachung aktiv
-                </label>
-            </p>
+        <div class="field is-horizontal">
+            <div class="field-label is-normal">
+                <label class="label" for="path">Pfad</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <input class="input" type="text" id="path" v-model.trim="item.path">
+                    </div>
+                    <p class="help">
+                        Der Pfad kann sowohl absolut (empfohlen) als auch relativ zum Arbeitsverzeichnis des Servers angegeben werden.
+                    </p>
+                </div>
+            </div>
         </div>
-        <div class="field">
-            <p class="control">
-                <label class="checkbox">
-                    <input type="checkbox" v-model="item.polling">
-                    Polling
-                </label>
-            </p>
-            <p class="help">Regelmäßig den Inhalt des Ordners abfragen, anstatt auf Benachrichtigungen des Betriebssystems zu warten. Dies kann für eingebundene Netzlaufwerke erforderlich sein.</p>
+
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label is-normal">Polling</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <label class="checkbox">
+                            <input type="checkbox" v-model="item.polling">
+                            Polling verwenden
+                        </label>
+                    </div>
+                    <p class="help">Regelmäßig den Inhalt des Ordners abfragen, anstatt auf Benachrichtigungen des Betriebssystems zu warten. Dies kann für eingebundene Netzlaufwerke erforderlich sein.</p>
+                </div>
+            </div>
         </div>
+
         <div class="level">
             <div class="level-left">
                 <div class="buttons">
