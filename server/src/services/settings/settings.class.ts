@@ -10,7 +10,7 @@ export class Settings extends Service<SettingsData> {
 
   setup(app: Application): void {
     const settingDefaults = new Map<string, SettingsValue>([
-      // TODO add setting defaults
+      ['ignore_processed_files', true],
     ]);
 
     (app.get('databaseReady') as Promise<void>).then(async () => {
@@ -24,5 +24,10 @@ export class Settings extends Service<SettingsData> {
         }
       }
     });
+  }
+
+  async getBooleanValue(key: string): Promise<boolean> {
+    const settingsData = await this.get(key);
+    return settingsData.value == true;
   }
 }

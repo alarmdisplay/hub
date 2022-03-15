@@ -16,7 +16,7 @@ declare module '../../declarations' {
     value: SettingsValue
   }
 
-  type SettingsValue = null | string | number
+  type SettingsValue = null | string | number | boolean
 }
 
 export default function (app: Application): void {

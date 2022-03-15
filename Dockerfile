@@ -21,6 +21,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -o "APT:
     imagemagick \
     nodejs \
     npm \
+    poppler-utils \
     tesseract-ocr-deu \
     && rm -rf /var/lib/apt/lists/*
 
