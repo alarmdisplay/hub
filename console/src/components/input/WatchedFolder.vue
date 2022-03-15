@@ -23,9 +23,6 @@
                     </p>
                 </div>
             </div>
-            <div class="content">
-                <b>Dateityp:</b> PDF
-            </div>
 
             <hr>
 
@@ -44,7 +41,7 @@
                 </div>
             </div>
             <div v-else class="content">
-                <p class="has-text-warning-dark">PDF-Dateien müssen eine Texterkennung durchlaufen, bevor sie als Alarmquelle verwendet werden können.</p>
+                <p class="has-text-warning-dark">PDF-Dateien und Bilder müssen eine Texterkennung durchlaufen, bevor sie als Alarmquelle verwendet werden können.</p>
                 <div class="field">
                     <label class="label">Layout</label>
                     <div class="control">

@@ -25,9 +25,10 @@ export class Ocr {
     let workDir: string;
 
     // Copy the file into a working directory
+    const ocrFile = 'in' + path.extname(filePath);
     try {
       workDir = await Ocr.createWorkingDirectory();
-      const fileName = path.join(workDir, 'in.pdf');
+      const fileName = path.join(workDir, ocrFile);
       await fs.promises.copyFile(filePath, fileName);
     } catch (error: any) {
       throw new Error('Could not copy file to working directory: ' + error.message);
@@ -35,7 +36,7 @@ export class Ocr {
 
     let text = '';
     try {
-      const imagesToOcr = await this.prepareFileForOcr(workDir, 'in.pdf');
+      const imagesToOcr = await this.prepareFileForOcr(workDir, ocrFile);
       logger.debug('Starting OCR ...');
       text = await this.doOcr(workDir, imagesToOcr, userWords);
     } catch (error: any) {
