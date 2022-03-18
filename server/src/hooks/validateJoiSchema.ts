@@ -1,4 +1,4 @@
-import {Schema} from '@hapi/joi';
+import {Schema} from 'joi';
 import {HookContext} from '@feathersjs/feathers';
 import {BadRequest} from '@feathersjs/errors';
 
