@@ -52,13 +52,6 @@ trigger:
 depends_on:
   - compliance
 
-services:
-  - name: mariadb
-    image: mariadb
-    environment:
-      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
-      MARIADB_DATABASE: hub_backend
-
 steps:
   - name: test-server-node-10
     image: node:10
@@ -84,19 +77,60 @@ steps:
       - cd server
       - npm ci
       - npm test
-  - name: hubserver
-    image: node:16
-    detach: true
-    commands:
-      - cd server
-      - 'echo ''{"mysql": "mysql://root:@mariadb:3306/hub_backend"}'' > config/local-production.json'
-      - NODE_ENV=production npm start
+  - name: docker-dryrun
+    pull: always
+    image: plugins/docker:latest
+    settings:
+      dry_run: true
+      repo: alarmdisplay/hub
+      tags: testing-amd64
+  - name: slack
+    image: plugins/slack
+    settings:
+      webhook:
+        from_secret: slack_hook
+    when:
+      status:
+        - failure
+      event:
+        exclude:
+          - pull_request
+---
+kind: pipeline
+type: docker
+name: docker-amd64
+
+platform:
+  os: linux
+  arch: amd64
+
+trigger:
+  branch:
+    include:
+      - develop
+      - main
+
+depends_on:
+  - testing-amd64
+
+services:
+  - name: mariadb
+    image: mariadb
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
+      MARIADB_DATABASE: hub
+  - name: sut
+    image: alarmdisplay/hub:testing-amd64
+    environment:
+      MYSQL_URI: mysql://root:@mariadb:3306/hub
+
+steps:
   - name: test-api
     image: node:16
     commands:
       - cd test-api
       - npm ci
-      - SERVER_URL=hubserver:3030 npm start
+      - SERVER_URL=sut:3030 npm start
   - name: slack
     image: plugins/slack
     settings:
@@ -110,6 +144,6 @@ steps:
           - pull_request
 ---
 kind: signature
-hmac: dc109dd2902960d3ddbb9d96298a07b025464aaec38ad776072c99643be7a6bd
+hmac: 5d00105821eee23cb1b2e6a08dd2a6bcd1da4ae49bc6ff06df25beb3c62bac11
 
 ...
