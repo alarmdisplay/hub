@@ -96,7 +96,6 @@ steps:
     commands:
       - cd test-api
       - npm ci
-      - sleep 15
       - SERVER_URL=hubserver:3030 npm start
   - name: slack
     image: plugins/slack
@@ -111,6 +110,6 @@ steps:
           - pull_request
 ---
 kind: signature
-hmac: aa28a8e241a6902b4de49a3447fc3460af15d03c8bdf6d1ce83726dc455ebef7
+hmac: dc109dd2902960d3ddbb9d96298a07b025464aaec38ad776072c99643be7a6bd
 
 ...
