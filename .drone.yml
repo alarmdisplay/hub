@@ -81,9 +81,14 @@ steps:
     pull: always
     image: plugins/docker:latest
     settings:
-      dry_run: true
-      repo: alarmdisplay/hub
+      repo: registry.abrain.dev:5000/alarmdisplay/hub
+      registry: registry.abrain.dev:5000
       tags: testing-amd64
+    environment:
+      DOCKER_PASSWORD:
+        from_secret: tmpregistry_password
+      DOCKER_USERNAME:
+        from_secret: tmpregistry_username
   - name: slack
     image: plugins/slack
     settings:
@@ -120,7 +125,7 @@ services:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
       MARIADB_DATABASE: hub
   - name: sut
-    image: alarmdisplay/hub:testing-amd64
+    image: registry.abrain.dev:5000/alarmdisplay/hub:testing-amd64
     environment:
       MYSQL_URI: mysql://root:@mariadb:3306/hub
 
@@ -144,6 +149,6 @@ steps:
           - pull_request
 ---
 kind: signature
-hmac: 5d00105821eee23cb1b2e6a08dd2a6bcd1da4ae49bc6ff06df25beb3c62bac11
+hmac: 466eecf71d9dffaa8f1e4a0b428e545f20ae82707ca8b0067b180d6cc6f89db5
 
 ...
