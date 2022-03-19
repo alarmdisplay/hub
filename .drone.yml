@@ -53,12 +53,6 @@ depends_on:
   - compliance
 
 steps:
-  - name: test-server-node-10
-    image: node:10
-    commands:
-      - cd server
-      - npm ci
-      - npm test
   - name: test-server-node-12
     image: node:12
     commands:
@@ -103,7 +97,7 @@ steps:
 ---
 kind: pipeline
 type: docker
-name: docker-amd64
+name: docker-linux-amd64
 
 platform:
   os: linux
@@ -169,12 +163,6 @@ depends_on:
   - compliance
 
 steps:
-  - name: test-server-node-10
-    image: node:10
-    commands:
-      - cd server
-      - npm ci
-      - npm test
   - name: test-server-node-12
     image: node:12
     commands:
@@ -219,7 +207,7 @@ steps:
 ---
 kind: pipeline
 type: docker
-name: docker-armv7
+name: docker-linux-armv7
 
 platform:
   os: linux
@@ -268,6 +256,6 @@ image_pull_secrets:
   - dockerconfig
 ---
 kind: signature
-hmac: 47a97c3554e173fec1f4d9262ac43fc37e11c52732f95218312b6d4a2f1e6d0f
+hmac: 4bf7b830c2f74c8d1936106ff2b6cdfb0d1bb6699c4f8b563295e0d771940c27
 
 ...
