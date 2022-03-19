@@ -158,7 +158,6 @@ name: testing-armv7
 platform:
   os: linux
   arch: arm
-  variant: v7
 
 trigger:
   branch:
@@ -225,7 +224,6 @@ name: docker-armv7
 platform:
   os: linux
   arch: arm
-  variant: v7
 
 trigger:
   branch:
