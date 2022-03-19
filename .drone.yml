@@ -37,7 +37,7 @@ steps:
 ---
 kind: pipeline
 type: docker
-name: testing-amd64
+name: testing-linux-amd64
 
 platform:
   os: linux
@@ -116,7 +116,7 @@ trigger:
       - main
 
 depends_on:
-  - testing-amd64
+  - testing-linux-amd64
 
 services:
   - name: mariadb
@@ -153,7 +153,7 @@ image_pull_secrets:
 ---
 kind: pipeline
 type: docker
-name: testing-armv7
+name: testing-linux-armv7
 
 platform:
   os: linux
@@ -232,7 +232,7 @@ trigger:
       - main
 
 depends_on:
-  - testing-armv7
+  - testing-linux-armv7
 
 services:
   - name: mariadb
@@ -268,6 +268,6 @@ image_pull_secrets:
   - dockerconfig
 ---
 kind: signature
-hmac: 57448f93d89e434f525d1fe06ca4c5885f50af3d7e3e6c1875297233d9c25483
+hmac: 47a97c3554e173fec1f4d9262ac43fc37e11c52732f95218312b6d4a2f1e6d0f
 
 ...
