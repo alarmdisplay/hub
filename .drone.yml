@@ -57,13 +57,13 @@ steps:
     image: node:12
     commands:
       - cd server
-      - npm ci
+      - npm ci --unsafe-perm
       - npm test
   - name: test-server-node-14
     image: node:14
     commands:
       - cd server
-      - npm ci
+      - npm ci --unsafe-perm
       - npm test
   - name: test-server-node-16
     image: node:16
@@ -167,13 +167,13 @@ steps:
     image: node:12
     commands:
       - cd server
-      - npm ci
+      - npm ci --unsafe-perm
       - npm test
   - name: test-server-node-14
     image: node:14
     commands:
       - cd server
-      - npm ci
+      - npm ci --unsafe-perm
       - npm test
   - name: test-server-node-16
     image: node:16
@@ -256,6 +256,6 @@ image_pull_secrets:
   - dockerconfig
 ---
 kind: signature
-hmac: 4bf7b830c2f74c8d1936106ff2b6cdfb0d1bb6699c4f8b563295e0d771940c27
+hmac: f96b5cfca30bcb2e1785009987b8d6ffe5d4ed53a0827d34be1346daa25211fb
 
 ...
