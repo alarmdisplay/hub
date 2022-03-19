@@ -147,8 +147,11 @@ steps:
       event:
         exclude:
           - pull_request
+
+image_pull_secrets:
+  - dockerconfig
 ---
 kind: signature
-hmac: 466eecf71d9dffaa8f1e4a0b428e545f20ae82707ca8b0067b180d6cc6f89db5
+hmac: 20d43f05a3ba7a582588b7c78f8f20c305a6d761be2213858ca7add2115971c3
 
 ...
