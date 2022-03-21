@@ -1,15 +1,14 @@
 let chai = require('chai');
 let chaiHttp = require('chai-http');
 let should = chai.should();
-let server = require('./server')
 
 chai.use(chaiHttp);
 
 const basePath = '/input/pager'
 describe(basePath, () => {
   describe('Authentication', () => {
-    it(`GET ${basePath} should not work`, (done) => {
-      chai.request(server.base)
+    it(`GET ${basePath} should not work`, function (done) {
+      chai.request(this.server.base)
         .get(basePath)
         .end((err, res) => {
           if (err) {
@@ -20,8 +19,8 @@ describe(basePath, () => {
         });
     });
 
-    it(`POST ${basePath} should require authentication`, (done) => {
-      chai.request(server.base)
+    it(`POST ${basePath} should require authentication`, function (done) {
+      chai.request(this.server.base)
         .post(basePath)
         .send({})
         .end((err, res) => {
@@ -33,8 +32,8 @@ describe(basePath, () => {
         });
     });
 
-    it(`POST ${basePath} should reject invalid JWT`, (done) => {
-      chai.request(server.base)
+    it(`POST ${basePath} should reject invalid JWT`, function (done) {
+      chai.request(this.server.base)
         .post(basePath)
         .auth('invalid-token', { type: 'bearer' })
         .send({})
