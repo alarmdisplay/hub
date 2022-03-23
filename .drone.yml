@@ -115,11 +115,13 @@ depends_on:
 services:
   - name: mariadb
     image: mariadb
+    pull: if-not-exists
     environment:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
       MARIADB_DATABASE: hub
   - name: sut
     image: registry.abrain.dev:5000/alarmdisplay/hub:testing-amd64
+    pull: always
     environment:
       MYSQL_URI: mysql://root:@mariadb:3306/hub
 
@@ -165,6 +167,7 @@ depends_on:
 services:
   - name: mariadb
     image: mariadb
+    pull: if-not-exists
     environment:
       MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
       MARIADB_DATABASE: hub
@@ -214,6 +217,6 @@ steps:
           - pull_request
 ---
 kind: signature
-hmac: 34f69ef19b7707f98bbd09cbd549a9d297a8fad5a3332d7ae4f5492fd1162c06
+hmac: ae86f9309854b9940d1dc031d9be95e062491d61e5e26d2bf1121f200a611af5
 
 ...
