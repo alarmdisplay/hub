@@ -12,12 +12,12 @@ console.log(`Using ${url.origin} as base for all requests`);
  * @return {Promise<void>}
  */
 export async function mochaGlobalSetup() {
-  const maxAttempts = 15
+  const maxAttempts = 40
   console.log(`Trying to connect to ${url.origin} and determine the ready state ...`);
   for (let i = 0; i < maxAttempts; i++) {
     if (i > 0) {
       // Wait a bit between attempts
-      await sleep(2000)
+      await sleep(3000)
     }
 
     try {
