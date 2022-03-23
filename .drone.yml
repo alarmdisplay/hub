@@ -11,13 +11,13 @@ trigger:
 
 steps:
   - name: lint-server
-    image: node:lts
+    image: node:16
     commands:
       - cd server
       - npm ci
       - npm run lint
   - name: lint-console
-    image: node:lts
+    image: node:16
     commands:
       - cd console
       - npm ci
@@ -147,76 +147,7 @@ steps:
 image_pull_secrets:
   - dockerconfig
 ---
-kind: pipeline
-type: docker
-name: testing-linux-armv7
-
-platform:
-  os: linux
-  arch: arm
-
-trigger:
-  branch:
-    include:
-      - develop
-      - main
-
-depends_on:
-  - compliance
-
-services:
-  - name: mariadb
-    image: mariadb
-    pull: if-not-exists
-    environment:
-      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
-      MARIADB_DATABASE: hub
-
-steps:
-  - name: test-server-node-12
-    image: node:12
-    commands:
-      - cd server
-      - npm ci --unsafe-perm
-      - npm test
-  - name: test-server-node-14
-    image: node:14
-    commands:
-      - cd server
-      - npm ci --unsafe-perm
-      - npm test
-  - name: test-server-node-16
-    image: node:16
-    commands:
-      - cd server
-      - npm ci
-      - npm test
-  - name: sut
-    image: node:16
-    detach: true
-    commands:
-      - cd server
-      - 'echo ''{"mysql": "mysql://root:@mariadb:3306/hub"}'' > config/local-production.json'
-      - NODE_ENV=production npm start
-  - name: test-api
-    image: node:16
-    commands:
-      - cd test-api
-      - npm ci
-      - SERVER_URL=http://sut:3030 npm start
-  - name: slack
-    image: plugins/slack
-    settings:
-      webhook:
-        from_secret: slack_hook
-    when:
-      status:
-        - failure
-      event:
-        exclude:
-          - pull_request
----
 kind: signature
-hmac: ae86f9309854b9940d1dc031d9be95e062491d61e5e26d2bf1121f200a611af5
+hmac: 92d1b65d172ec0c7f22a11c60d829a942c7cd2f24f67d460e0a26b635057f153
 
 ...
