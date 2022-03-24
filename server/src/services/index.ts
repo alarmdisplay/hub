@@ -12,6 +12,7 @@ import printTasks from './print-tasks/print-tasks.service';
 import serialMonitors from './serial-monitors/serial-monitors.service';
 import settings from './settings/settings.service';
 import processedFiles from './processed-files/processed-files.service';
+import status from './status/status.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application) {
@@ -28,4 +29,5 @@ export default function (app: Application) {
   app.configure(serialMonitors);
   app.configure(settings);
   app.configure(processedFiles);
+  app.configure(status);
 }
