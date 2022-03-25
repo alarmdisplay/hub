@@ -7,11 +7,11 @@
                 </div>
                 <div class="level-right">
                     <div class="buttons level-item">
-                        <router-link tag="button" type="button" class="button" :to="{ name: 'incident-form', params: { id: 'new' } }">
+                        <router-link class="button" :to="{ name: 'incident-form', params: { id: 'new' } }">
                             <span class="icon"><font-awesome-icon icon="plus"/></span>
                             <span>Einsatz anlegen</span>
                         </router-link>
-                        <router-link tag="button" class="button" :to="{ name: 'incident-list' }">
+                        <router-link class="button" :to="{ name: 'incident-list' }">
                             <span>Alle Eins&auml;tze</span>
                             <span class="icon"><font-awesome-icon icon="chevron-right"/></span>
                         </router-link>

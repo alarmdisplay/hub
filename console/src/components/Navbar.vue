@@ -14,24 +14,24 @@
 
         <div ref="navbarmenu" class="navbar-menu">
             <div class="navbar-start">
-                <router-link tag="a" class="navbar-item is-tab" to="/" exact>
+                <router-link class="navbar-item is-tab" to="/" exact>
                     <span class="icon"><font-awesome-icon icon="home"/></span>
                     <span>&Uuml;bersicht</span>
                 </router-link>
 
-                <router-link tag="a" class="navbar-item is-tab" :to="{ name: 'input' }">
+                <router-link class="navbar-item is-tab" :to="{ name: 'input' }">
                     <span class="icon"><font-awesome-icon icon="inbox"/></span>
                     <span>Eingang</span>
                 </router-link>
 
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                    <a class="navbar-link" tabindex="0">
                         <span class="icon"><font-awesome-icon icon="cogs"/></span>
                         <span>Verarbeitung</span>
                     </a>
 
                     <div class="navbar-dropdown">
-                        <router-link tag="a" class="navbar-item" :to="{ name: 'resource-list' }">
+                        <router-link class="navbar-item" :to="{ name: 'resource-list' }">
                             <span class="icon"><font-awesome-icon icon="truck"/></span>
                             <span>Einsatzmittel</span>
                         </router-link>
@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                    <a class="navbar-link" tabindex="0">
                         <span class="icon"><font-awesome-icon icon="paper-plane"/></span>
                         <span>Ausgabe</span>
                     </a>
@@ -55,24 +55,24 @@
 
             <div class="navbar-end">
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                    <a class="navbar-link" tabindex="0">
                         <span class="icon"><font-awesome-icon icon="wrench"/></span>
                         <span>Administration</span>
                     </a>
 
                     <div class="navbar-dropdown">
-                        <router-link tag="a" class="navbar-item" :to="{ name: 'settings' }">
+                        <router-link class="navbar-item" :to="{ name: 'settings' }">
                             <span class="icon"><font-awesome-icon icon="cog"/></span>
                             <span>Einstellungen</span>
                         </router-link>
 
                         <hr class="navbar-divider">
 
-                        <router-link tag="a" class="navbar-item" to="/admin/users">
+                        <router-link class="navbar-item" to="/admin/users">
                             <span class="icon"><font-awesome-icon icon="user"/></span>
                             <span>Konten</span>
                         </router-link>
-                        <router-link tag="a" class="navbar-item" to="/admin/api-keys">
+                        <router-link class="navbar-item" to="/admin/api-keys">
                             <span class="icon"><font-awesome-icon icon="key"/></span>
                             <span>API-Keys</span>
                         </router-link>
@@ -80,13 +80,13 @@
                 </div>
 
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                    <a class="navbar-link" tabindex="0">
                         <span class="icon"><font-awesome-icon icon="question-circle"/></span>
                         <span>Hilfe</span>
                     </a>
 
                     <div class="navbar-dropdown">
-                        <router-link tag="a" class="navbar-item" to="/about">
+                        <router-link class="navbar-item" to="/about">
                             <span class="icon"><font-awesome-icon icon="info-circle"/></span>
                             <span>&Uuml;ber</span>
                         </router-link>
@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                    <a class="navbar-link" tabindex="0">
                         <span class="icon"><font-awesome-icon icon="user"/></span>
                         <span>{{ displayName }}</span>
                         <span class="tag is-warning ml-2 has-text-weight-bold" style="width: 6em" v-if="isSessionAboutToExpire">

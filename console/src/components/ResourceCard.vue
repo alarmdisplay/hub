@@ -33,7 +33,7 @@
                     </div>
                 </div>
                 <div class="media-right">
-                    <router-link tag="button" class="button" :to="{ name: 'resource-form', params: { id: resource.id } }" title="Einsatzmittel bearbeiten">
+                    <router-link class="button" :to="{ name: 'resource-form', params: { id: resource.id } }" title="Einsatzmittel bearbeiten">
                         <span class="icon">
                             <font-awesome-icon icon="edit"/>
                         </span>
