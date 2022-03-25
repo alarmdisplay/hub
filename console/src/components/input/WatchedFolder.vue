@@ -192,4 +192,8 @@ export default {
     word-break: break-all;
     font-style: italic;
 }
+
+.dropdown:focus-within .dropdown-menu {
+    display: block;
+}
 </style>

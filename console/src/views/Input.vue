@@ -110,5 +110,7 @@ export default {
 </script>
 
 <style scoped>
-
+.dropdown:focus-within .dropdown-menu {
+    display: block;
+}
 </style>
