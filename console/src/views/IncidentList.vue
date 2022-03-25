@@ -4,7 +4,7 @@
             <h1 class="title">Eins&auml;tze</h1>
 
             <div class="buttons">
-                <router-link tag="button" type="button" class="button" to="new" append>
+                <router-link class="button" to="new" append>
                     <span class="icon"><font-awesome-icon icon="plus"/></span>
                     <span>Einsatz anlegen</span>
                 </router-link>

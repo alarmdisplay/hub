@@ -14,7 +14,7 @@
                     <font-awesome-icon :icon="showDetails ? 'chevron-up' : 'chevron-down'"/>
                 </span>
                 </button>
-                <router-link tag="button" class="button" :to="{ name: 'incident-form', params: { id: incident.id } }" title="Einsatz bearbeiten">
+                <router-link class="button" :to="{ name: 'incident-form', params: { id: incident.id } }" title="Einsatz bearbeiten">
                     <span class="icon"><font-awesome-icon icon="edit"/></span>
                 </router-link>
             </div>

@@ -19,13 +19,13 @@
                 </div>
                 <div class="dropdown-menu" id="dropdown-menu" role="menu">
                     <div class="dropdown-content">
-                        <router-link tag="a" class="dropdown-item is-flex is-align-items-center" :to="{ name: 'serial-monitor-form', params: { id: 'new' } }" append>
+                        <router-link class="dropdown-item is-flex is-align-items-center" :to="{ name: 'serial-monitor-form', params: { id: 'new' } }" append>
                             <span class="icon is-small mr-1">
                                 <font-awesome-icon icon="wave-square"/>
                             </span>
                             <span>Serielle Schnittstelle</span>
                         </router-link>
-                        <router-link tag="a" class="dropdown-item is-flex is-align-items-center" :to="{ name: 'watched-folder-form', params: { id: 'new' } }" append>
+                        <router-link class="dropdown-item is-flex is-align-items-center" :to="{ name: 'watched-folder-form', params: { id: 'new' } }" append>
                             <span class="icon is-small mr-1">
                                 <font-awesome-icon icon="folder"/>
                             </span>

@@ -4,7 +4,7 @@
             <h1 class="title">Konten</h1>
 
             <div class="buttons">
-                <router-link tag="button" type="button" class="button" to="new" append>
+                <router-link class="button" to="new" append>
                     <span class="icon"><font-awesome-icon icon="user-plus"/></span>
                     <span>Konto anlegen</span>
                 </router-link>
