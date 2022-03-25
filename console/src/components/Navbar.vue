@@ -25,7 +25,7 @@
                 </router-link>
 
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                    <a class="navbar-link" tabindex="0">
                         <span class="icon"><font-awesome-icon icon="cogs"/></span>
                         <span>Verarbeitung</span>
                     </a>
@@ -39,7 +39,7 @@
                 </div>
 
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                    <a class="navbar-link" tabindex="0">
                         <span class="icon"><font-awesome-icon icon="paper-plane"/></span>
                         <span>Ausgabe</span>
                     </a>
@@ -55,7 +55,7 @@
 
             <div class="navbar-end">
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                    <a class="navbar-link" tabindex="0">
                         <span class="icon"><font-awesome-icon icon="wrench"/></span>
                         <span>Administration</span>
                     </a>
@@ -80,7 +80,7 @@
                 </div>
 
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                    <a class="navbar-link" tabindex="0">
                         <span class="icon"><font-awesome-icon icon="question-circle"/></span>
                         <span>Hilfe</span>
                     </a>
@@ -94,7 +94,7 @@
                 </div>
 
                 <div class="navbar-item has-dropdown is-hoverable">
-                    <a class="navbar-link">
+                    <a class="navbar-link" tabindex="0">
                         <span class="icon"><font-awesome-icon icon="user"/></span>
                         <span>{{ displayName }}</span>
                         <span class="tag is-warning ml-2 has-text-weight-bold" style="width: 6em" v-if="isSessionAboutToExpire">
