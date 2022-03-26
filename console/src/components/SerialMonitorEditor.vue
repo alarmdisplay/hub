@@ -1,6 +1,5 @@
 <template>
   <form @submit.prevent="handleSubmit">
-
     <div class="field is-horizontal">
       <div class="field-label">
         <label class="label is-normal">Status</label>
@@ -9,7 +8,10 @@
         <div class="field">
           <div class="control">
             <label class="checkbox">
-              <input type="checkbox" v-model="item.active">
+              <input
+                v-model="item.active"
+                type="checkbox"
+              >
               &Uuml;berwachung aktiv
             </label>
           </div>
@@ -19,12 +21,20 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label" for="port">Port</label>
+        <label
+          class="label"
+          for="port"
+        >Port</label>
       </div>
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input class="input" type="text" id="port" v-model="item.port">
+            <input
+              id="port"
+              v-model="item.port"
+              class="input"
+              type="text"
+            >
           </div>
           <p class="help">
             Unter UNIX- oder Linux-basierten Systemen in der Form <code>/dev/tty.usbmodem12345</code>, unter Windows z.&nbsp;B. <code>COM3</code>
@@ -35,13 +45,23 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label" for="baudRate">Baudrate</label>
+        <label
+          class="label"
+          for="baudRate"
+        >Baudrate</label>
       </div>
       <div class="field-body">
         <div class="field is-expanded">
           <div class="field has-addons">
             <div class="control">
-              <input class="input" type="number" min="1" max="115200" id="baudRate" v-model.number="item.baudRate">
+              <input
+                id="baudRate"
+                v-model.number="item.baudRate"
+                class="input"
+                type="number"
+                min="1"
+                max="115200"
+              >
             </div>
             <div class="control">
               <span class="button is-static">Baud</span>
@@ -56,13 +76,23 @@
 
     <div class="field is-horizontal">
       <div class="field-label is-normal">
-        <label class="label" for="timeout">Timeout</label>
+        <label
+          class="label"
+          for="timeout"
+        >Timeout</label>
       </div>
       <div class="field-body">
         <div class="field is-expanded">
           <div class="field has-addons">
             <div class="control">
-              <input class="input" type="number" min="1" max="10000" id="timeout" v-model.number="item.timeout">
+              <input
+                id="timeout"
+                v-model.number="item.timeout"
+                class="input"
+                type="number"
+                min="1"
+                max="10000"
+              >
             </div>
             <div class="control">
               <span class="button is-static">Millisekunden</span>
@@ -78,13 +108,32 @@
     <div class="level">
       <div class="level-left">
         <div class="buttons">
-          <button class="button level-item is-danger is-outlined" v-if="!isNewItem" type="button" @click="$emit('remove')">Überwachung beenden</button>
+          <button
+            v-if="!isNewItem"
+            class="button level-item is-danger is-outlined"
+            type="button"
+            @click="$emit('remove')"
+          >
+            Überwachung beenden
+          </button>
         </div>
       </div>
       <div class="level-right">
         <div class="buttons">
-          <button class="button level-item" type="button" @click="$emit('reset')">Zur&uuml;cksetzen</button>
-          <button class="button level-item is-success" type="submit" :disabled="!isValid()">Speichern</button>
+          <button
+            class="button level-item"
+            type="button"
+            @click="$emit('reset')"
+          >
+            Zur&uuml;cksetzen
+          </button>
+          <button
+            class="button level-item is-success"
+            type="submit"
+            :disabled="!isValid()"
+          >
+            Speichern
+          </button>
         </div>
       </div>
     </div>
@@ -100,6 +149,16 @@ export default {
       required: true
     }
   },
+  setup(props, context) {
+    function handleSubmit() {
+      if (this.isValid()) {
+        context.emit('save')
+      } else {
+        // TODO show validation result
+      }
+    }
+    return { handleSubmit }
+  },
   computed: {
     isNewItem: function () {
       return this.item.id === undefined
@@ -113,16 +172,6 @@ export default {
         Number.isInteger(this.item.timeout) &&
         this.item.timeout > 0
     }
-  },
-  setup(props, context) {
-    function handleSubmit() {
-      if (this.isValid()) {
-        context.emit('save')
-      } else {
-        // TODO show validation result
-      }
-    }
-    return { handleSubmit }
   }
 }
 </script>

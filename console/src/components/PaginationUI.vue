@@ -1,27 +1,34 @@
 <template>
-  <nav class="my-5" role="navigation" aria-label="Paginierung">
+  <nav
+    class="my-5"
+    role="navigation"
+    aria-label="Paginierung"
+  >
     <div class="buttons is-centered has-addons">
-      <button class="button" :disabled="!canPrev" @click="e => $emit('prev', e)">
+      <button
+        class="button"
+        :disabled="!canPrev"
+        @click="e => $emit('prev', e)"
+      >
         <span class="is-sr-only">Vorherige Seite</span>
-        <FontAwesomeIcon icon="chevron-left"/>
+        <font-awesome-icon icon="chevron-left" />
       </button>
       <span class="button is-static">Seite {{ currentPage }} von {{ pageCount }}</span>
-      <button class="button" :disabled="!canNext" @click="e => $emit('next', e)">
+      <button
+        class="button"
+        :disabled="!canNext"
+        @click="e => $emit('next', e)"
+      >
         <span class="is-sr-only">Nächste Seite</span>
-        <FontAwesomeIcon icon="chevron-right"/>
+        <font-awesome-icon icon="chevron-right" />
       </button>
     </div>
   </nav>
 </template>
 
 <script>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-
 export default {
   name: 'PaginationUI',
-  components: {
-    FontAwesomeIcon
-  },
   props: {
     currentPage: {
       type: Number,

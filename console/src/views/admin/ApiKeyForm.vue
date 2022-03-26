@@ -1,16 +1,21 @@
 <template>
   <section class="section">
     <div class="container">
-      <h1 class="title">API-Key {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}</h1>
+      <h1 class="title">
+        API-Key {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}
+      </h1>
 
       <div class="buttons is-left">
-        <BackButton/>
+        <BackButton />
       </div>
 
-      <ErrorMessage :form-error="formError"/>
+      <ErrorMessage :form-error="formError" />
 
-      <FeathersVuexFormWrapper :item="item" watch>
-        <template v-slot="{ clone, save, reset }">
+      <FeathersVuexFormWrapper
+        :item="item"
+        watch
+      >
+        <template #default="{ clone, save, reset }">
           <ApiKeyEditor
             :item="clone"
             @save="
@@ -21,7 +26,7 @@
                   .catch(reason => { $data.formError = reason })
               }"
             @reset="reset"
-          ></ApiKeyEditor>
+          />
         </template>
       </FeathersVuexFormWrapper>
     </div>
@@ -35,6 +40,11 @@ import ErrorMessage from '@/components/ErrorMessage'
 export default {
   name: 'ApiKeyForm',
   components: { BackButton, ApiKeyEditor, ErrorMessage },
+  data: function () {
+    return {
+      formError: null
+    }
+  },
   computed: {
     id() {
       return this.$route.params.id
@@ -44,11 +54,6 @@ export default {
       // Get the API key for the given ID or create a new one if the ID is 'new'
       return this.id === 'new' ? new ApiKey() : ApiKey.getFromStore(this.id)
     },
-  },
-  data: function () {
-    return {
-      formError: null
-    }
   },
   watch: {
     id: {

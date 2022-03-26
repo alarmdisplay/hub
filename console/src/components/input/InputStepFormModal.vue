@@ -1,16 +1,25 @@
 <template>
   <div :class="['modal', (item ? 'is-active' : '')]">
-    <div class="modal-background"></div>
+    <div class="modal-background" />
     <div class="modal-card">
       <header class="modal-card-head">
-        <p class="modal-card-title">{{ modalTitle }}</p>
-        <button class="delete" aria-label="close" @click="$emit('close-request')"></button>
+        <p class="modal-card-title">
+          {{ modalTitle }}
+        </p>
+        <button
+          class="delete"
+          aria-label="close"
+          @click="$emit('close-request')"
+        />
       </header>
       <section class="modal-card-body">
-        <ErrorMessage :form-error="formError"/>
+        <ErrorMessage :form-error="formError" />
 
-        <FeathersVuexFormWrapper :item="item" watch>
-          <template v-slot="{ clone, save, reset, remove }">
+        <FeathersVuexFormWrapper
+          :item="item"
+          watch
+        >
+          <template #default="{ clone, save, reset, remove }">
             <PrintTaskEditor
               :item="clone"
               @save="
@@ -28,7 +37,7 @@
                     .then(() => { $emit('close-request') })
                     .catch(reason => { $data.formError = reason })
                 }"
-            ></PrintTaskEditor>
+            />
           </template>
         </FeathersVuexFormWrapper>
       </section>
@@ -42,6 +51,21 @@ import PrintTaskEditor from '@/components/PrintTaskEditor'
 export default {
   name: 'InputStepFormModal',
   components: { ErrorMessage, PrintTaskEditor },
+  props: {
+    item: {
+      type: Object,
+      required: true
+    },
+    stepType: {
+      type: String,
+      default: ''
+    },
+  },
+  data: function () {
+    return {
+      formError: null
+    }
+  },
   computed: {
     isNew() {
       return !this.item || this.item.id === undefined
@@ -57,15 +81,6 @@ export default {
       }
       return `${stepName} ${this.isNew ? 'hinzufügen' : 'bearbeiten'}`
     },
-  },
-  data: function () {
-    return {
-      formError: null
-    }
-  },
-  props: {
-    item: Object,
-    stepType: String,
   },
 }
 </script>

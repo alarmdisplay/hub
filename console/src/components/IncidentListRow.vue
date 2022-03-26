@@ -5,12 +5,18 @@
     <td class="incident-location">
       {{ incident.location ? [incident.location.district || incident.location.municipality, incident.location.street].join('\n').trim() : '' }}
     </td>
-    <td class="has-text-right">{{ incident.time | moment('LLL') }}</td>
+    <td class="has-text-right">
+      {{ incident.time | moment('LLL') }}
+    </td>
     <td class="is-narrow">
       <div class="field is-grouped">
         <p class="control">
-          <button class="button is-outlined" title="Einsatz bearbeiten" @click="$router.push({ name: 'incident-form', params: { id: incident.id } })">
-            <span class="icon"><font-awesome-icon icon="edit"/></span>
+          <button
+            class="button is-outlined"
+            title="Einsatz bearbeiten"
+            @click="$router.push({ name: 'incident-form', params: { id: incident.id } })"
+          >
+            <span class="icon"><font-awesome-icon icon="edit" /></span>
             <span>Bearbeiten</span>
           </button>
         </p>
@@ -21,6 +27,12 @@
 <script>
 export default {
   name: 'IncidentListRow',
+  props: {
+    incident: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     reasonText() {
       const reason = this.incident.reason || ''
@@ -33,9 +45,6 @@ export default {
         return reason
       }
     }
-  },
-  props: {
-    incident: Object
   }
 }
 </script>

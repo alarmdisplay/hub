@@ -1,16 +1,23 @@
 <template>
   <section class="section">
     <div class="container">
-      <h1 class="title">Einsatz {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}</h1>
+      <h1 class="title">
+        Einsatz {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}
+      </h1>
 
       <div class="buttons is-left">
-        <BackButton/>
+        <BackButton />
       </div>
 
-      <ErrorMessage :form-error="formError"/>
+      <ErrorMessage :form-error="formError" />
 
-      <FeathersVuexFormWrapper v-if="item" :item="item" :watch="false" :eager="false">
-        <template v-slot="{ clone, save, reset, remove }">
+      <FeathersVuexFormWrapper
+        v-if="item"
+        :item="item"
+        :watch="false"
+        :eager="false"
+      >
+        <template #default="{ clone, save, reset, remove }">
           <IncidentEditor
             :item="clone"
             @save="
@@ -28,7 +35,7 @@
                   .then(() => $router.push({name: 'incident-list'}))
                   .catch(reason => { $data.formError = reason })
               }"
-          ></IncidentEditor>
+          />
         </template>
       </FeathersVuexFormWrapper>
     </div>
@@ -43,6 +50,13 @@ import IncidentEditor from '@/components/IncidentEditor'
 export default {
   name: 'IncidentForm',
   components: { IncidentEditor, ErrorMessage, BackButton },
+  data: function () {
+    const { Incident } = this.$FeathersVuex.api
+    return {
+      formError: null,
+      newItem : new Incident()
+    }
+  },
   computed: {
     id() {
       return this.$route.params.id
@@ -52,13 +66,6 @@ export default {
       // Get the Incident for the given ID or create a new one if the ID is 'new'
       return this.id === 'new' ? this.newItem : Incident.getFromStore(this.id)
     },
-  },
-  data: function () {
-    const { Incident } = this.$FeathersVuex.api
-    return {
-      formError: null,
-      newItem : new Incident()
-    }
   },
   watch: {
     id: {

@@ -4,32 +4,56 @@
       <div class="card-header-title">
         Serielle Schnittstelle
       </div>
-      <router-link class="card-header-icon" :to="{ name: 'serial-monitor-form', params: {id: serialMonitor.id} }" title="Bearbeiten">
+      <router-link
+        class="card-header-icon"
+        :to="{ name: 'serial-monitor-form', params: {id: serialMonitor.id} }"
+        title="Bearbeiten"
+      >
         <span class="icon">
-          <font-awesome-icon icon="edit"/>
+          <font-awesome-icon icon="edit" />
         </span>
       </router-link>
     </div>
     <div class="card-content">
       <div class="media">
         <div class="media-left">
-          <font-awesome-icon icon="wave-square" style="font-size: 2em"/>
+          <font-awesome-icon
+            icon="wave-square"
+            style="font-size: 2em"
+          />
         </div>
         <div class="media-content">
-          <p class="title is-4">{{ serialMonitor.port }}</p>
+          <p class="title is-4">
+            {{ serialMonitor.port }}
+          </p>
           <p class="subtitle is-6">
-            <span v-if="serialMonitor.active" class="has-text-success"><font-awesome-icon icon="circle" size="sm"/> Aktiv</span>
-            <span v-else class=""><font-awesome-icon icon="pause"/> Pausiert</span>
+            <span
+              v-if="serialMonitor.active"
+              class="has-text-success"
+            ><font-awesome-icon
+              icon="circle"
+              size="sm"
+            /> Aktiv</span>
+            <span
+              v-else
+              class=""
+            ><font-awesome-icon icon="pause" /> Pausiert</span>
           </p>
         </div>
       </div>
 
       <hr>
 
-      <div v-if="textAnalysisJob" class="media">
+      <div
+        v-if="textAnalysisJob"
+        class="media"
+      >
         <div class="media-left">
           <span class="icon">
-            <font-awesome-icon icon="file-alt" size="2x"/>
+            <font-awesome-icon
+              icon="file-alt"
+              size="2x"
+            />
           </span>
         </div>
         <div class="media-content">
@@ -37,26 +61,47 @@
           <b>{{ getConfigDisplayName(textAnalysisJob.config) }}</b>
         </div>
         <div class="media-right">
-          <button class="delete is-small" @click="removeTextAnalysisJob" title="Textanalyse entfernen"></button>
+          <button
+            class="delete is-small"
+            title="Textanalyse entfernen"
+            @click="removeTextAnalysisJob"
+          />
         </div>
       </div>
-      <div v-else class="content">
-        <p class="has-text-warning-dark">Eingehende Daten müssen analysiert werden, um sie als Alarm behandeln zu können.</p>
+      <div
+        v-else
+        class="content"
+      >
+        <p class="has-text-warning-dark">
+          Eingehende Daten müssen analysiert werden, um sie als Alarm behandeln zu können.
+        </p>
         <div class="field">
           <label class="label">Layout</label>
           <div class="control">
             <div class="select">
               <select ref="analysis-config-select">
-                <option v-for="config in Object.entries(textAnalysisConfigs)" :key="config[0]" :value="config[0]">
+                <option
+                  v-for="config in Object.entries(textAnalysisConfigs)"
+                  :key="config[0]"
+                  :value="config[0]"
+                >
                   {{ config[1] }}
                 </option>
               </select>
             </div>
           </div>
-          <p class="help">Ein Layout definiert, wie der Text analysiert wird. Wähle das zur Quelle passende Layout aus.</p>
+          <p class="help">
+            Ein Layout definiert, wie der Text analysiert wird. Wähle das zur Quelle passende Layout aus.
+          </p>
         </div>
 
-        <button type="button" class="button is-success" @click="addTextAnalysisJob">Analyse einrichten</button>
+        <button
+          type="button"
+          class="button is-success"
+          @click="addTextAnalysisJob"
+        >
+          Analyse einrichten
+        </button>
       </div>
     </div>
   </div>
@@ -67,6 +112,15 @@ import { makeFindMixin } from 'feathers-vuex'
 
 export default {
   name: "SerialMonitor",
+  mixins: [
+    makeFindMixin({ service: 'textanalysis', items: 'textAnalysisJobs' }),
+  ],
+  props: {
+    serialMonitor: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     textAnalysisConfigs() {
       // TODO This should be retrieved from the backend
@@ -113,12 +167,6 @@ export default {
 
       job.remove()
     }
-  },
-  mixins: [
-    makeFindMixin({ service: 'textanalysis', items: 'textAnalysisJobs' }),
-  ],
-  props: {
-    serialMonitor: Object
   }
 }
 </script>

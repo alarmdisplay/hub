@@ -1,20 +1,29 @@
 <template>
   <section class="section">
     <div class="container">
-      <h1 class="title">Einsatzmittel</h1>
+      <h1 class="title">
+        Einsatzmittel
+      </h1>
 
       <div class="content">
         Hier konfigurierte Einsatzmittel werden in den eingehenden Alarmen identifiziert und den Einsätzen zugeordnet.
       </div>
 
       <div class="buttons">
-        <router-link class="button" to="new" append>
-          <span class="icon"><font-awesome-icon icon="plus"/></span>
+        <router-link
+          class="button"
+          to="new"
+          append
+        >
+          <span class="icon"><font-awesome-icon icon="plus" /></span>
           <span>Einsatzmittel anlegen</span>
         </router-link>
       </div>
 
-      <FeathersVuexPagination v-model="pagination" :latest-query="latestQuery">
+      <FeathersVuexPagination
+        v-model="pagination"
+        :latest-query="latestQuery"
+      >
         <template #default="{ currentPage, pageCount, next, prev, canNext, canPrev }">
           <PaginationUI
             :current-page="currentPage"
@@ -28,8 +37,11 @@
       </FeathersVuexPagination>
 
       <ul>
-        <li v-for="resource in resources" :key="resource.id">
-          <ResourceCard :resource="resource"/>
+        <li
+          v-for="resource in resources"
+          :key="resource.id"
+        >
+          <ResourceCard :resource="resource" />
         </li>
       </ul>
     </div>

@@ -1,16 +1,28 @@
 <template>
   <section class="section">
     <div class="container">
-      <h1 class="title">Konten</h1>
+      <h1 class="title">
+        Konten
+      </h1>
 
       <div class="buttons">
-        <router-link class="button" to="new" append>
-          <span class="icon"><font-awesome-icon icon="user-plus"/></span>
+        <router-link
+          class="button"
+          to="new"
+          append
+        >
+          <span class="icon"><font-awesome-icon icon="user-plus" /></span>
           <span>Konto anlegen</span>
         </router-link>
       </div>
 
-      <FeathersVuexFind v-slot="{ items: users }" service="users" :query="{ $limit: 50 }" qid="userList" watch="query">
+      <FeathersVuexFind
+        v-slot="{ items: users }"
+        service="users"
+        :query="{ $limit: 50 }"
+        qid="userList"
+        watch="query"
+      >
         <table class="table is-fullwidth">
           <thead>
             <tr>
@@ -29,17 +41,26 @@
                 <td class="is-narrow">
                   <div class="field is-grouped">
                     <p class="control">
-                      <button class="button is-outlined" title="Konto bearbeiten" @click="$router.push({ name: 'user-form', params: { id: user.id } })">
+                      <button
+                        class="button is-outlined"
+                        title="Konto bearbeiten"
+                        @click="$router.push({ name: 'user-form', params: { id: user.id } })"
+                      >
                         <span class="icon">
-                          <font-awesome-icon icon="user-edit"/>
+                          <font-awesome-icon icon="user-edit" />
                         </span>
                         <span>Bearbeiten</span>
                       </button>
                     </p>
                     <p class="control">
-                      <button class="button is-danger is-outlined" title="Konto entfernen" :disabled="user.id === $store.getters['auth/user'].id" @click="removeUser(user.id)">
+                      <button
+                        class="button is-danger is-outlined"
+                        title="Konto entfernen"
+                        :disabled="user.id === $store.getters['auth/user'].id"
+                        @click="removeUser(user.id)"
+                      >
                         <span class="icon">
-                          <font-awesome-icon icon="user-minus"/>
+                          <font-awesome-icon icon="user-minus" />
                         </span>
                       </button>
                     </p>

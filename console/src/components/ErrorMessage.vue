@@ -1,14 +1,23 @@
 <template>
-  <span v-if="formError && short" class="has-text-danger">
+  <span
+    v-if="formError && short"
+    class="has-text-danger"
+  >
     {{ messages[0] || 'Fehler' }}
   </span>
-  <article class="message is-danger" v-else-if="formError">
+  <article
+    v-else-if="formError"
+    class="message is-danger"
+  >
     <div class="message-header">
       Fehler
     </div>
     <div class="message-body">
       <ul>
-        <li v-for="[index, message] in messages.entries()" :key="index">
+        <li
+          v-for="[index, message] in messages.entries()"
+          :key="index"
+        >
           {{ message }}
         </li>
       </ul>
@@ -18,6 +27,13 @@
 <script>
 export default {
   name: 'ErrorMessage',
+  props: {
+    formError: {
+      type: Object,
+      default: undefined
+    },
+    short: Boolean
+  },
   computed: {
     messages: function () {
       if (this.formError.type === 'FeathersError') {
@@ -30,10 +46,6 @@ export default {
 
       return [this.formError.toString()]
     }
-  },
-  props: {
-    formError: Object,
-    short: Boolean
   }
 }
 </script>

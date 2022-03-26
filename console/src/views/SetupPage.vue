@@ -4,18 +4,24 @@
       <h1 class="title">
         Zentrale
       </h1>
-      <h2 class="subtitle">Erste Einrichtung</h2>
+      <h2 class="subtitle">
+        Erste Einrichtung
+      </h2>
 
       <div class="buttons is-link">
-        <button type="button" class="button" @click="$store.commit('setShowSetup', false)">
+        <button
+          type="button"
+          class="button"
+          @click="$store.commit('setShowSetup', false)"
+        >
           <span class="icon">
-            <font-awesome-icon icon="chevron-left"/>
+            <font-awesome-icon icon="chevron-left" />
           </span>
           <span>Zurück zur Anmeldung</span>
         </button>
       </div>
 
-      <ErrorMessage :form-error="createError"/>
+      <ErrorMessage :form-error="createError" />
 
       <div class="columns">
         <div class="column is-half">
@@ -32,31 +38,51 @@
         <div class="column is-half">
           <form @submit.prevent="createUser">
             <div class="field">
-              <label class="label" for="email">
+              <label
+                class="label"
+                for="email"
+              >
                 E-Mail
               </label>
               <p class="control has-icons-left">
-                <input class="input" type="email" id="email" v-model="email">
+                <input
+                  id="email"
+                  v-model="email"
+                  class="input"
+                  type="email"
+                >
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="envelope"/>
+                  <font-awesome-icon icon="envelope" />
                 </span>
               </p>
             </div>
             <div class="field">
-              <label class="label" for="password">
+              <label
+                class="label"
+                for="password"
+              >
                 Passwort
               </label>
               <p class="control has-icons-left">
-                <input class="input" type="password" id="password" autocomplete="new-password" v-model="password">
+                <input
+                  id="password"
+                  v-model="password"
+                  class="input"
+                  type="password"
+                  autocomplete="new-password"
+                >
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="lock"/>
+                  <font-awesome-icon icon="lock" />
                 </span>
               </p>
             </div>
             <div class="field">
               <div class="control">
                 <div class="buttons is-right">
-                  <button class="button is-success" :disabled="email === '' || password === ''">
+                  <button
+                    class="button is-success"
+                    :disabled="email === '' || password === ''"
+                  >
                     Konto anlegen
                   </button>
                 </div>

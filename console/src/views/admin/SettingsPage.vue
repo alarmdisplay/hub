@@ -1,20 +1,30 @@
 <template>
   <section class="section">
     <div class="container">
-      <h1 class="title mb-6">Einstellungen</h1>
+      <h1 class="title mb-6">
+        Einstellungen
+      </h1>
 
-      <h2 class="subtitle">Überwachte Ordner</h2>
+      <h2 class="subtitle">
+        Überwachte Ordner
+      </h2>
       <table class="table is-fullwidth">
         <thead>
           <tr>
-            <th scope="col">Einstellung</th>
-            <th scope="col">Wert</th>
+            <th scope="col">
+              Einstellung
+            </th>
+            <th scope="col">
+              Wert
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <th scope="row">Bereits verarbeitete Dateien ignorieren</th>
-            <td><BooleanValue settings-key="ignore_processed_files"/></td>
+            <th scope="row">
+              Bereits verarbeitete Dateien ignorieren
+            </th>
+            <td><BooleanValue settings-key="ignore_processed_files" /></td>
           </tr>
         </tbody>
       </table>

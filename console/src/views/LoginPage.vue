@@ -8,36 +8,56 @@
         Console
       </p>
 
-      <ErrorMessage :form-error="errorToShow"/>
+      <ErrorMessage :form-error="errorToShow" />
 
       <div class="columns">
         <div class="column is-half">
           <form @submit.prevent="login">
             <div class="field">
-              <label class="label" for="email">
+              <label
+                class="label"
+                for="email"
+              >
                 E-Mail
               </label>
               <p class="control has-icons-left">
-                <input class="input" type="email" id="email" v-model="email">
+                <input
+                  id="email"
+                  v-model="email"
+                  class="input"
+                  type="email"
+                >
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="envelope"/>
+                  <font-awesome-icon icon="envelope" />
                 </span>
               </p>
             </div>
             <div class="field">
-              <label class="label" for="password">
+              <label
+                class="label"
+                for="password"
+              >
                 Passwort
               </label>
               <p class="control has-icons-left">
-                <input class="input" type="password" id="password" autocomplete="current-password" v-model="password">
+                <input
+                  id="password"
+                  v-model="password"
+                  class="input"
+                  type="password"
+                  autocomplete="current-password"
+                >
                 <span class="icon is-small is-left">
-                  <font-awesome-icon icon="lock"/>
+                  <font-awesome-icon icon="lock" />
                 </span>
               </p>
             </div>
             <div class="field">
               <p class="control">
-                <button :class="['button', 'is-success', { 'is-loading': isLoginPending }]" :disabled="isLoginDisabled">
+                <button
+                  :class="['button', 'is-success', { 'is-loading': isLoginPending }]"
+                  :disabled="isLoginDisabled"
+                >
                   Anmelden
                 </button>
               </p>
@@ -52,10 +72,14 @@
             <div class="message-body">
               Wenn du das System gerade neu aufgesetzt hast, musst du erst ein Konto anlegen, um dich anmelden zu können.
               <div class="buttons is-right">
-                <button type="button" class="button" @click="$store.commit('setShowSetup', true)">
+                <button
+                  type="button"
+                  class="button"
+                  @click="$store.commit('setShowSetup', true)"
+                >
                   <span>Konto anlegen</span>
                   <span class="icon">
-                    <font-awesome-icon icon="chevron-right"/>
+                    <font-awesome-icon icon="chevron-right" />
                   </span>
                 </button>
               </div>
@@ -63,7 +87,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </section>
 </template>
@@ -75,6 +98,13 @@ export default {
   name: 'LoginPage',
   components: {
     ErrorMessage
+  },
+  data () {
+    return {
+      loginError: null,
+      email: '',
+      password: ''
+    }
   },
   computed: {
     errorToShow() {
@@ -101,13 +131,6 @@ export default {
     },
     isLoginPending() {
       return this.$store.state.auth.isAuthenticatePending
-    }
-  },
-  data () {
-    return {
-      loginError: null,
-      email: '',
-      password: ''
     }
   },
   methods: {

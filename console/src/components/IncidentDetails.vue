@@ -22,7 +22,7 @@
       </div>
     </div>
     <p>
-      <strong>Einsatzort:</strong> {{ locationText || '-/-'}}
+      <strong>Einsatzort:</strong> {{ locationText || '-/-' }}
     </p>
     <p>
       <strong>Freitext:</strong> {{ incident.description || '-/-' }}
@@ -33,6 +33,12 @@
 <script>
 export default {
   name: "IncidentDetails",
+  props: {
+    incident: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     locationText () {
       if (!this.incident.location) {
@@ -41,9 +47,6 @@ export default {
 
       return this.incident.location.rawText
     }
-  },
-  props: {
-    incident: Object
   }
 }
 </script>

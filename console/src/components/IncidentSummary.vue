@@ -20,14 +20,17 @@
 <script>
 export default {
   name: "IncidentSummary",
+  props: {
+    incident: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     isRecent: function () {
       // Check if the incident began within the last hour
       return Date.now() - this.incident.time.getTime() < 3600000
     }
-  },
-  props: {
-    incident: Object
   }
 }
 </script>

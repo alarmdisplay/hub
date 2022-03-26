@@ -12,15 +12,30 @@
               <div class="field is-narrow">
                 <div class="control">
                   <label class="radio mr-2">
-                    <input type="radio" name="status" value="Actual" v-model="item.status">
+                    <input
+                      v-model="item.status"
+                      type="radio"
+                      name="status"
+                      value="Actual"
+                    >
                     Tatsächlicher Einsatz
                   </label>
                   <label class="radio mr-2">
-                    <input type="radio" name="status" value="Exercise" v-model="item.status">
+                    <input
+                      v-model="item.status"
+                      type="radio"
+                      name="status"
+                      value="Exercise"
+                    >
                     Übung
                   </label>
                   <label class="radio">
-                    <input type="radio" name="status" value="Test" v-model="item.status">
+                    <input
+                      v-model="item.status"
+                      type="radio"
+                      name="status"
+                      value="Test"
+                    >
                     Probealarm
                   </label>
                 </div>
@@ -40,13 +55,21 @@
 
           <div class="field is-horizontal">
             <div class="field-label is-normal">
-              <label class="label" for="reason">Einsatzgrund</label>
+              <label
+                class="label"
+                for="reason"
+              >Einsatzgrund</label>
             </div>
             <div class="field-body">
               <div class="field">
                 <div class="control">
-                  <input class="input" type="text" id="reason" :placeholder="reasonPlaceholder"
-                         v-model="item.reason">
+                  <input
+                    id="reason"
+                    v-model="item.reason"
+                    class="input"
+                    type="text"
+                    :placeholder="reasonPlaceholder"
+                  >
                 </div>
               </div>
             </div>
@@ -54,12 +77,20 @@
 
           <div class="field is-horizontal">
             <div class="field-label is-normal">
-              <label class="label" for="keyword">Stichwort</label>
+              <label
+                class="label"
+                for="keyword"
+              >Stichwort</label>
             </div>
             <div class="field-body">
               <div class="field">
                 <div class="control">
-                  <input class="input" type="text" id="keyword" v-model="item.keyword">
+                  <input
+                    id="keyword"
+                    v-model="item.keyword"
+                    class="input"
+                    type="text"
+                  >
                 </div>
               </div>
             </div>
@@ -67,12 +98,19 @@
 
           <div class="field is-horizontal">
             <div class="field-label is-normal">
-              <label class="label" for="description">Freitext</label>
+              <label
+                class="label"
+                for="description"
+              >Freitext</label>
             </div>
             <div class="field-body">
               <div class="field">
                 <div class="control">
-                  <textarea class="textarea" id="description" v-model="item.description"></textarea>
+                  <textarea
+                    id="description"
+                    v-model="item.description"
+                    class="textarea"
+                  />
                 </div>
               </div>
             </div>
@@ -85,40 +123,74 @@
           <legend>Quelle</legend>
           <div class="field is-horizontal">
             <div class="field-label is-normal">
-              <label class="label" for="caller_name">Meldende Person</label>
+              <label
+                class="label"
+                for="caller_name"
+              >Meldende Person</label>
             </div>
             <div class="field-body">
               <div class="field">
                 <div class="control">
-                  <input class="input" type="text" id="caller_name" v-model="item.caller_name">
+                  <input
+                    id="caller_name"
+                    v-model="item.caller_name"
+                    class="input"
+                    type="text"
+                  >
                 </div>
-                <p class="help">Name der Person</p>
+                <p class="help">
+                  Name der Person
+                </p>
               </div>
               <div class="field">
                 <div class="control">
-                  <input class="input" type="text" id="caller_number" v-model="item.caller_number">
+                  <input
+                    id="caller_number"
+                    v-model="item.caller_number"
+                    class="input"
+                    type="text"
+                  >
                 </div>
-                <p class="help">Rufnummer für Rückfragen</p>
+                <p class="help">
+                  Rufnummer für Rückfragen
+                </p>
               </div>
             </div>
           </div>
 
           <div class="field is-horizontal">
             <div class="field-label is-normal">
-              <label class="label" for="sender">Absender</label>
+              <label
+                class="label"
+                for="sender"
+              >Absender</label>
             </div>
             <div class="field-body">
               <div class="field">
                 <div class="control">
-                  <input class="input" type="text" id="sender" v-model="item.sender">
+                  <input
+                    id="sender"
+                    v-model="item.sender"
+                    class="input"
+                    type="text"
+                  >
                 </div>
-                <p class="help">Stelle oder Organisation, die den Einsatz übermittelt hat</p>
+                <p class="help">
+                  Stelle oder Organisation, die den Einsatz übermittelt hat
+                </p>
               </div>
               <div class="field">
                 <div class="control">
-                  <input class="input" type="text" id="ref" v-model="item.ref">
+                  <input
+                    id="ref"
+                    v-model="item.ref"
+                    class="input"
+                    type="text"
+                  >
                 </div>
-                <p class="help">Eindeutige Referenz (Einsatznummer)</p>
+                <p class="help">
+                  Eindeutige Referenz (Einsatznummer)
+                </p>
               </div>
             </div>
           </div>
@@ -126,11 +198,22 @@
 
         <fieldset>
           <legend>Einsatzmittel</legend>
-          <div class="field" id="resources">
-            <span class="control" v-for="resource of resources" :key="resource.id">
+          <div
+            id="resources"
+            class="field"
+          >
+            <span
+              v-for="resource of resources"
+              :key="resource.id"
+              class="control"
+            >
               <label class="checkbox">
-                <input type="checkbox" :value="resource.id" v-model="item.resourceIds">
-                <ResourceIcon :resource="resource"/>
+                <input
+                  v-model="item.resourceIds"
+                  type="checkbox"
+                  :value="resource.id"
+                >
+                <ResourceIcon :resource="resource" />
                 {{ resource.name }}
               </label>
             </span>
@@ -141,113 +224,225 @@
 
     <fieldset v-if="item.location">
       <legend>Einsatzort</legend>
-      <button type="button" class="button" @click.prevent="item.location = null">Einsatzort entfernen</button>
+      <button
+        type="button"
+        class="button"
+        @click.prevent="item.location = null"
+      >
+        Einsatzort entfernen
+      </button>
       <div class="field is-horizontal">
         <div class="field-label is-normal">
-          <label class="label" for="location_name">Objektname</label>
+          <label
+            class="label"
+            for="location_name"
+          >Objektname</label>
         </div>
         <div class="field-body">
           <div class="field">
             <div class="control">
-              <input class="input" type="text" id="location_name" v-model.trim="item.location.name">
+              <input
+                id="location_name"
+                v-model.trim="item.location.name"
+                class="input"
+                type="text"
+              >
             </div>
-            <p class="help">Bezeichnung des Objekts oder der Örtlichkeit</p>
+            <p class="help">
+              Bezeichnung des Objekts oder der Örtlichkeit
+            </p>
           </div>
         </div>
       </div>
 
       <div class="field is-horizontal">
         <div class="field-label is-normal">
-          <label class="label" for="street">Adresse</label>
+          <label
+            class="label"
+            for="street"
+          >Adresse</label>
         </div>
         <div class="field-body">
           <div class="field">
             <div class="control">
-              <input class="input" type="text" id="street" v-model="item.location.street">
+              <input
+                id="street"
+                v-model="item.location.street"
+                class="input"
+                type="text"
+              >
             </div>
-            <p class="help">Straße</p>
+            <p class="help">
+              Straße
+            </p>
           </div>
           <div class="field">
             <div class="control">
-              <input class="input" type="text" id="street-number" size="5" v-model="item.location.number">
+              <input
+                id="street-number"
+                v-model="item.location.number"
+                class="input"
+                type="text"
+                size="5"
+              >
             </div>
-            <p class="help">Hausnummer</p>
+            <p class="help">
+              Hausnummer
+            </p>
           </div>
           <div class="field">
             <div class="control">
-              <input class="input" type="text" id="detail" v-model="item.location.detail">
+              <input
+                id="detail"
+                v-model="item.location.detail"
+                class="input"
+                type="text"
+              >
             </div>
-            <p class="help">Detaillierte Angabe, z.&nbsp;B. Stockwerk</p>
+            <p class="help">
+              Detaillierte Angabe, z.&nbsp;B. Stockwerk
+            </p>
           </div>
         </div>
       </div>
 
       <div class="field is-horizontal">
         <div class="field-label is-normal">
-          <label class="label" for="post-code">Ort</label>
+          <label
+            class="label"
+            for="post-code"
+          >Ort</label>
         </div>
         <div class="field-body">
           <div class="field">
             <div class="control">
-              <input class="input" type="text" id="post-code" size="5" v-model="item.location.postCode">
+              <input
+                id="post-code"
+                v-model="item.location.postCode"
+                class="input"
+                type="text"
+                size="5"
+              >
             </div>
-            <p class="help">Postleitzahl</p>
+            <p class="help">
+              Postleitzahl
+            </p>
           </div>
           <div class="field">
             <div class="control">
-              <input class="input" type="text" id="municipality" v-model="item.location.municipality">
+              <input
+                id="municipality"
+                v-model="item.location.municipality"
+                class="input"
+                type="text"
+              >
             </div>
-            <p class="help">Stadt oder Gemeinde</p>
+            <p class="help">
+              Stadt oder Gemeinde
+            </p>
           </div>
           <div class="field">
             <div class="control">
-              <input class="input" type="text" id="district" v-model="item.location.district">
+              <input
+                id="district"
+                v-model="item.location.district"
+                class="input"
+                type="text"
+              >
             </div>
-            <p class="help">Stadt- oder Ortsteil</p>
+            <p class="help">
+              Stadt- oder Ortsteil
+            </p>
           </div>
           <div class="field">
             <div class="control">
-              <input class="input" type="text" id="country" v-model="item.location.country">
+              <input
+                id="country"
+                v-model="item.location.country"
+                class="input"
+                type="text"
+              >
             </div>
-            <p class="help">Land</p>
+            <p class="help">
+              Land
+            </p>
           </div>
         </div>
       </div>
 
       <div class="field is-horizontal">
         <div class="field-label is-normal">
-          <label class="label" for="longitude">Koordinaten (WGS84)</label>
+          <label
+            class="label"
+            for="longitude"
+          >Koordinaten (WGS84)</label>
         </div>
         <div class="field-body">
           <div class="field">
             <div class="control">
-              <input class="input" type="text" id="longitude" v-model.number="item.location.longitude">
+              <input
+                id="longitude"
+                v-model.number="item.location.longitude"
+                class="input"
+                type="text"
+              >
             </div>
-            <p class="help">Längengrad (dezimal)</p>
+            <p class="help">
+              Längengrad (dezimal)
+            </p>
           </div>
           <div class="field">
             <div class="control">
-              <input class="input" type="text" id="latitude" v-model.number="item.location.latitude">
+              <input
+                id="latitude"
+                v-model.number="item.location.latitude"
+                class="input"
+                type="text"
+              >
             </div>
-            <p class="help">Breitengrad (dezimal)</p>
+            <p class="help">
+              Breitengrad (dezimal)
+            </p>
           </div>
         </div>
       </div>
     </fieldset>
-    <button v-else type="button" class="button" @click="addLocation">
+    <button
+      v-else
+      type="button"
+      class="button"
+      @click="addLocation"
+    >
       Einsatzort hinzufügen
     </button>
 
     <div class="level mt-5">
       <div class="level-left">
         <div class="buttons">
-          <button class="button level-item is-danger is-outlined" v-if="!isNewItem" type="button" @click="$emit('remove')">Löschen</button>
+          <button
+            v-if="!isNewItem"
+            class="button level-item is-danger is-outlined"
+            type="button"
+            @click="$emit('remove')"
+          >
+            Löschen
+          </button>
         </div>
       </div>
       <div class="level-right">
         <div class="buttons">
-          <button class="button level-item" type="button" @click="$emit('reset')">Zur&uuml;cksetzen</button>
-          <button :class="['button', 'level-item', isNewItem && item.status === 'Actual' ? 'is-danger' : 'is-success']" type="submit" :disabled="!isValid()">
+          <button
+            class="button level-item"
+            type="button"
+            @click="$emit('reset')"
+          >
+            Zur&uuml;cksetzen
+          </button>
+          <button
+            :class="['button', 'level-item', isNewItem && item.status === 'Actual' ? 'is-danger' : 'is-success']"
+            type="submit"
+            :disabled="!isValid()"
+          >
             {{ isNewItem ? 'Anlegen' : 'Speichern' }}
           </button>
         </div>
@@ -263,11 +458,33 @@ import { makeFindMixin } from 'feathers-vuex'
 export default {
   name: 'IncidentEditor',
   components: { ResourceIcon },
+  mixins: [
+    makeFindMixin({ service: 'resources', local: true }),
+  ],
   props: {
     item: {
       type: Object,
       required: true
     }
+  },
+  setup(props, context) {
+    function handleSubmit() {
+      if (this.isValid()) {
+        if (this.item.location && this.item.location.latitude === '') {
+          this.item.location.latitude = null
+        }
+        if (this.item.location && this.item.location.longitude === '') {
+          this.item.location.longitude = null
+        }
+        context.emit('save')
+      } else {
+        // TODO show validation result
+      }
+    }
+    return { handleSubmit }
+  },
+  data() {
+    return {}
   },
   computed: {
     isNewItem: function () {
@@ -298,9 +515,6 @@ export default {
     // Make sure all resources are loaded and up-to-date
     Resource.find()
   },
-  data() {
-    return {}
-  },
   methods: {
     addLocation () {
       const { Location } = this.$FeathersVuex.api
@@ -310,25 +524,6 @@ export default {
       // For now the form is also valid if it is completely empty
       return true
     }
-  },
-  mixins: [
-    makeFindMixin({ service: 'resources', local: true }),
-  ],
-  setup(props, context) {
-    function handleSubmit() {
-      if (this.isValid()) {
-        if (this.item.location && this.item.location.latitude === '') {
-          this.item.location.latitude = null
-        }
-        if (this.item.location && this.item.location.longitude === '') {
-          this.item.location.longitude = null
-        }
-        context.emit('save')
-      } else {
-        // TODO show validation result
-      }
-    }
-    return { handleSubmit }
   }
 }
 </script>

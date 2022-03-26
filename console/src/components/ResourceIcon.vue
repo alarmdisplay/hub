@@ -1,5 +1,8 @@
 <template>
-  <font-awesome-icon :icon="getIcon(resource)" :size="size"/>
+  <font-awesome-icon
+    :icon="getIcon(resource)"
+    :size="size"
+  />
 </template>
 
 <script>
@@ -13,6 +16,16 @@ const icons = {
 
 export default {
   name: "ResourceIcon",
+  props: {
+    resource: {
+      type: Object,
+      required: true
+    },
+    size: {
+      type: String,
+      default: null
+    }
+  },
   methods: {
     getIcon: function (resource) {
       if (!resource || !resource.type || !Object.keys(icons).includes(resource.type.toLowerCase())) {
@@ -21,16 +34,6 @@ export default {
 
       return icons[resource.type.toLowerCase()]
     },
-  },
-  props: {
-    resource: {
-      type: Object,
-      required: true
-    },
-    size: {
-      type: String,
-      required: false
-    }
   }
 }
 </script>
