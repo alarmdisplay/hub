@@ -1,15 +1,15 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import About from '../views/About'
-import Home from '../views/Home.vue'
+import About from '../views/AboutPage'
+import Overview from '../views/OverviewPage.vue'
 import ApiKeyList from '@/views/admin/ApiKeyList'
 import ApiKeyForm from '@/views/admin/ApiKeyForm'
-import Display from '@/views/output/Display'
-import Input from '@/views/Input'
+import Display from '@/views/output/DisplayPage'
+import Input from '@/views/InputPage'
 import ResourceForm from '@/views/processing/ResourceForm'
 import ResourceList from '@/views/processing/ResourceList'
 import SerialMonitorForm from '@/views/input/SerialMonitorForm'
-import Settings from '@/views/admin/Settings'
+import Settings from '@/views/admin/SettingsPage'
 import UserList from '../views/admin/UserList'
 import UserForm from '@/views/admin/UserForm'
 import WatchedFolderForm from '@/views/input/WatchedFolderForm'
@@ -21,8 +21,8 @@ Vue.use(VueRouter)
   const routes = [
     {
       path: '/',
-      name: 'Home',
-      component: Home
+      name: 'overview',
+      component: Overview
     },
     {
       path: '/about',

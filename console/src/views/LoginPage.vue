@@ -72,7 +72,7 @@
 import ErrorMessage from '@/components/ErrorMessage'
 
 export default {
-  name: 'Login',
+  name: 'LoginPage',
   components: {
     ErrorMessage
   },

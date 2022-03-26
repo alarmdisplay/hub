@@ -34,7 +34,7 @@
 import IncidentMediaObject from '@/components/IncidentMediaObject'
 
 export default {
-  name: 'Home',
+  name: 'OverviewPage',
   components: { IncidentMediaObject }
 }
 </script>

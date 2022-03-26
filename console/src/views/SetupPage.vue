@@ -72,7 +72,7 @@
 <script>
 import ErrorMessage from '@/components/ErrorMessage'
 export default {
-  name: 'Setup',
+  name: 'SetupPage',
   components: {
     ErrorMessage
   },

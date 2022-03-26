@@ -18,9 +18,9 @@
 
 <script>
 import 'bulma/css/bulma.css'
-import Navbar from './components/Navbar'
-import Login from './views/Login'
-import Setup from '@/views/Setup'
+import Navbar from './components/TheNavbar'
+import Login from './views/LoginPage'
+import Setup from '@/views/SetupPage'
 
 export default {
   name: 'App',

@@ -62,7 +62,7 @@ import WatchedFolder from '@/components/input/WatchedFolder'
 const knownStepTypes = ['PrintTask']
 
 export default {
-  name: "Input",
+  name: "InputPage",
   components: { SerialMonitor, InputStepFormModal, WatchedFolder },
   computed: {
     serialMonitorsParams() {

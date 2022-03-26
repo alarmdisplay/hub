@@ -14,7 +14,7 @@
 
     <div ref="navbarmenu" class="navbar-menu">
       <div class="navbar-start">
-        <router-link class="navbar-item is-tab" to="/" exact>
+        <router-link class="navbar-item is-tab" :to="{ name: 'overview' }" exact>
           <span class="icon"><font-awesome-icon icon="home"/></span>
           <span>&Uuml;bersicht</span>
         </router-link>
@@ -121,7 +121,7 @@
 
 <script>
 export default {
-  name: 'Navbar',
+  name: 'TheNavbar',
   computed: {
     displayName: function () {
       const currentUser = this.$store.getters['auth/user']

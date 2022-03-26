@@ -26,7 +26,7 @@
 import BooleanValue from '@/components/admin/settings/BooleanValue'
 
 export default {
-  name: 'Settings',
+  name: 'SettingsPage',
   components: {
     BooleanValue
   },
