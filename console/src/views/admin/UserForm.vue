@@ -1,31 +1,31 @@
 <template>
-    <section class="section">
-        <div class="container">
-            <h1 class="title">Konto {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}</h1>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Konto {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}</h1>
 
-            <div class="buttons is-left">
-                <BackButton/>
-            </div>
+      <div class="buttons is-left">
+        <BackButton/>
+      </div>
 
-            <ErrorMessage :form-error="formError"/>
+      <ErrorMessage :form-error="formError"/>
 
-            <FeathersVuexFormWrapper :item="item" :eager="false">
-                <template v-slot="{ clone, save, reset }">
-                    <UserEditor
-                        :item="clone"
-                        @save="
-                        () => {
-                          $data.formError = null
-                          save()
-                            .then(() => $router.push({name: 'user-list'}))
-                            .catch(reason => { $data.formError = reason })
-                        }"
-                        @reset="reset"
-                    ></UserEditor>
-                </template>
-            </FeathersVuexFormWrapper>
-        </div>
-    </section>
+      <FeathersVuexFormWrapper :item="item" :eager="false">
+        <template v-slot="{ clone, save, reset }">
+          <UserEditor
+            :item="clone"
+            @save="
+              () => {
+                $data.formError = null
+                save()
+                  .then(() => $router.push({name: 'user-list'}))
+                  .catch(reason => { $data.formError = reason })
+              }"
+            @reset="reset"
+          ></UserEditor>
+        </template>
+      </FeathersVuexFormWrapper>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -34,7 +34,7 @@ import BackButton from '@/components/BackButton'
 import ErrorMessage from '@/components/ErrorMessage'
 
 export default {
-name: 'UserForm',
+  name: 'UserForm',
   components: { ErrorMessage, BackButton, UserEditor },
   computed: {
     id() {

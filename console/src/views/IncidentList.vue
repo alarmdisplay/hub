@@ -1,44 +1,44 @@
 <template>
-    <section class="section">
-        <div class="container">
-            <h1 class="title">Eins&auml;tze</h1>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">Eins&auml;tze</h1>
 
-            <div class="buttons">
-                <router-link class="button" to="new" append>
-                    <span class="icon"><font-awesome-icon icon="plus"/></span>
-                    <span>Einsatz anlegen</span>
-                </router-link>
-            </div>
+      <div class="buttons">
+        <router-link class="button" to="new" append>
+          <span class="icon"><font-awesome-icon icon="plus"/></span>
+          <span>Einsatz anlegen</span>
+        </router-link>
+      </div>
 
-            <FeathersVuexPagination v-model="pagination" :latest-query="latestQuery">
-                <template #default="{ currentPage, pageCount, next, prev, canNext, canPrev }">
-                    <PaginationUI
-                        :current-page="currentPage"
-                        :page-count="pageCount"
-                        :can-prev="canPrev"
-                        :can-next="canNext"
-                        @next="next"
-                        @prev="prev"
-                    />
-                </template>
-            </FeathersVuexPagination>
+      <FeathersVuexPagination v-model="pagination" :latest-query="latestQuery">
+        <template #default="{ currentPage, pageCount, next, prev, canNext, canPrev }">
+          <PaginationUI
+            :current-page="currentPage"
+            :page-count="pageCount"
+            :can-prev="canPrev"
+            :can-next="canNext"
+            @next="next"
+            @prev="prev"
+          />
+        </template>
+      </FeathersVuexPagination>
 
-            <table class="table is-fullwidth">
-                <thead>
-                    <tr>
-                        <th>Einsatzgrund</th>
-                        <th>Stichwort</th>
-                        <th>Einsatzort</th>
-                        <th class="has-text-right">Alarmzeitpunkt</th>
-                        <th>Aktionen</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <IncidentListRow v-for="incident in incidents" :key="incident.id" :incident="incident"/>
-                </tbody>
-            </table>
-        </div>
-    </section>
+      <table class="table is-fullwidth">
+        <thead>
+          <tr>
+            <th>Einsatzgrund</th>
+            <th>Stichwort</th>
+            <th>Einsatzort</th>
+            <th class="has-text-right">Alarmzeitpunkt</th>
+            <th>Aktionen</th>
+          </tr>
+        </thead>
+        <tbody>
+          <IncidentListRow v-for="incident in incidents" :key="incident.id" :incident="incident"/>
+        </tbody>
+      </table>
+    </div>
+  </section>
 </template>
 
 <script>

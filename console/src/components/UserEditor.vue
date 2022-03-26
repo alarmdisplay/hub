@@ -1,35 +1,35 @@
 <template>
-    <form @submit.prevent="handleSubmit">
-        <div class="field">
-            <label class="label" for="name">
-                Name
-            </label>
-            <p class="control">
-                <input class="input" type="text" id="name" v-model="item.name">
-            </p>
-        </div>
-        <div class="field">
-            <label class="label" for="email">
-                E-Mail
-            </label>
-            <p class="control">
-                <input class="input" type="email" id="email" v-model="item.email">
-            </p>
-        </div>
-        <div class="field">
-            <label class="label" for="password">
-                Passwort
-            </label>
-            <p class="control">
-                <input class="input" type="password" id="password" autocomplete="new-password" v-model="newPassword">
-            </p>
-            <p v-if="!isNewItem" class="help">Wird dieses Feld leer gelassen, bleibt das aktuelle Passwort bestehen. Zur Änderung ein neues Passwort eingeben.</p>
-        </div>
-        <div class="buttons is-right">
-            <button class="button" type="button" @click="$emit('reset')">Zur&uuml;cksetzen</button>
-            <button class="button is-success" type="submit" :disabled="!isValid()">Speichern</button>
-        </div>
-    </form>
+  <form @submit.prevent="handleSubmit">
+    <div class="field">
+      <label class="label" for="name">
+        Name
+      </label>
+      <p class="control">
+        <input class="input" type="text" id="name" v-model="item.name">
+      </p>
+    </div>
+    <div class="field">
+      <label class="label" for="email">
+        E-Mail
+      </label>
+      <p class="control">
+        <input class="input" type="email" id="email" v-model="item.email">
+      </p>
+    </div>
+    <div class="field">
+      <label class="label" for="password">
+        Passwort
+      </label>
+      <p class="control">
+        <input class="input" type="password" id="password" autocomplete="new-password" v-model="newPassword">
+      </p>
+      <p v-if="!isNewItem" class="help">Wird dieses Feld leer gelassen, bleibt das aktuelle Passwort bestehen. Zur Änderung ein neues Passwort eingeben.</p>
+    </div>
+    <div class="buttons is-right">
+      <button class="button" type="button" @click="$emit('reset')">Zur&uuml;cksetzen</button>
+      <button class="button is-success" type="submit" :disabled="!isValid()">Speichern</button>
+    </div>
+  </form>
 </template>
 
 <script>

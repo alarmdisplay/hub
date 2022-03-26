@@ -1,31 +1,31 @@
 <template>
-    <section class="section">
-        <div class="container">
-            <h1 class="title">API-Key {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}</h1>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">API-Key {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}</h1>
 
-            <div class="buttons is-left">
-                <BackButton/>
-            </div>
+      <div class="buttons is-left">
+        <BackButton/>
+      </div>
 
-            <ErrorMessage :form-error="formError"/>
+      <ErrorMessage :form-error="formError"/>
 
-            <FeathersVuexFormWrapper :item="item" watch>
-                <template v-slot="{ clone, save, reset }">
-                    <ApiKeyEditor
-                        :item="clone"
-                        @save="
-                        () => {
-                          $data.formError = null
-                          save()
-                            .then(() => $router.push({name: 'api-key-list'}))
-                            .catch(reason => { $data.formError = reason })
-                        }"
-                        @reset="reset"
-                    ></ApiKeyEditor>
-                </template>
-            </FeathersVuexFormWrapper>
-        </div>
-    </section>
+      <FeathersVuexFormWrapper :item="item" watch>
+        <template v-slot="{ clone, save, reset }">
+          <ApiKeyEditor
+            :item="clone"
+            @save="
+              () => {
+                $data.formError = null
+                save()
+                  .then(() => $router.push({name: 'api-key-list'}))
+                  .catch(reason => { $data.formError = reason })
+              }"
+            @reset="reset"
+          ></ApiKeyEditor>
+        </template>
+      </FeathersVuexFormWrapper>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -33,7 +33,7 @@ import ApiKeyEditor from '@/components/ApiKeyEditor'
 import BackButton from '@/components/BackButton'
 import ErrorMessage from '@/components/ErrorMessage'
 export default {
-name: 'ApiKeyForm',
+  name: 'ApiKeyForm',
   components: { BackButton, ApiKeyEditor, ErrorMessage },
   computed: {
     id() {

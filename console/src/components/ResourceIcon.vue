@@ -1,5 +1,5 @@
 <template>
-    <font-awesome-icon :icon="getIcon(resource)" :size="size"/>
+  <font-awesome-icon :icon="getIcon(resource)" :size="size"/>
 </template>
 
 <script>

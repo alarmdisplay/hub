@@ -1,38 +1,38 @@
 <template>
-    <form @submit.prevent="handleSubmit">
-        <div class="field">
-            <label class="label" for="printerName">
-                Druckername
-            </label>
-            <p class="control">
-                <input class="input" type="text" id="printerName" v-model.trim="item.printerName">
-            </p>
-            <p class="help">Der Druckername, wie er in CUPS geführt wird. Das Feld kann leer gelassen werden, um den Standarddrucker zu verwenden.</p>
-        </div>
+  <form @submit.prevent="handleSubmit">
+    <div class="field">
+      <label class="label" for="printerName">
+        Druckername
+      </label>
+      <p class="control">
+        <input class="input" type="text" id="printerName" v-model.trim="item.printerName">
+      </p>
+      <p class="help">Der Druckername, wie er in CUPS geführt wird. Das Feld kann leer gelassen werden, um den Standarddrucker zu verwenden.</p>
+    </div>
 
-        <div class="field">
-            <label class="label" for="numberCopies">
-                Anzahl Kopien
-            </label>
-            <p class="control">
-                <input class="input" type="number" min="1" max="99" id="numberCopies" v-model.number="item.numberCopies">
-            </p>
-        </div>
+    <div class="field">
+      <label class="label" for="numberCopies">
+        Anzahl Kopien
+      </label>
+      <p class="control">
+        <input class="input" type="number" min="1" max="99" id="numberCopies" v-model.number="item.numberCopies">
+      </p>
+    </div>
 
-        <div class="level mt-5">
-            <div class="level-left">
-                <div class="buttons">
-                    <button class="button level-item is-danger is-outlined" v-if="!isNewItem" type="button" @click="$emit('remove')">Druckauftrag entfernen</button>
-                </div>
-            </div>
-            <div class="level-right">
-                <div class="buttons">
-                    <button class="button level-item" type="button" @click="$emit('reset')">Zur&uuml;cksetzen</button>
-                    <button class="button level-item is-success" type="submit" :disabled="!isValid()">Speichern</button>
-                </div>
-            </div>
+    <div class="level mt-5">
+      <div class="level-left">
+        <div class="buttons">
+          <button class="button level-item is-danger is-outlined" v-if="!isNewItem" type="button" @click="$emit('remove')">Druckauftrag entfernen</button>
         </div>
-    </form>
+      </div>
+      <div class="level-right">
+        <div class="buttons">
+          <button class="button level-item" type="button" @click="$emit('reset')">Zur&uuml;cksetzen</button>
+          <button class="button level-item is-success" type="submit" :disabled="!isValid()">Speichern</button>
+        </div>
+      </div>
+    </div>
+  </form>
 </template>
 
 <script>

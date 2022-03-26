@@ -1,19 +1,19 @@
 <template>
-    <span v-if="formError && short" class="has-text-danger">
-        {{ messages[0] || 'Fehler' }}
-    </span>
-    <article class="message is-danger" v-else-if="formError">
-        <div class="message-header">
-            Fehler
-        </div>
-        <div class="message-body">
-            <ul>
-                <li v-for="[index, message] in messages.entries()" :key="index">
-                    {{ message }}
-                </li>
-            </ul>
-        </div>
-    </article>
+  <span v-if="formError && short" class="has-text-danger">
+    {{ messages[0] || 'Fehler' }}
+  </span>
+  <article class="message is-danger" v-else-if="formError">
+    <div class="message-header">
+      Fehler
+    </div>
+    <div class="message-body">
+      <ul>
+        <li v-for="[index, message] in messages.entries()" :key="index">
+          {{ message }}
+        </li>
+      </ul>
+    </div>
+  </article>
 </template>
 <script>
 export default {

@@ -1,20 +1,20 @@
 <template>
-    <FeathersVuexFormWrapper :item="settingsItem" :eager="false">
-        <template v-slot="{ clone, save }">
-            <div class="level">
-                <div class="level-left">
-                    <div class="level-item" style="flex-direction: column">
-                        <input type="checkbox" class="checkbox is-small" v-model="clone.value" @change="
-                        () => {
-                          $data.formError = null
-                          save().catch(reason => { $data.formError = reason })
-                        }" :disabled="$store.state.settings.isIdPatchPending.includes(settingsKey)">
-                        <ErrorMessage :form-error="formError" :short="true"/>
-                    </div>
-                </div>
-            </div>
-        </template>
-    </FeathersVuexFormWrapper>
+  <FeathersVuexFormWrapper :item="settingsItem" :eager="false">
+    <template v-slot="{ clone, save }">
+      <div class="level">
+        <div class="level-left">
+          <div class="level-item" style="flex-direction: column">
+            <input type="checkbox" class="checkbox is-small" v-model="clone.value" @change="
+              () => {
+                $data.formError = null
+                save().catch(reason => { $data.formError = reason })
+              }" :disabled="$store.state.settings.isIdPatchPending.includes(settingsKey)">
+            <ErrorMessage :form-error="formError" :short="true"/>
+          </div>
+        </div>
+      </div>
+    </template>
+  </FeathersVuexFormWrapper>
 </template>
 
 <script>

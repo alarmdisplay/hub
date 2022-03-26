@@ -38,8 +38,8 @@
               <p class="control has-icons-left">
                 <input class="input" type="email" id="email" v-model="email">
                 <span class="icon is-small is-left">
-              <font-awesome-icon icon="envelope"/>
-            </span>
+                  <font-awesome-icon icon="envelope"/>
+                </span>
               </p>
             </div>
             <div class="field">
@@ -49,8 +49,8 @@
               <p class="control has-icons-left">
                 <input class="input" type="password" id="password" autocomplete="new-password" v-model="password">
                 <span class="icon is-small is-left">
-              <font-awesome-icon icon="lock"/>
-            </span>
+                  <font-awesome-icon icon="lock"/>
+                </span>
               </p>
             </div>
             <div class="field">

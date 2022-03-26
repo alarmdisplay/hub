@@ -1,21 +1,21 @@
 <template>
-    <span>
-        <span class="clickable" title="Zum Bearbeiten klicken" v-show="!isEditing" @click.prevent="startEditing">{{ item[prop] || '' }}</span>
-        <FeathersVuexInputWrapper :item="item" :prop="prop">
-            <template #default="{ current, prop, createClone, handler }">
-                <input
-                        v-model="current[prop]"
-                        type="text"
-                        @focus="createClone"
-                        @blur="e => handler(e, save)"
-                        v-show="isEditing"
-                        ref="input"
-                        :class="['input', error ? 'is-danger' : '']"
-                />
-            </template>
-        </FeathersVuexInputWrapper>
-        <p class="help is-danger" v-if="error">{{ error.message || error.toString() }}</p>
-    </span>
+  <span>
+    <span class="clickable" title="Zum Bearbeiten klicken" v-show="!isEditing" @click.prevent="startEditing">{{ item[prop] || '' }}</span>
+    <FeathersVuexInputWrapper :item="item" :prop="prop">
+      <template #default="{ current, prop, createClone, handler }">
+        <input
+          v-model="current[prop]"
+          type="text"
+          @focus="createClone"
+          @blur="e => handler(e, save)"
+          v-show="isEditing"
+          ref="input"
+          :class="['input', error ? 'is-danger' : '']"
+        />
+      </template>
+    </FeathersVuexInputWrapper>
+    <p class="help is-danger" v-if="error">{{ error.message || error.toString() }}</p>
+  </span>
 </template>
 
 <script>

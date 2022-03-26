@@ -1,50 +1,50 @@
 <template>
-    <section class="section">
-        <div class="container">
-            <h1 class="title">{{ id === 'new' ? 'Ordner überwachen' : 'Überwachten Ordner bearbeiten' }}</h1>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">{{ id === 'new' ? 'Ordner überwachen' : 'Überwachten Ordner bearbeiten' }}</h1>
 
-            <div class="buttons is-left">
-                <BackButton/>
-            </div>
+      <div class="buttons is-left">
+        <BackButton/>
+      </div>
 
-            <div class="content">
-                <p>
-                    Der Ordner wird auf neue Dateien mit den Endungen .pdf, .tif, .tiff, .jpg, .jpeg, .png und .bmp überwacht.
-                    Der Dateiname muss mit einem Buchstaben oder einer Ziffer beginnen, die Groß- und Kleinschreibung spielt keine Rolle.
-                </p>
-                <p>
-                    Für einmal erkannte Dateien wird eine Prüfsumme gespeichert, um eine erneute Verarbeitung zu unterbinden.
-                    Dieses Verhalten kann in den Einstellungen deaktiviert werden.
-                </p>
-            </div>
+      <div class="content">
+        <p>
+          Der Ordner wird auf neue Dateien mit den Endungen .pdf, .tif, .tiff, .jpg, .jpeg, .png und .bmp überwacht.
+          Der Dateiname muss mit einem Buchstaben oder einer Ziffer beginnen, die Groß- und Kleinschreibung spielt keine Rolle.
+        </p>
+        <p>
+          Für einmal erkannte Dateien wird eine Prüfsumme gespeichert, um eine erneute Verarbeitung zu unterbinden.
+          Dieses Verhalten kann in den Einstellungen deaktiviert werden.
+        </p>
+      </div>
 
-            <ErrorMessage :form-error="formError"/>
+      <ErrorMessage :form-error="formError"/>
 
-            <FeathersVuexFormWrapper :item="item" watch>
-                <template v-slot="{ clone, save, reset, remove }">
-                    <WatchedFolderEditor
-                        :item="clone"
-                        @save="
-                        () => {
-                          $data.formError = null
-                          save()
-                            .then(() => $router.push({name: 'input'}))
-                            .catch(reason => { $data.formError = reason })
-                        }"
-                        @reset="reset"
-                        @remove="
-                        () => {
-                            $data.formError = null
-                            remove()
-                              .then(() => $router.push({name: 'input'}))
-                              .catch(reason => { $data.formError = reason })
-                        }
-                        "
-                    ></WatchedFolderEditor>
-                </template>
-            </FeathersVuexFormWrapper>
-        </div>
-    </section>
+      <FeathersVuexFormWrapper :item="item" watch>
+        <template v-slot="{ clone, save, reset, remove }">
+          <WatchedFolderEditor
+            :item="clone"
+            @save="
+              () => {
+                $data.formError = null
+                save()
+                  .then(() => $router.push({name: 'input'}))
+                  .catch(reason => { $data.formError = reason })
+              }"
+            @reset="reset"
+            @remove="
+              () => {
+                $data.formError = null
+                remove()
+                  .then(() => $router.push({name: 'input'}))
+                  .catch(reason => { $data.formError = reason })
+              }
+            "
+          ></WatchedFolderEditor>
+        </template>
+      </FeathersVuexFormWrapper>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -52,7 +52,7 @@ import BackButton from '@/components/BackButton'
 import ErrorMessage from '@/components/ErrorMessage'
 import WatchedFolderEditor from '@/components/WatchedFolderEditor'
 export default {
-name: 'WatchedFolderForm',
+  name: 'WatchedFolderForm',
   components: { WatchedFolderEditor, BackButton, ErrorMessage },
   computed: {
     id() {
