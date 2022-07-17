@@ -1,7 +1,6 @@
 import { Service } from 'feathers-sequelize';
 import {AlertContext, AlertData, Application, IncidentData, LocationData} from '../../declarations';
 import logger from '../../logger';
-import {IncidentCategory, IncidentStatus} from './incidents.service';
 import { NullableId, Params } from '@feathersjs/feathers';
 
 /**
@@ -94,7 +93,7 @@ export class Incidents extends Service<IncidentData> {
     // If there is no existing incident to be updated, create a new one
     if (incidentToUpdate === false) {
       logger.debug('Creating a new incident');
-      const newIncident = {
+      const newIncident: Partial<IncidentData> = {
         sender: alert.sender,
         ref: alert.ref,
         caller_name: alert.caller_name,
@@ -104,8 +103,8 @@ export class Incidents extends Service<IncidentData> {
         keyword: alert.keyword,
         resources: alert.resources,
         description: alert.description,
-        status: IncidentStatus.Actual, // TODO Add a mechanism to detect Test and Exercise status by keywords or date/time
-        category: IncidentCategory.Other // TODO Define the category according to reason or keyword
+        status: 'Actual', // TODO Add a mechanism to detect Test and Exercise status by keywords or date/time
+        category: 'Other' // TODO Define the category according to reason or keyword
       };
 
       return await this.create(newIncident) as IncidentData;

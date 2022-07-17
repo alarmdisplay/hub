@@ -1,5 +1,4 @@
 import app from '../../src/app';
-import { IncidentCategory, IncidentStatus } from '../../src/services/incidents/incidents.service';
 import { AlertData, IncidentData } from '../../src/declarations';
 
 describe('\'incidents\' service', () => {
@@ -15,7 +14,7 @@ describe('\'incidents\' service', () => {
       id: 2531,
       caller_name: '',
       caller_number: '',
-      category: IncidentCategory.Other,
+      category: 'Other',
       description: '',
       keyword: '',
       location: undefined,
@@ -23,7 +22,7 @@ describe('\'incidents\' service', () => {
       ref: '',
       resources: [],
       sender: '',
-      status: IncidentStatus.Actual,
+      status: 'Actual',
       time: date
     };
     const alert: AlertData = {
@@ -54,7 +53,7 @@ describe('\'incidents\' service', () => {
       id: 4651,
       caller_name: 'Wood',
       caller_number: '987654321',
-      category: IncidentCategory.Other,
+      category: 'Other',
       description: 'Something\'s burning',
       keyword: 'B3',
       location: undefined,
@@ -62,7 +61,7 @@ describe('\'incidents\' service', () => {
       ref: '0815',
       resources: [],
       sender: 'Dispatch center',
-      status: IncidentStatus.Actual,
+      status: 'Actual',
       time: date
     };
     const alert: AlertData = {
