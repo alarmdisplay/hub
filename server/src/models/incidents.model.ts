@@ -72,7 +72,7 @@ export default function (app: Application): typeof Model {
       as: 'resources'
     });
     models.incident.hasOne(models.locations);
-    models.incident.belongsTo(models.scheduled_alert);
+    models.incident.hasOne(models.scheduled_alert);
   };
 
   return Incident;

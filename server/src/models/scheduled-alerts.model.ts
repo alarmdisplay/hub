@@ -39,7 +39,7 @@ export default function (app: Application): typeof Model {
   });
 
   (ScheduledAlert as any).associate = function (models: any): void {
-    models.scheduled_alert.hasOne(models.incident);
+    models.scheduled_alert.belongsTo(models.incident);
   };
 
   return ScheduledAlert;
