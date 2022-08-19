@@ -26,7 +26,8 @@
     "lint:fix": "eslint src/. test/. --config .eslintrc.json --ext .ts --fix",
     "dev": "ts-node-dev --no-notify --rs src/",
     "start": "npm run compile && node lib/",
-    "jest": "jest --runInBand --forceExit",
+    "jest": "jest --runInBand --forceExit --coverage",
+    "jest:watch": "jest --runInBand --forceExit --watch",
     "compile": "shx rm -rf lib/ && tsc"
   },
   "standard": {
