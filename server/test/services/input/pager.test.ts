@@ -8,6 +8,11 @@ describe('\'input/pager\' service', () => {
     await (app.get('databaseReady') as Promise<void>);
   });
 
+  afterEach(async () => {
+    await app.service('incidents')._remove(null);
+    await app.service('resources')._remove(null);
+  });
+
   it('registered the service', () => {
     const service = app.service('input/pager');
     expect(service).toBeTruthy();
