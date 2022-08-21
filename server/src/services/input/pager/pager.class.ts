@@ -1,5 +1,5 @@
 import { Application, ResourceData, ResourceIdentifierData } from '../../../declarations';
-import {NotFound} from '@feathersjs/errors';
+import { NotFound } from '@feathersjs/errors';
 import { AlertSourceType } from '../../incidents/incidents.service';
 
 interface PagerData {
@@ -35,8 +35,7 @@ export class Pager {
     }
 
     // Forward the alert
-    const incidentService = this.app.service('incidents');
-    const incidentData = await incidentService.processAlert({
+    const incidentData = await this.app.service('alerts').create({
       resources: resources,
       context: {
         processingStarted: new Date(),

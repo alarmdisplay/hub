@@ -14,6 +14,7 @@ import settings from './settings/settings.service';
 import processedFiles from './processed-files/processed-files.service';
 import status from './status/status.service';
 import scheduledAlerts from './scheduled-alerts/scheduled-alerts.service';
+import alerts from './alerts/alerts.service';
 // Don't remove this comment. It's needed to format import lines nicely.
 
 export default function (app: Application) {
@@ -32,4 +33,5 @@ export default function (app: Application) {
   app.configure(processedFiles);
   app.configure(status);
   app.configure(scheduledAlerts);
+  app.configure(alerts);
 }

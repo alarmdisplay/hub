@@ -156,8 +156,8 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     // Compress multiple consecutive spaces into a single one
     const description = (result.description || '').replace(/\s{2,}/, ' ');
 
-    const IncidentsService = this.app.service('incidents');
-    await IncidentsService.processAlert({
+    const AlertsService = this.app.service('alerts');
+    await AlertsService.create({
       caller_name: result.caller.name,
       caller_number: result.caller.number,
       description: description,
