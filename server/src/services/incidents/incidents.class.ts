@@ -1,5 +1,5 @@
 import { Service } from 'feathers-sequelize';
-import {AlertContext, AlertData, Application, IncidentData, LocationData} from '../../declarations';
+import {AlertData, Application, IncidentData, LocationData} from '../../declarations';
 import logger from '../../logger';
 import { NullableId, Params } from '@feathersjs/feathers';
 
@@ -69,10 +69,9 @@ export class Incidents extends Service<IncidentData> {
    * Takes new alerts and either creates a new incident or updates an existing one
    *
    * @param alert The content of the alert
-   * @param context Metadata on how the alert came to be
    */
-  async processAlert(alert: AlertData, context: AlertContext): Promise<IncidentData> {
-    const incidentToUpdate = await this.getIncidentToUpdate(alert, context);
+  async processAlert(alert: AlertData): Promise<IncidentData> {
+    const incidentToUpdate = await this.getIncidentToUpdate(alert);
 
     let existingIncidentHasLocation = false;
     const LocationsService = this.app.service('locations');
@@ -128,11 +127,10 @@ export class Incidents extends Service<IncidentData> {
    * Checks if there is an incident on record that should be updated instead of creating a new one
    *
    * @param alert
-   * @param context
    */
-  async getIncidentToUpdate(alert: AlertData, context: AlertContext): Promise<IncidentData | false> {
+  async getIncidentToUpdate(alert: AlertData): Promise<IncidentData | false> {
     // The context can enforce the creation of a new incident
-    if (context.forceNewIncident) {
+    if (alert.context?.forceNewIncident) {
       logger.debug('New incident enforced by alert context');
       return false;
     }

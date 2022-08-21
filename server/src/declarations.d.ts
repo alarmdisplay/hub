@@ -15,4 +15,5 @@ export interface AlertData {
   keyword?: string
   resources?: ResourceData[]
   description?: string
+  context?: AlertContext
 }

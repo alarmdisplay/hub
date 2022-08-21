@@ -166,7 +166,8 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       reason: result.reason,
       ref: result.ref,
       resources: resources,
-      sender: result.sender
-    }, alertContext);
+      sender: result.sender,
+      context: alertContext
+    });
   }
 }
