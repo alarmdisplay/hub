@@ -9,6 +9,7 @@ describe('\'Alerts\' service', () => {
   });
 
   afterEach(async () => {
+    await app.service('locations')._remove(null);
     await app.service('incidents')._remove(null);
   });
 
