@@ -66,6 +66,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.4.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/bluebird": "^3.5.36",
     "@types/compression": "^1.7.2",
@@ -80,6 +81,7 @@
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
     "eslint": "^8.22.0",
+    "feathers-factory": "^4.0.2",
     "jest": "^27.5.1",
     "nodemon": "^2.0.19",
     "shx": "^0.3.4",

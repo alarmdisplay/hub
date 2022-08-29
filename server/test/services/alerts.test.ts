@@ -1,8 +1,13 @@
 import app from '../../src/app';
 import { IncidentData } from '../../src/declarations';
 import { AlertData } from '../../src/services/alerts/alerts.class';
+import { IncidentFactory } from '../../src/feathers-factories';
+import { AlertSourceType } from '../../src/services/incidents/incidents.service';
+import { faker } from '@faker-js/faker/locale/de';
 
 describe('\'Alerts\' service', () => {
+  const minutesBeforeNewIncident = 15;
+
   beforeAll(async () => {
     app.setup();
     await (app.get('databaseReady') as Promise<void>);
@@ -83,6 +88,115 @@ describe('\'Alerts\' service', () => {
       resources: [],
       sender: 'Dispatch'
     });
+  });
+
+  it('updates a recent incident', async () => {
+    const recentIncident = await IncidentFactory.create({
+      time: (new Date(Date.now() - (minutesBeforeNewIncident - 1) * 60 * 1000)),
+      reason: '',
+      keyword: '',
+    });
+    expect(recentIncident.reason).toStrictEqual('');
+    expect(recentIncident.keyword).toStrictEqual('');
+    const alertData = {
+      reason: 'New reason',
+      keyword: 'ABC 123',
+    };
+    const alertResult = await app.service('alerts').create(alertData);
+    expect(alertResult.id).toStrictEqual(recentIncident.id);
+    const updatedIncident = await app.service('incidents').get(recentIncident.id);
+    expect(updatedIncident.reason).toStrictEqual(alertData.reason);
+    expect(updatedIncident.keyword).toStrictEqual(alertData.keyword);
+  });
+
+  it('creates new incident when recent incident is too old', async () => {
+    const olderIncident = await IncidentFactory.create({
+      time: (new Date(Date.now() - (minutesBeforeNewIncident + 1) * 60 * 1000)),
+      reason: '',
+      keyword: '',
+    });
+    expect(olderIncident.reason).toStrictEqual('');
+    expect(olderIncident.keyword).toStrictEqual('');
+
+    // Alert should cause a new incident
+    const alertData = {
+      reason: 'Reason',
+      keyword: 'DEF 456',
+    };
+    const alertResult = await app.service('alerts').create(alertData);
+    expect(alertResult.id).not.toStrictEqual(olderIncident.id);
+    expect(alertResult.reason).toStrictEqual(alertData.reason);
+    expect(alertResult.keyword).toStrictEqual(alertData.keyword);
+
+    // Old incident should not have changed
+    const notUpdatedIncident = await app.service('incidents').get(olderIncident.id);
+    expect(notUpdatedIncident.reason).toStrictEqual('');
+    expect(notUpdatedIncident.keyword).toStrictEqual('');
+  });
+
+  it('updates a recent incident with same ref', async () => {
+    const ref = '7b690f22-c699-42f0-b187-5bf2c54ead65';
+    const recentIncident = await IncidentFactory.create({
+      time: (new Date(Date.now() - (minutesBeforeNewIncident - 1) * 60 * 1000)),
+      reason: '',
+      ref: ref,
+    });
+    const alertData = {
+      reason: 'Reason',
+      ref: ref,
+    };
+    const alertResult = await app.service('alerts').create(alertData);
+    expect(alertResult.id).toStrictEqual(recentIncident.id);
+    expect(alertResult.reason).toStrictEqual(alertData.reason);
+  });
+
+  it('updates an older incident with same ref', async () => {
+    const ref = 'b84333e1-78e4-4c23-88f7-a23aeaa4b89d';
+    const olderIncident = await IncidentFactory.create({
+      time: faker.date.recent(3),
+      reason: '',
+      ref: ref,
+    });
+    const alertData = {
+      reason: 'Reason',
+      ref: ref,
+    };
+    const alertResult = await app.service('alerts').create(alertData);
+    expect(alertResult.id).toStrictEqual(olderIncident.id);
+    const incident = await app.service('incidents').get(olderIncident.id);
+    expect(incident.reason).toStrictEqual(alertData.reason);
+  });
+
+  it('creates a new incident when refs differ', async () => {
+    const recentIncident = await IncidentFactory.create({
+      time: (new Date(Date.now() - (minutesBeforeNewIncident - 1) * 60 * 1000)),
+      reason: '',
+      ref: '2804ee60-1b87-40ef-a2fd-8e6b42264779',
+    });
+    const alertData = {
+      reason: 'Reason',
+      ref: '2383bd18-72d1-434e-afce-21c8754851a8',
+    };
+    const alertResult = await app.service('alerts').create(alertData);
+    expect(alertResult.id).not.toStrictEqual(recentIncident.id);
+  });
+
+  it('creates a new incident forced by context', async () => {
+    const recentIncident = await IncidentFactory.create({
+      time: (new Date(Date.now() - (minutesBeforeNewIncident - 1) * 60 * 1000)),
+    });
+    const alertResult = await app.service('alerts').create({
+      reason: 'Reason',
+      context: {
+        forceNewIncident: true,
+        processingStarted: new Date(),
+        source: {
+          type: AlertSourceType.PLAIN
+        },
+        rawContent: ''
+      }
+    });
+    expect(alertResult.id).not.toStrictEqual(recentIncident.id);
   });
 
   it('diff fills empty fields', () => {
