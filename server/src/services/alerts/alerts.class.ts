@@ -59,49 +59,62 @@ export class Alerts {
    * @param params
    */
   async create (alert: AlertData, params?: Params): Promise<IncidentData> {
-    const LocationsService = this.app.service('locations');
-    const IncidentsService = this.app.service('incidents');
-
-    const incidentToUpdate = await this.getIncidentToUpdate(alert);
-
-    let existingIncidentHasLocation = false;
-    if (incidentToUpdate !== false) {
-      const locations = await LocationsService.find({query: { incidentId: incidentToUpdate.id }, paginate: false}) as LocationData[];
-      if (locations.length > 0) {
-        existingIncidentHasLocation = true;
-      }
+    // The context can enforce the creation of a new incident
+    if (alert.context?.forceNewIncident) {
+      logger.debug('New incident enforced by alert context');
+      return this.createNewIncident(alert);
     }
 
-    // Process the location if it is a new incident or the existing one does not have a location record
+    const incidentToUpdate = await this.getIncidentToUpdate(alert);
+    if (incidentToUpdate !== false) {
+      logger.debug('Updating incident %d...', incidentToUpdate.id);
+      return this.updateIncident(incidentToUpdate, alert);
+    }
+
+    logger.debug('Creating a new incident');
+    return this.createNewIncident(alert);
+  }
+
+  private async createNewIncident(alert: AlertData): Promise<IncidentData> {
     let locationData = undefined;
-    if (alert.location && (incidentToUpdate === false || !existingIncidentHasLocation)) {
+    if (alert.location) {
+      locationData = await this.app.service('locations').processRawLocation(alert.location);
+      logger.debug('Processed location');
+    }
+
+    const newIncident: Partial<IncidentData> = {
+      sender: alert.sender,
+      ref: alert.ref,
+      caller_name: alert.caller_name,
+      caller_number: alert.caller_number,
+      location: locationData,
+      reason: alert.reason,
+      keyword: alert.keyword,
+      resources: alert.resources,
+      description: alert.description,
+      status: 'Actual', // TODO Add a mechanism to detect Test and Exercise status by keywords or date/time
+      category: 'Other' // TODO Define the category according to reason or keyword
+    };
+
+    return await this.app.service('incidents').create(newIncident) as IncidentData;
+  }
+
+  private async updateIncident(incident: IncidentData, alert: AlertData): Promise<IncidentData> {
+    const LocationsService = this.app.service('locations');
+
+    let incidentHasLocation = false;
+    const locations = await LocationsService.find({query: { incidentId: incident.id }, paginate: false}) as LocationData[];
+    if (locations.length > 0) {
+      incidentHasLocation = true;
+    }
+
+    let locationData = undefined;
+    if (alert.location && !incidentHasLocation) {
       locationData = await LocationsService.processRawLocation(alert.location);
       logger.debug('Processed location');
     }
 
-    // If there is no existing incident to be updated, create a new one
-    if (incidentToUpdate === false) {
-      logger.debug('Creating a new incident');
-      const newIncident: Partial<IncidentData> = {
-        sender: alert.sender,
-        ref: alert.ref,
-        caller_name: alert.caller_name,
-        caller_number: alert.caller_number,
-        location: locationData,
-        reason: alert.reason,
-        keyword: alert.keyword,
-        resources: alert.resources,
-        description: alert.description,
-        status: 'Actual', // TODO Add a mechanism to detect Test and Exercise status by keywords or date/time
-        category: 'Other' // TODO Define the category according to reason or keyword
-      };
-
-      return await IncidentsService.create(newIncident) as IncidentData;
-    }
-
-    // Otherwise update the existing incident
-    logger.debug('Updating incident %d...', incidentToUpdate.id);
-    const incidentDiff = this.getIncidentDiff(incidentToUpdate, alert);
+    const incidentDiff = this.getIncidentDiff(incident, alert);
 
     // Do not include an empty location as that might remove an existing one
     if (locationData) {
@@ -110,7 +123,9 @@ export class Alerts {
 
     // Always include the resources, the difference is calculated in the hooks
     incidentDiff.resources = alert.resources;
-    return await IncidentsService.patch(incidentToUpdate.id, incidentDiff, { appendResources: true }) as IncidentData;
+
+    const IncidentsService = this.app.service('incidents');
+    return await IncidentsService.patch(incident.id, incidentDiff, { appendResources: true }) as IncidentData;
   }
 
   /**
@@ -120,12 +135,6 @@ export class Alerts {
    */
   async getIncidentToUpdate(alert: AlertData): Promise<IncidentData | false> {
     const IncidentsService = this.app.service('incidents');
-
-    // The context can enforce the creation of a new incident
-    if (alert.context?.forceNewIncident) {
-      logger.debug('New incident enforced by alert context');
-      return false;
-    }
 
     // If given, try to find an incident with the same reference number
     if (alert.ref && alert.ref !== '') {

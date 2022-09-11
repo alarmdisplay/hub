@@ -109,6 +109,58 @@ describe('\'Alerts\' service', () => {
     expect(updatedIncident.keyword).toStrictEqual(alertData.keyword);
   });
 
+  it('adds a location to a recent incident', async () => {
+    const recentIncident = await IncidentFactory.create({
+      time: (new Date(Date.now() - (minutesBeforeNewIncident - 1) * 60 * 1000)),
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore Weird workaround to create an incident without location
+      async location() {
+        return undefined;
+      },
+    });
+    expect(recentIncident.location).toBeUndefined();
+    const alertData = {
+      location: {
+        name: 'A known address',
+        street: 'Main Street',
+        streetnumber: '5',
+        detail: 'backyard',
+        zip: '19843',
+        municipality: 'Some city',
+        district: 'Suburb'
+      },
+    };
+    const alertResult = await app.service('alerts').create(alertData);
+    expect(alertResult.id).toStrictEqual(recentIncident.id);
+    const updatedIncident = await app.service('incidents').get(recentIncident.id);
+    expect(updatedIncident.location).toMatchObject({
+      name: 'A known address',
+      street: 'Main Street',
+      number: '5',
+      detail: 'backyard',
+      postCode: '19843',
+      municipality: 'Some city',
+      district: 'Suburb',
+    });
+  });
+
+  it('updates a recent incident without removing the location', async () => {
+    const recentIncident = await IncidentFactory.create({
+      keyword: '',
+      time: (new Date(Date.now() - (minutesBeforeNewIncident - 1) * 60 * 1000)),
+    });
+    expect(recentIncident.location).toBeDefined();
+    const alertData = {
+      keyword: 'updated',
+      location: undefined
+    };
+    const alertResult = await app.service('alerts').create(alertData);
+    expect(alertResult.id).toStrictEqual(recentIncident.id);
+    const updatedIncident = await app.service('incidents').get(recentIncident.id);
+    expect(updatedIncident.keyword).toStrictEqual(alertData.keyword);
+    expect(updatedIncident.location).toStrictEqual(recentIncident.location);
+  });
+
   it('creates new incident when recent incident is too old', async () => {
     const olderIncident = await IncidentFactory.create({
       time: (new Date(Date.now() - (minutesBeforeNewIncident + 1) * 60 * 1000)),
