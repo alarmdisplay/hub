@@ -1,6 +1,7 @@
 import { Params } from '@feathersjs/feathers';
 import { AlertContext, Application, IncidentData, LocationData, RawLocation, ResourceData } from '../../declarations';
 import logger from '../../logger';
+import { ScheduledAlertData } from '../scheduled-alerts/scheduled-alerts.class';
 
 export interface AlertData {
   sender?: string
@@ -92,9 +93,23 @@ export class Alerts {
       keyword: alert.keyword,
       resources: alert.resources,
       description: alert.description,
-      status: 'Actual', // TODO Add a mechanism to detect Test and Exercise status by keywords or date/time
+      status: 'Actual',
       category: 'Other' // TODO Define the category according to reason or keyword
     };
+
+    // Check if this is a scheduled alert
+    const now = new Date();
+    const scheduledAlerts = await this.app.service('scheduled-alerts').find({
+      query: { begin: { $lte: now }, end: { $gte: now } },
+      paginate: false
+    }) as ScheduledAlertData[];
+    if (scheduledAlerts.length > 0) {
+      logger.debug('Found scheduled alert');
+      const scheduledAlert = scheduledAlerts[0];
+      newIncident.status = scheduledAlert.status;
+      newIncident.reason = scheduledAlert.reason || newIncident.reason;
+      newIncident.keyword = scheduledAlert.keyword || newIncident.keyword;
+    }
 
     return await this.app.service('incidents').create(newIncident) as IncidentData;
   }

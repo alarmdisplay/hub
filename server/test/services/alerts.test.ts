@@ -251,6 +251,33 @@ describe('\'Alerts\' service', () => {
     expect(alertResult.id).not.toStrictEqual(recentIncident.id);
   });
 
+  it('creates a new incident during a scheduled alert', async () => {
+    await app.service('scheduled-alerts').create({
+      status: 'Test',
+      keyword: 'TEST 5',
+      reason: 'Scheduled test alert',
+      begin: (new Date(Date.now() - 5000)),
+      end: (new Date(Date.now() + 5000)),
+    });
+    const incident = await app.service('alerts').create({
+      keyword: 'should be ignored',
+      reason: 'should be ignored'
+    });
+    expect(incident.time.valueOf() / 1000).toBeCloseTo(Date.now() / 1000, 0);
+    expect(incident).toMatchObject({
+      status: 'Test',
+      category: 'Other',
+      caller_name: '',
+      caller_number: '',
+      description: '',
+      keyword: 'TEST 5',
+      reason: 'Scheduled test alert',
+      ref: '',
+      resources: [],
+      sender: ''
+    });
+  });
+
   it('diff fills empty fields', () => {
     const service = app.service('alerts');
     const date = new Date();
