@@ -62,6 +62,13 @@
               <span class="icon"><font-awesome-icon icon="truck" /></span>
               <span>Einsatzmittel</span>
             </router-link>
+            <router-link
+              class="navbar-item"
+              :to="{ name: 'scheduled-alerts-list' }"
+            >
+              <span class="icon"><font-awesome-icon icon="bell-slash" /></span>
+              <span>Geplante Alarmierungen</span>
+            </router-link>
           </div>
         </div>
 
