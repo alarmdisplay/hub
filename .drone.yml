@@ -71,11 +71,11 @@ steps:
       CC_TEST_REPORTER_ID:
         from_secret: cc_test_reporter_id
     commands:
-      - cd server
-      - npm ci
       - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
       - chmod +x ./cc-test-reporter
       - ./cc-test-reporter before-build
+      - cd server
+      - npm ci
       - npx jest --runInBand --forceExit --coverage
       - ../scripts/report-code-coverage.sh
   - name: docker-testimage
@@ -160,6 +160,6 @@ image_pull_secrets:
   - dockerconfig
 ---
 kind: signature
-hmac: fc257c0938de6c509ade645ef872c01f2044b42943875fc4261b20e5191b220c
+hmac: 630ea54d64bd75fe739fe836533feaab62a72d2df0bc88d55db4f8155c728783
 
 ...
