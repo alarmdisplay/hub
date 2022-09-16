@@ -83,6 +83,9 @@ steps:
         from_secret: tmpregistry_password
       DOCKER_USERNAME:
         from_secret: tmpregistry_username
+    when:
+      event:
+        - push
   - name: slack
     image: plugins/slack
     settings:
@@ -108,6 +111,8 @@ trigger:
     include:
       - develop
       - main
+  event:
+    - push
 
 depends_on:
   - testing-linux-amd64
@@ -148,6 +153,6 @@ image_pull_secrets:
   - dockerconfig
 ---
 kind: signature
-hmac: 92d1b65d172ec0c7f22a11c60d829a942c7cd2f24f67d460e0a26b635057f153
+hmac: 8a88faa6af78c03468c72bf727652d685fc828e3b483294008cb7bdaa8992184
 
 ...
