@@ -17,7 +17,7 @@ class ScheduledAlert extends BaseModel {
 
   static setupInstance(data) {
     // Convert date strings into Date objects
-    for (const prop of ['createdAt', 'updatedAt']) {
+    for (const prop of ['begin', 'end', 'createdAt', 'updatedAt']) {
       if (data[prop]) {
         data[prop] = new Date(data[prop])
       }

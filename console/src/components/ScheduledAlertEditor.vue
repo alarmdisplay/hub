@@ -40,12 +40,10 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input
+            <DateTimePicker
               id="begin"
               v-model="item.begin"
-              class="input"
-              type="text"
-            >
+            />
           </div>
         </div>
       </div>
@@ -61,12 +59,10 @@
       <div class="field-body">
         <div class="field">
           <div class="control">
-            <input
+            <DateTimePicker
               id="end"
               v-model="item.end"
-              class="input"
-              type="text"
-            >
+            />
           </div>
         </div>
       </div>
@@ -150,9 +146,10 @@
 </template>
 
 <script>
+import DateTimePicker from '@/components/DateTimePicker'
 export default {
   name: 'ScheduledAlertEditor',
-  components: {},
+  components: { DateTimePicker },
   props: {
     item: {
       type: Object,
@@ -176,7 +173,7 @@ export default {
   },
   methods: {
     isValid: function () {
-      return this.item.name !== ''
+      return !isNaN(this.item.begin.getTime()) && !isNaN(this.item.end.getTime())
     },
   }
 }
