@@ -13,15 +13,11 @@ declare module '../../declarations' {
 
   interface ResourceIdentifierData {
     id: number
-    type: IdentifierType
+    type: 'name' | 'selcall'
     value: string
     createdAt: Date
     updatedAt: Date
     resourceId: number
-  }
-
-  enum IdentifierType {
-    name
   }
 }
 

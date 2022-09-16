@@ -8,6 +8,8 @@ import Display from '@/views/output/DisplayPage'
 import Input from '@/views/InputPage'
 import ResourceForm from '@/views/processing/ResourceForm'
 import ResourceList from '@/views/processing/ResourceList'
+import ScheduledAlertsList from '@/views/processing/ScheduledAlertsList'
+import ScheduledAlertsForm from '@/views/processing/ScheduledAlertsForm'
 import SerialMonitorForm from '@/views/input/SerialMonitorForm'
 import Settings from '@/views/admin/SettingsPage'
 import UserList from '../views/admin/UserList'
@@ -63,6 +65,16 @@ Vue.use(VueRouter)
       path: '/processing/resources/:id',
       name: 'resource-form',
       component: ResourceForm
+    },
+    {
+      path: '/processing/scheduled-alerts',
+      name: 'scheduled-alerts-list',
+      component: ScheduledAlertsList
+    },
+    {
+      path: '/processing/scheduled-alerts/:id',
+      name: 'scheduled-alerts-form',
+      component: ScheduledAlertsForm
     },
     {
       path: '/output/display',
