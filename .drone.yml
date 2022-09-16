@@ -77,7 +77,7 @@ steps:
       - chmod +x ./cc-test-reporter
       - ./cc-test-reporter before-build
       - npx jest --runInBand --forceExit --coverage
-      - ./scripts/report-code-coverage.sh
+      - ../scripts/report-code-coverage.sh
   - name: docker-testimage
     pull: always
     image: plugins/docker:latest
@@ -160,6 +160,6 @@ image_pull_secrets:
   - dockerconfig
 ---
 kind: signature
-hmac: add625c861151eab1c8b213c678b1ca3504aac0a4032c0d3eea54c7eaabb0c8f
+hmac: fc257c0938de6c509ade645ef872c01f2044b42943875fc4261b20e5191b220c
 
 ...
