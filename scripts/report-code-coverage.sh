@@ -11,4 +11,6 @@ else
     export GIT_BRANCH="$DRONE_COMMIT_BRANCH"
 fi
 
-./cc-test-reporter after-build --debug --coverage-input-type lcov
+./cc-test-reporter format-coverage -t lcov -o coverage/codeclimate.server.json server/coverage/lcov.info
+./cc-test-reporter sum-coverage coverage/codeclimate.*.json -p 1
+./cc-test-reporter upload-coverage

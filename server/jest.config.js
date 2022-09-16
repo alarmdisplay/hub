@@ -1,3 +1,4 @@
+const { dirname } = require('path');
 module.exports = {
   preset: 'ts-jest',
   testEnvironment: 'node',
@@ -7,6 +8,6 @@ module.exports = {
     }
   },
   coverageDirectory: "coverage",
-  coverageReporters: ["lcov", ["text", {"skipFull": true}]],
+  coverageReporters: [["lcovonly", {"projectRoot": dirname(__dirname)}], ["text", {"skipFull": true}]],
   testSequencer: "./test/testSequencer.js"
 };
