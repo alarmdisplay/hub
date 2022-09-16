@@ -58,19 +58,26 @@ steps:
     commands:
       - cd server
       - npm ci --unsafe-perm
-      - npm test
+      - npx jest --runInBand --forceExit
   - name: test-server-node-14
     image: node:14
     commands:
       - cd server
       - npm ci --unsafe-perm
-      - npm test
+      - npx jest --runInBand --forceExit
   - name: test-server-node-16
     image: node:16
+    environment:
+      CC_TEST_REPORTER_ID:
+        from_secret: cc_test_reporter_id
     commands:
+      - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      - chmod +x ./cc-test-reporter
+      - ./cc-test-reporter before-build
       - cd server
       - npm ci
-      - npm test
+      - npx jest --runInBand --forceExit --coverage
+      - ../scripts/report-code-coverage.sh
   - name: docker-testimage
     pull: always
     image: plugins/docker:latest
@@ -83,6 +90,9 @@ steps:
         from_secret: tmpregistry_password
       DOCKER_USERNAME:
         from_secret: tmpregistry_username
+    when:
+      event:
+        - push
   - name: slack
     image: plugins/slack
     settings:
@@ -108,6 +118,8 @@ trigger:
     include:
       - develop
       - main
+  event:
+    - push
 
 depends_on:
   - testing-linux-amd64
@@ -148,6 +160,6 @@ image_pull_secrets:
   - dockerconfig
 ---
 kind: signature
-hmac: 92d1b65d172ec0c7f22a11c60d829a942c7cd2f24f67d460e0a26b635057f153
+hmac: 630ea54d64bd75fe739fe836533feaab62a72d2df0bc88d55db4f8155c728783
 
 ...
