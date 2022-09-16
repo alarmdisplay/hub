@@ -6,5 +6,7 @@ module.exports = {
       diagnostics: false
     }
   },
+  coverageDirectory: "coverage",
+  coverageReporters: ["lcov", ["text", {"skipFull": true}]],
   testSequencer: "./test/testSequencer.js"
 };
