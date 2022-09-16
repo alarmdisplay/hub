@@ -58,13 +58,13 @@ steps:
     commands:
       - cd server
       - npm ci --unsafe-perm
-      - jest --runInBand --forceExit
+      - npx jest --runInBand --forceExit
   - name: test-server-node-14
     image: node:14
     commands:
       - cd server
       - npm ci --unsafe-perm
-      - jest --runInBand --forceExit
+      - npx jest --runInBand --forceExit
   - name: test-server-node-16
     image: node:16
     environment:
@@ -76,7 +76,7 @@ steps:
       - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
       - chmod +x ./cc-test-reporter
       - ./cc-test-reporter before-build
-      - jest --runInBand --forceExit --coverage
+      - npx jest --runInBand --forceExit --coverage
       - ./scripts/report-code-coverage.sh
   - name: docker-testimage
     pull: always
@@ -160,6 +160,6 @@ image_pull_secrets:
   - dockerconfig
 ---
 kind: signature
-hmac: 165274b80b57e5f39fff4733ea57b4f26996f38e5b061295a5840d0b71199f91
+hmac: add625c861151eab1c8b213c678b1ca3504aac0a4032c0d3eea54c7eaabb0c8f
 
 ...
