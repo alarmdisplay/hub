@@ -11,13 +11,16 @@
         <div class="media-content">
           <div class="content">
             <p>
-              <span v-if="scheduledAlert.keyword" class="tag is-warning is-medium">
+              <span v-if="scheduledAlert.keyword" class="tag is-warning is-medium mr-2">
                 {{ scheduledAlert.keyword || '?' }}
               </span>
               <span class="has-text-weight-bold">{{ title }}</span>
+              <span v-if="scheduledAlert.reason">
+                (Einsatzgrund: {{ scheduledAlert. reason }})
+              </span>
             </p>
-            <p v-if="scheduledAlert.reason">
-              Einsatzgrund: {{ scheduledAlert. reason }}
+            <p>
+              {{ validityInfo }}
             </p>
           </div>
         </div>
@@ -33,14 +36,6 @@
           </router-link>
         </div>
       </article>
-      <div class="level">
-        <div class="level-left">
-          <small class="level-item">{{ validityInfo }}</small>
-        </div>
-        <div class="level-right">
-          <small>Stand</small>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -67,7 +62,11 @@ export default {
       }
     },
     validityInfo() {
-      return `Zwischen ${this.$moment(this.scheduledAlert.begin).format('LLL')} Uhr und ${this.$moment(this.scheduledAlert.end).format('LLL')} Uhr`
+      if (this.scheduledAlert.begin.toDateString() === this.scheduledAlert.end.toDateString()) {
+        return `Am ${this.$moment(this.scheduledAlert.begin).format('LL')} zwischen ${this.$moment(this.scheduledAlert.begin).format('LT')} und ${this.$moment(this.scheduledAlert.end).format('LT')} Uhr`
+      }
+
+      return `Vom ${this.$moment(this.scheduledAlert.begin).format('LLL')} Uhr bis ${this.$moment(this.scheduledAlert.end).format('LLL')} Uhr`
     },
   },
 }

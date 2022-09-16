@@ -83,8 +83,12 @@
               v-model="item.reason"
               class="input"
               type="text"
+              maxlength="255"
             >
           </div>
+          <p class="help">
+            Optional. Überschreibt den Einsatzgrund eines eingehenden Alarms.
+          </p>
         </div>
       </div>
     </div>
@@ -104,8 +108,12 @@
               v-model="item.keyword"
               class="input"
               type="text"
+              maxlength="255"
             >
           </div>
+          <p class="help">
+            Optional. Überschreibt das Stichwort eines eingehenden Alarms.
+          </p>
         </div>
       </div>
     </div>
