@@ -11,7 +11,10 @@
         <div class="media-content">
           <div class="content">
             <p>
-              <span v-if="scheduledAlert.keyword" class="tag is-warning is-medium mr-2">
+              <span
+                v-if="scheduledAlert.keyword"
+                class="tag is-warning is-medium mr-2"
+              >
                 {{ scheduledAlert.keyword || '?' }}
               </span>
               <span class="has-text-weight-bold">{{ title }}</span>
