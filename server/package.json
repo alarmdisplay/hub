@@ -55,7 +55,7 @@
     "feathers-sequelize": "^6.3.4",
     "feathers-shallow-populate": "^2.5.1",
     "gauss-krueger": "^1.0.1",
-    "helmet": "^4.6.0",
+    "helmet": "^6.0.0",
     "joi": "^17.6.3",
     "log4js": "^6.7.0",
     "mysql2": "^2.3.3",
