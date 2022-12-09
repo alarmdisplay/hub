@@ -1,7 +1,6 @@
 import path from 'path';
 import favicon from 'serve-favicon';
 import compress from 'compression';
-import helmet from 'helmet';
 import cors from 'cors';
 
 import feathers from '@feathersjs/feathers';
@@ -38,22 +37,6 @@ if (['ALL', 'MARK', 'TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL', 'OFF'].i
 logger.info('Logging level is \'%s\'', logger.level);
 
 // Enable security, CORS, compression, favicon and body parsing
-app.use(helmet({
-  contentSecurityPolicy: {
-    useDefaults: false,
-    reportOnly: !productionMode,
-    directives: {
-      'default-src': ['\'none\''],
-      'base-uri': ['\'self\''],
-      'font-src': ['\'self\'', 'data:'],
-      'form-action': ['\'self\''],
-      'img-src': ['\'self\'', 'data:'],
-      'script-src': ['\'self\'', '\'unsafe-eval\''],
-      'style-src': ['\'self\'', '\'unsafe-inline\''],
-      'upgrade-insecure-requests': []
-    }
-  }
-}));
 app.use(cors<Request>());
 app.use(compress());
 app.use(express.json());
