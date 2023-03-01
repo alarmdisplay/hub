@@ -22,17 +22,6 @@ steps:
       - cd console
       - npm ci
       - npm run lint
-  - name: slack
-    image: plugins/slack
-    settings:
-      webhook:
-        from_secret: slack_hook
-    when:
-      status:
-        - failure
-      event:
-        exclude:
-          - pull_request
 
 ---
 kind: pipeline
@@ -87,17 +76,6 @@ steps:
     when:
       event:
         - push
-  - name: slack
-    image: plugins/slack
-    settings:
-      webhook:
-        from_secret: slack_hook
-    when:
-      status:
-        - failure
-      event:
-        exclude:
-          - pull_request
 ---
 kind: pipeline
 type: docker
@@ -138,22 +116,11 @@ steps:
       - cd test-api
       - npm ci
       - SERVER_URL=http://sut:3030 npm start
-  - name: slack
-    image: plugins/slack
-    settings:
-      webhook:
-        from_secret: slack_hook
-    when:
-      status:
-        - failure
-      event:
-        exclude:
-          - pull_request
 
 image_pull_secrets:
   - dockerconfig
 ---
 kind: signature
-hmac: 996675c7038308a194d78f041dcc283413b2f2123613bff7dab9533b8cef9414
+hmac: 375be9e65c3e2a2caa3c6bb6297e898af91fad3cf3ec4d776a467fffeca8b084
 
 ...
