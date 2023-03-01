@@ -53,12 +53,6 @@ depends_on:
   - compliance
 
 steps:
-  - name: test-server-node-14
-    image: node:14
-    commands:
-      - cd server
-      - npm ci --unsafe-perm
-      - npx jest --runInBand --forceExit
   - name: test-server-node-16
     image: node:16
     commands:
@@ -160,6 +154,6 @@ image_pull_secrets:
   - dockerconfig
 ---
 kind: signature
-hmac: bed6ab21cb833620e14a6a4c2f05ceb5a458d8557018d21af010dea5fcdfc99c
+hmac: 996675c7038308a194d78f041dcc283413b2f2123613bff7dab9533b8cef9414
 
 ...
