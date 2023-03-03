@@ -5,7 +5,6 @@
     "group:allNonMajor",
     "npm:unpublishSafe",
     "schedule:automergeNonOfficeHours",
-    ":automergeBranch",
     ":automergeLinters",
     ":automergeTesters"
   ]
