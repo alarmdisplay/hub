@@ -17,8 +17,8 @@
     "group:jwtFramework",
     "group:socketio",
     "group:allNonMajor",
-    "workarounds:all"
-    ":pinAllExceptPeerDependencies"
+    "workarounds:all",
+    ":pinAllExceptPeerDependencies",
     "npm:unpublishSafe",
     "schedule:automergeNonOfficeHours",
     ":automergeLinters",
