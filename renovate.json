@@ -9,7 +9,7 @@
     ":prHourlyLimit2",
     ":prConcurrentLimit10",
     "docker:disable",
-    "group:monorepos",    
+    "group:monorepos",
     "group:nodeJs",
     "group:jsTest",
     "group:fortawesome",
@@ -24,5 +24,33 @@
     "schedule:automergeNonOfficeHours",
     ":automergeLinters",
     ":automergeTesters"
+  ],
+  "packageRules": [
+    {
+      "matchPackagePatterns": [
+        "^@feathersjs/"
+      ],
+      "allowedVersions": "< 5"
+    },
+    {
+      "matchPackageNames": [
+        "feathers-hooks-common",
+        "feathers-sequelize"
+      ],
+      "allowedVersions": "< 7"
+    },
+    {
+      "matchPackageNames": [
+        "vue",
+        "vue-template-compiler"
+      ],
+      "allowedVersions": "< 2.7"
+    },
+    {
+      "matchPackageNames": [
+        "vue-router"
+      ],
+      "allowedVersions": "< 4"
+    }
   ]
 }
