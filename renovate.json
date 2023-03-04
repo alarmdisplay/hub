@@ -27,29 +27,19 @@
   ],
   "packageRules": [
     {
-      "matchPackagePatterns": [
-        "^@feathersjs/"
-      ],
+      "matchPackagePatterns": ["^@feathersjs/"],
       "allowedVersions": "< 5"
     },
     {
-      "matchPackageNames": [
-        "feathers-hooks-common",
-        "feathers-sequelize"
-      ],
+      "matchPackageNames": ["feathers-hooks-common", "feathers-sequelize"],
       "allowedVersions": "< 7"
     },
     {
-      "matchPackageNames": [
-        "vue",
-        "vue-template-compiler"
-      ],
+      "matchPackageNames": ["vue", "vue-template-compiler"],
       "allowedVersions": "< 2.7"
     },
     {
-      "matchPackageNames": [
-        "vue-router"
-      ],
+      "matchPackageNames": ["vue-router"],
       "allowedVersions": "< 4"
     },
     {
