@@ -1,8 +1,24 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:js-app",
+    ":dependencyDashboard",
+    ":semanticCommits",
+    ":semanticPrefixFixDepsChoreOthers",
+    ":ignoreModulesAndTests",
+    ":autodetectRangeStrategy",
+    ":prHourlyLimit2",
+    ":prConcurrentLimit10",
+    "group:monorepos",    
+    "group:nodeJs",
+    "group:jsTest",
+    "group:fortawesome",
+    "group:jestPlusTSJest",
+    "group:jestPlusTypes",
+    "group:jwtFramework",
+    "group:socketio",
     "group:allNonMajor",
+    "workarounds:all"
+    ":pinAllExceptPeerDependencies"
     "npm:unpublishSafe",
     "schedule:automergeNonOfficeHours",
     ":automergeLinters",
