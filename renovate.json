@@ -51,6 +51,10 @@
         "vue-router"
       ],
       "allowedVersions": "< 4"
+    },
+    {
+      "matchPackageNames": ["@fortawesome/vue-fontawesome"],
+      "allowedVersions": "< 3"
     }
   ]
 }
