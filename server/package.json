@@ -61,7 +61,7 @@
     "sequelize": "6.33.0",
     "serialport": "9.2.8",
     "serve-favicon": "2.5.0",
-    "umzug": "2.3.0",
+    "umzug": "3.3.1",
     "uuid": "9.0.1"
   },
   "devDependencies": {
