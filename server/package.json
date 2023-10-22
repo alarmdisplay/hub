@@ -57,7 +57,7 @@
     "gauss-krueger": "1.0.1",
     "joi": "17.10.1",
     "log4js": "6.9.1",
-    "mysql2": "2.3.3",
+    "mysql2": "3.6.2",
     "sequelize": "6.33.0",
     "serialport": "9.2.8",
     "serve-favicon": "2.5.0",
