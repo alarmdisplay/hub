@@ -205,7 +205,7 @@ describe('\'Alerts\' service', () => {
   it('updates an older incident with same ref', async () => {
     const ref = 'b84333e1-78e4-4c23-88f7-a23aeaa4b89d';
     const olderIncident = await IncidentFactory.create({
-      time: faker.date.recent(3),
+      time: faker.date.recent({ days: 3 }),
       reason: '',
       ref: ref,
     });
