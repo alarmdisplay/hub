@@ -11,13 +11,13 @@ trigger:
 
 steps:
   - name: lint-server
-    image: node:18
+    image: node:18.19.0
     commands:
       - cd server
       - npm ci
       - npm run lint
   - name: lint-console
-    image: node:18
+    image: node:18.19.0
     commands:
       - cd console
       - npm ci
@@ -43,13 +43,13 @@ depends_on:
 
 steps:
   - name: test-server-node-16
-    image: node:16
+    image: node:16.20.2
     commands:
       - cd server
       - npm ci
       - npx jest --runInBand --forceExit
   - name: test-server-node-18
-    image: node:18
+    image: node:18.19.0
     environment:
       CC_TEST_REPORTER_ID:
         from_secret: cc_test_reporter_id
@@ -63,6 +63,6 @@ steps:
       - ../scripts/report-code-coverage.sh
 ---
 kind: signature
-hmac: fa9da77c8e74474e5b59569a1026eea10f1d808c151873a0b960aba0867ed6ca
+hmac: dd7cc879cbd4cf238ef0ab9eba85595a40d7d70cccb29d12af70107492abfb61
 
 ...
