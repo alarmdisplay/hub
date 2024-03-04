@@ -63,6 +63,6 @@ steps:
       - ../scripts/report-code-coverage.sh
 ---
 kind: signature
-hmac: dd7cc879cbd4cf238ef0ab9eba85595a40d7d70cccb29d12af70107492abfb61
+hmac: bd0b981273fe7861e7c418d8cf0ab1dbba6890304592762ca6f5ccde305101db
 
 ...
