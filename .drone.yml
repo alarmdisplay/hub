@@ -42,13 +42,13 @@ depends_on:
   - compliance
 
 steps:
-  - name: test-server-node-16
-    image: node:20.11.1
+  - name: test-server-node-18
+    image: node:18.19.1
     commands:
       - cd server
       - npm ci
       - npx jest --runInBand --forceExit
-  - name: test-server-node-18
+  - name: test-server-node-20
     image: node:20.11.1
     environment:
       CC_TEST_REPORTER_ID:
@@ -63,6 +63,6 @@ steps:
       - ../scripts/report-code-coverage.sh
 ---
 kind: signature
-hmac: bd0b981273fe7861e7c418d8cf0ab1dbba6890304592762ca6f5ccde305101db
+hmac: 85de9d14a090a769e7a5dd5b8c40bc1782dc8961280b881bd88df3abd452780d
 
 ...

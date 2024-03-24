@@ -40,6 +40,12 @@
     {
       "matchFileNames": ["Dockerfile*"],
       "excludePackageNames": ["ubuntu"]
+    },
+    {
+      "matchFileNames": [".drone.yml"],
+      "matchPackageNames": ["node"],
+      "matchCurrentVersion": "< 20.0",
+      "enabled": false
     }
   ]
 }
