@@ -1,6 +1,6 @@
 import {HookContext} from '@feathersjs/feathers';
 
-export function allowApiKey(options = {}) {
+export function allowApiKey() {
   return async (context: HookContext): Promise<HookContext> => {
     const { params } = context;
 

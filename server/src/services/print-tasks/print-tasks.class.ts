@@ -4,7 +4,7 @@ import logger from '../../logger';
 import cp from 'child_process';
 
 export class PrintTasks extends Service<PrintTaskData> {
-  constructor(options: Partial<SequelizeServiceOptions>, app: Application) {
+  constructor(options: Partial<SequelizeServiceOptions>) {
     super(options);
   }
 

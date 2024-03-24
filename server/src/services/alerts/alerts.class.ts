@@ -1,4 +1,3 @@
-import { Params } from '@feathersjs/feathers';
 import { AlertContext, Application, IncidentData, LocationData, RawLocation, ResourceData } from '../../declarations';
 import logger from '../../logger';
 import { ScheduledAlertData } from '../scheduled-alerts/scheduled-alerts.class';
@@ -57,9 +56,8 @@ export class Alerts {
    * Takes new alerts and either creates a new incident or updates an existing one.
    *
    * @param alert
-   * @param params
    */
-  async create (alert: AlertData, params?: Params): Promise<IncidentData> {
+  async create (alert: AlertData): Promise<IncidentData> {
     // The context can enforce the creation of a new incident
     if (alert.context?.forceNewIncident) {
       logger.debug('New incident enforced by alert context');
