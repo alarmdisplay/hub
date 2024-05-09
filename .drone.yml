@@ -11,13 +11,13 @@ trigger:
 
 steps:
   - name: lint-server
-    image: node:20.13.0
+    image: node:20.13.1
     commands:
       - cd server
       - npm ci
       - npm run lint
   - name: lint-console
-    image: node:20.13.0
+    image: node:20.13.1
     commands:
       - cd console
       - npm ci
@@ -49,7 +49,7 @@ steps:
       - npm ci
       - npx jest --runInBand --forceExit
   - name: test-server-node-20
-    image: node:20.13.0
+    image: node:20.13.1
     environment:
       CC_TEST_REPORTER_ID:
         from_secret: cc_test_reporter_id
