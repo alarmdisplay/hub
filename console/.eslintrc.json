@@ -4,7 +4,7 @@
     "node": true
   },
   "extends": [
-    "plugin:vue/essential",
+    "plugin:vue/recommended",
     "eslint:recommended"
   ],
   "parserOptions": {
@@ -12,7 +12,9 @@
   },
   "reportUnusedDisableDirectives": true,
   "rules": {
-    "vue/multi-word-component-names": "off",
-    "vue/no-mutating-props": "off"
+    "vue/html-indent": "error",
+    "vue/html-comment-indent": "error",
+    "vue/no-mutating-props": "off",
+    "vue/script-indent": "error"
   }
 }

@@ -2,6 +2,7 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import {
   faAngleDown,
   faBell,
+  faBellSlash,
   faBuilding,
   faCheck,
   faChevronDown,
@@ -51,6 +52,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 library.add(
   faAngleDown,
   faBell,
+  faBellSlash,
   faBuilding,
   faCheck,
   faChevronDown,

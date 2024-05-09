@@ -1,20 +1,36 @@
 <template>
-    <FeathersVuexFormWrapper :item="settingsItem" :eager="false">
-        <template v-slot="{ clone, save }">
-            <div class="level">
-                <div class="level-left">
-                    <div class="level-item" style="flex-direction: column">
-                        <input type="checkbox" class="checkbox is-small" v-model="clone.value" @change="
-                        () => {
-                          $data.formError = null
-                          save().catch(reason => { $data.formError = reason })
-                        }" :disabled="$store.state.settings.isIdPatchPending.includes(settingsKey)">
-                        <ErrorMessage :form-error="formError" :short="true"/>
-                    </div>
-                </div>
-            </div>
-        </template>
-    </FeathersVuexFormWrapper>
+  <FeathersVuexFormWrapper
+    v-if="settingsItem"
+    :item="settingsItem"
+    :eager="false"
+  >
+    <template #default="{ clone, save }">
+      <div class="level">
+        <div class="level-left">
+          <div
+            class="level-item"
+            style="flex-direction: column"
+          >
+            <input
+              v-model="clone.value"
+              type="checkbox"
+              class="checkbox is-small"
+              :disabled="$store.state.settings.isIdPatchPending.includes(settingsKey)"
+              @change="
+                () => {
+                  $data.formError = null
+                  save().catch(reason => { $data.formError = reason })
+                }"
+            >
+            <ErrorMessage
+              :form-error="formError"
+              :short="true"
+            />
+          </div>
+        </div>
+      </div>
+    </template>
+  </FeathersVuexFormWrapper>
 </template>
 
 <script>
@@ -25,13 +41,10 @@ export default {
   components: {
     ErrorMessage
   },
-  computed: {
-    settingsItem () {
-      const { Setting } = this.$FeathersVuex.api
-      return Setting.getFromStore(this.settingsKey)
-    },
-    value () {
-      return this.$store.getters['settings/getBooleanValue'](this.settingsKey)
+  props: {
+    settingsKey: {
+      type: String,
+      required: true
     }
   },
   data () {
@@ -39,10 +52,13 @@ export default {
       formError: null
     }
   },
-  props: {
-    settingsKey: {
-      type: String,
-      required: true
+  computed: {
+    settingsItem () {
+      const { Setting } = this.$FeathersVuex.api
+      return Setting.getFromStore(this.settingsKey)
+    },
+    value () {
+      return this.$store.getters['settings/getBooleanValue'](this.settingsKey)
     }
   }
 }

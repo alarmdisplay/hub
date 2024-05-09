@@ -23,8 +23,8 @@ declare module '../../declarations' {
     keyword: string
     resources: ResourceData[]
     description: string
-    status: IncidentStatus
-    category: IncidentCategory
+    status: 'Actual' | 'Exercise' | 'Test'
+    category: 'Geo' | 'Met' | 'Safety' | 'Security' | 'Rescue' | 'Fire' | 'Health' | 'Env' | 'Transport' | 'Infra' | 'CBRNE' | 'Other'
   }
 
   export interface AlertContext {
@@ -66,28 +66,6 @@ export enum AlertSourceType {
   PLAIN
 }
 
-export enum IncidentStatus {
-  Actual = 'Actual',
-  Exercise = 'Exercise',
-  Test = 'Test'
-}
-
-export enum IncidentCategory {
-  Geo = 'Geo',
-  Met = 'Met',
-  Safety = 'Safety',
-  Security = 'Security',
-  Rescue = 'Rescue',
-  Fire = 'Fire',
-  Health = 'Health',
-  Env = 'Env',
-  Transport = 'Transport',
-  Infra = 'Infra',
-  CBRNE = 'CBRNE',
-  Other = 'Other'
-}
-
-
 export default function (app: Application): void {
   const options = {
     Model: createModel(app),
@@ -95,7 +73,7 @@ export default function (app: Application): void {
   };
 
   // Initialize our service with any options it requires
-  app.use('/incidents', new Incidents(options));
+  app.use('/incidents', new Incidents(options, app));
 
   // Get our initialized service so that we can register hooks
   const service = app.service('incidents');

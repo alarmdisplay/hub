@@ -5,14 +5,3 @@ export interface ServiceTypes {}
 // The application instance type that will be used everywhere else
 export type Application = ExpressFeathers<ServiceTypes>;
 
-export interface AlertData {
-  sender?: string
-  ref?: string
-  caller_name?: string
-  caller_number?: string
-  location?: RawLocation
-  reason?: string
-  keyword?: string
-  resources?: ResourceData[]
-  description?: string
-}

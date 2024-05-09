@@ -11,33 +11,26 @@ trigger:
 
 steps:
   - name: lint-server
-    image: node:lts
+    image: node:20.13.0
     commands:
       - cd server
       - npm ci
       - npm run lint
   - name: lint-console
-    image: node:lts
+    image: node:20.13.0
     commands:
       - cd console
       - npm ci
       - npm run lint
-  - name: slack
-    image: plugins/slack
-    settings:
-      webhook:
-        from_secret: slack_hook
-    when:
-      status:
-        - failure
-      event:
-        exclude:
-          - pull_request
 
 ---
 kind: pipeline
 type: docker
-name: testing
+name: testing-linux-amd64
+
+platform:
+  os: linux
+  arch: amd64
 
 trigger:
   branch:
@@ -48,47 +41,43 @@ trigger:
 depends_on:
   - compliance
 
-services:
-  - name: mariadb
-    image: mariadb
-    environment:
-      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: yes
-      MARIADB_DATABASE: hub_backend
-
 steps:
-  - name: test-server-node-lts
-    image: node:lts
+  - name: test-server-node-18
+    image: node:18.19.1
     commands:
       - cd server
       - npm ci
-      - npm test
-  - name: hubserver
-    image: node:lts
-    detach: true
+      - npx jest --runInBand --forceExit
+  - name: test-server-node-20
+    image: node:20.13.0
+    environment:
+      CC_TEST_REPORTER_ID:
+        from_secret: cc_test_reporter_id
     commands:
+      - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+      - chmod +x ./cc-test-reporter
+      - ./cc-test-reporter before-build
       - cd server
-      - 'echo ''{"mysql": "mysql://root:@mariadb:3306/hub_backend"}'' > config/local-production.json'
-      - NODE_ENV=production npm start
-  - name: test-api
-    image: node:lts
-    commands:
-      - cd test-api
       - npm ci
-      - sleep 15
-      - SERVER_URL=hubserver:3030 npm start
-  - name: slack
-    image: plugins/slack
-    settings:
-      webhook:
-        from_secret: slack_hook
-    when:
-      status:
-        - failure
-      event:
-        exclude:
-          - pull_request
+      - npx jest --runInBand --forceExit --coverage
+      - ../scripts/report-code-coverage.sh
+  - name: codecov
+    image: alpine:3.19.1
+    environment:
+      CODECOV_TOKEN:
+        from_secret: codecov_token
+    commands:
+      - apk add curl gnupg coreutils git
+      - curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring /root/trustedkeys.gpg --import
+      - curl -Os https://cli.codecov.io/latest/alpine/codecov
+      - curl -Os https://cli.codecov.io/latest/alpine/codecov.SHA256SUM
+      - curl -Os https://cli.codecov.io/latest/alpine/codecov.SHA256SUM.sig
+      - gpgv --keyring /root/trustedkeys.gpg codecov.SHA256SUM.sig codecov.SHA256SUM
+      - sha256sum -c codecov.SHA256SUM
+      - chmod +x codecov
+      - ./codecov upload-process --dir server/coverage --flag server
 ---
 kind: signature
-hmac: b6bda581ebd91036d0c7c882d525548b7593fb9c72f847b7d83774ff85760cf2
+hmac: 0f9992ca322892bc22a2404c0eed6e28a255a2a792d5de01187d4b42754b57ad
 
 ...

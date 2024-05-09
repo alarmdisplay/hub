@@ -61,11 +61,12 @@ export default function(app: Application) {
     }
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.on('disconnect', async (connection: any) => {
     logger.debug('Socket disconnected');
   });
 
-  // eslint-disable-next-line no-unused-vars
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   app.publish((data: any, hook: HookContext) => {
     // Here you can add event publishers to channels set up in `channels.js`
     // To publish only for a specific event use `app.publish(eventname, () => {})`

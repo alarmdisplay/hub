@@ -1,6 +1,6 @@
-import {Application, ResourceData, ResourceIdentifierData} from '../../../declarations';
-import {NotFound} from '@feathersjs/errors';
-import {AlertSourceType} from '../../incidents/incidents.service';
+import { Application, ResourceData, ResourceIdentifierData } from '../../../declarations';
+import { NotFound } from '@feathersjs/errors';
+import { AlertSourceType } from '../../incidents/incidents.service';
 
 interface PagerData {
   selcall: string
@@ -35,14 +35,14 @@ export class Pager {
     }
 
     // Forward the alert
-    const incidentService = this.app.service('incidents');
-    const incidentData = await incidentService.processAlert({
-      resources: resources
-    }, {
-      processingStarted: new Date(),
-      rawContent: data.selcall,
-      source: {
-        type: AlertSourceType.PLAIN
+    const incidentData = await this.app.service('alerts').create({
+      resources: resources,
+      context: {
+        processingStarted: new Date(),
+        rawContent: data.selcall,
+        source: {
+          type: AlertSourceType.PLAIN
+        }
       }
     });
 

@@ -1,38 +1,45 @@
 <template>
-    <section class="section">
-        <div class="container">
-            <h1 class="title">Einsatzmittel {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}</h1>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+        Einsatzmittel {{ id === 'new' ? 'anlegen' : 'bearbeiten' }}
+      </h1>
 
-            <div class="buttons is-left">
-                <BackButton/>
-            </div>
+      <div class="buttons is-left">
+        <BackButton />
+      </div>
 
-            <ErrorMessage :form-error="formError"/>
+      <ErrorMessage :form-error="formError" />
 
-            <FeathersVuexFormWrapper v-if="item" :item="item" :watch="false" :eager="false">
-                <template v-slot="{ clone, save, reset, remove }">
-                    <ResourceEditor
-                        :item="clone"
-                        @save="
-                        () => {
-                          $data.formError = null
-                          save()
-                            .then(() => $router.push({name: 'resource-list'}))
-                            .catch(reason => { $data.formError = reason })
-                        }"
-                        @reset="reset"
-                        @remove="
-                        () => {
-                          $data.formError = null
-                          remove()
-                            .then(() => $router.push({name: 'resource-list'}))
-                            .catch(reason => { $data.formError = reason })
-                        }"
-                    ></ResourceEditor>
-                </template>
-            </FeathersVuexFormWrapper>
-        </div>
-    </section>
+      <FeathersVuexFormWrapper
+        v-if="item"
+        :item="item"
+        :watch="false"
+        :eager="false"
+      >
+        <template #default="{ clone, save, reset, remove }">
+          <ResourceEditor
+            :item="clone"
+            @save="
+              () => {
+                $data.formError = null
+                save()
+                  .then(() => $router.push({name: 'resource-list'}))
+                  .catch(reason => { $data.formError = reason })
+              }"
+            @reset="reset"
+            @remove="
+              () => {
+                $data.formError = null
+                remove()
+                  .then(() => $router.push({name: 'resource-list'}))
+                  .catch(reason => { $data.formError = reason })
+              }"
+          />
+        </template>
+      </FeathersVuexFormWrapper>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -41,8 +48,15 @@ import ErrorMessage from '@/components/ErrorMessage'
 import ResourceEditor from '@/components/ResourceEditor'
 
 export default {
-name: 'ResourceForm',
+  name: 'ResourceForm',
   components: { ResourceEditor, ErrorMessage, BackButton },
+  data: function () {
+    const { Resource } = this.$FeathersVuex.api
+    return {
+      formError: null,
+      newItem : new Resource()
+    }
+  },
   computed: {
     id() {
       return this.$route.params.id
@@ -52,13 +66,6 @@ name: 'ResourceForm',
       // Get the Resource for the given ID or create a new one if the ID is 'new'
       return this.id === 'new' ? this.newItem : Resource.getFromStore(this.id)
     },
-  },
-  data: function () {
-    const { Resource } = this.$FeathersVuex.api
-    return {
-      formError: null,
-      newItem : new Resource()
-    }
   },
   watch: {
     id: {
