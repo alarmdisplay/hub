@@ -2,6 +2,7 @@ import app from '../../src/app';
 import { SerialPort, SerialPortMock } from 'serialport';
 import { MockBinding } from '@serialport/binding-mock';
 import { SerialMonitorsData } from '../../src/services/serial-monitors/serial-monitors.class';
+import { DisconnectedError } from '@serialport/stream'
 
 jest.mock('serialport', () => {
   return {
@@ -70,6 +71,29 @@ describe('\'serial-monitors\' service', () => {
             done(err);
           }
         });
+      }).catch(reason => {
+        done(reason);
+      });
+  });
+
+  it('reacts to disconnect', (done) => {
+    MockBinding.createPort('/dev/test_close', { echo: true });
+
+    const service = app.service('serial-monitors');
+
+    (service.create({ port: '/dev/test_close', active: true, baudRate: 9600 }) as Promise<SerialMonitorsData>)
+      .then(() => {
+        // Acquire serial port mock and close it
+        const result = mockConstructor.mock.results.at(0)!;
+        expect(result).toHaveProperty('type', 'return');
+        const serialPortMock = result.value as SerialPortMock;
+
+        setTimeout(() => {
+          serialPortMock.close(() => {
+            jest.clearAllMocks();
+            done();
+          }, new DisconnectedError('gotta go'));
+        }, 100);
       }).catch(reason => {
         done(reason);
       });
