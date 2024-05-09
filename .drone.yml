@@ -75,9 +75,9 @@ steps:
       - gpgv --keyring /root/trustedkeys.gpg codecov.SHA256SUM.sig codecov.SHA256SUM
       - sha256sum -c codecov.SHA256SUM
       - chmod +x codecov
-      - ./codecov --file server/coverage/lcov.info --flags server
+      - ./codecov upload-process --dir server/coverage --flags server
 ---
 kind: signature
-hmac: 20253b450eac3e19c6a8a699be13ed51767344b6c4a5687b2eed003cbaced1a0
+hmac: b493b03943895e2ebe18b36ffc985eeda09997c208452f559fa8587c0a599a76
 
 ...
