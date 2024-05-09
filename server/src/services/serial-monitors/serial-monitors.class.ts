@@ -1,15 +1,12 @@
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application, SerialDataContext } from '../../declarations';
-import SerialPort from 'serialport';
+import { InterByteTimeoutParser, SerialPort } from 'serialport';
+import { DisconnectedError } from '@serialport/stream';
 import logger from '../../logger';
 import { Params, NullableId } from '@feathersjs/feathers';
 import util from 'util';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore The types for serialport are incomplete
-const InterByteTimeout = SerialPort.parsers.InterByteTimeout;
-
-interface SerialMonitorsData {
+export interface SerialMonitorsData {
   id: number
   port: string
   baudRate: number
@@ -108,12 +105,12 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
     }
 
     return new Promise((resolve, reject) => {
-      const port = new SerialPort(serialMonitor.port, { autoOpen: false, baudRate: serialMonitor.baudRate });
+      const port = new SerialPort({ path: serialMonitor.port, autoOpen: false, baudRate: serialMonitor.baudRate });
       this.monitors.set(serialMonitor.id, port);
 
       // Register for the open event
       port.on('open', () => {
-        const parser = port.pipe(new InterByteTimeout({ interval: serialMonitor.timeout }));
+        const parser = port.pipe(new InterByteTimeoutParser({ interval: serialMonitor.timeout }));
         parser.on('data', (data: Buffer) => this.onSerialData(data, serialMonitor));
 
         resolve(serialMonitor);
@@ -124,8 +121,8 @@ export class SerialMonitors extends Service<SerialMonitorsData> {
         logger.error('Serial monitor for %s reports: %s', serialMonitor.port, error);
       });
 
-      port.on('close', error => {
-        if (error?.disconnected) {
+      port.on('close', (error: unknown) => {
+        if (error instanceof DisconnectedError) {
           logger.error('Serial port %s disconnected', serialMonitor.port);
         }
         logger.info('Serial monitor for %s stopped', serialMonitor.port);
