@@ -61,8 +61,23 @@ steps:
       - npm ci
       - npx jest --runInBand --forceExit --coverage
       - ../scripts/report-code-coverage.sh
+  - name: codecov
+    image: alpine:3.19.1
+    environment:
+      CODECOV_TOKEN:
+        from_secret: codecov_token
+    commands:
+      - apk add curl gnupg coreutils git
+      - curl https://keybase.io/codecovsecurity/pgp_keys.asc | gpg --no-default-keyring --keyring /root/trustedkeys.gpg --import
+      - curl -Os https://cli.codecov.io/latest/alpine/codecov
+      - curl -Os https://cli.codecov.io/latest/alpine/codecov.SHA256SUM
+      - curl -Os https://cli.codecov.io/latest/alpine/codecov.SHA256SUM.sig
+      - gpgv --keyring /root/trustedkeys.gpg codecov.SHA256SUM.sig codecov.SHA256SUM
+      - sha256sum -c codecov.SHA256SUM
+      - chmod +x codecov
+      - ./codecov upload-process --dir server/coverage --flag server
 ---
 kind: signature
-hmac: 806dcafe34b7af7e14dbbc98b689fe33828ba3606f9f22741ddaedc296e4206a
+hmac: 0f9992ca322892bc22a2404c0eed6e28a255a2a792d5de01187d4b42754b57ad
 
 ...
