@@ -78,6 +78,6 @@ steps:
       - ./codecov upload-process --dir server/coverage --flag server
 ---
 kind: signature
-hmac: 0f9992ca322892bc22a2404c0eed6e28a255a2a792d5de01187d4b42754b57ad
+hmac: 40697b2573f6594b79b31f36e35536c8f3d13b5755b07c3ac448427d41a31440
 
 ...
