@@ -2,7 +2,7 @@ import app from '../../src/app';
 import { SerialPort, SerialPortMock } from 'serialport';
 import { MockBinding } from '@serialport/binding-mock';
 import { SerialMonitorsData } from '../../src/services/serial-monitors/serial-monitors.class';
-import { DisconnectedError } from '@serialport/stream'
+import { DisconnectedError } from '@serialport/stream';
 
 jest.mock('serialport', () => {
   return {
