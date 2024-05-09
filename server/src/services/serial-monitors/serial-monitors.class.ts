@@ -1,7 +1,7 @@
 import { Service, SequelizeServiceOptions } from 'feathers-sequelize';
 import { Application, SerialDataContext } from '../../declarations';
 import { InterByteTimeoutParser, SerialPort } from 'serialport';
-import { DisconnectedError } from '@serialport/stream'
+import { DisconnectedError } from '@serialport/stream';
 import logger from '../../logger';
 import { Params, NullableId } from '@feathersjs/feathers';
 import util from 'util';
