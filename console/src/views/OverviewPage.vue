@@ -26,23 +26,29 @@
           </div>
         </div>
       </div>
-      <FeathersVuexFind
-        v-slot="{ items: incidents }"
-        service="incidents"
-        :query="{ $limit: 3, $sort: { time: -1 } }"
-        qid="recentIncidents"
-        watch="query"
-      >
-        <ol class="">
-          <li
-            v-for="incident in incidents"
-            :key="incident.id"
-            class="box"
-          >
-            <IncidentMediaObject :incident="incident" />
-          </li>
-        </ol>
-      </FeathersVuexFind>
+
+      <div class="content">
+        <FeathersVuexFind
+          v-slot="{ items: incidents }"
+          service="incidents"
+          :query="{ $limit: 3, $sort: { time: -1 } }"
+          qid="recentIncidents"
+          watch="query"
+        >
+          <ol v-if="incidents.length > 0">
+            <li
+              v-for="incident in incidents"
+              :key="incident.id"
+              class="box"
+            >
+              <IncidentMediaObject :incident="incident" />
+            </li>
+          </ol>
+          <span v-else>
+            Keine Eins&auml;tze gefunden
+          </span>
+        </FeathersVuexFind>
+      </div>
     </div>
   </section>
 </template>
