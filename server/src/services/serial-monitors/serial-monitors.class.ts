@@ -6,7 +6,7 @@ import logger from '../../logger';
 import { Params, NullableId } from '@feathersjs/feathers';
 import util from 'util';
 
-interface SerialMonitorsData {
+export interface SerialMonitorsData {
   id: number
   port: string
   baudRate: number
