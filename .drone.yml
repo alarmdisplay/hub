@@ -11,13 +11,13 @@ trigger:
 
 steps:
   - name: lint-server
-    image: node:20.13.1
+    image: node:20.16.0
     commands:
       - cd server
       - npm ci
       - npm run lint
   - name: lint-console
-    image: node:20.13.1
+    image: node:20.16.0
     commands:
       - cd console
       - npm ci
@@ -49,7 +49,7 @@ steps:
       - npm ci
       - npx jest --runInBand --forceExit
   - name: test-server-node-20
-    image: node:20.13.1
+    image: node:20.16.0
     environment:
       CC_TEST_REPORTER_ID:
         from_secret: cc_test_reporter_id
@@ -62,7 +62,7 @@ steps:
       - npx jest --runInBand --forceExit --coverage
       - ../scripts/report-code-coverage.sh
   - name: codecov
-    image: alpine:3.19.1
+    image: alpine:3.20.2
     environment:
       CODECOV_TOKEN:
         from_secret: codecov_token
