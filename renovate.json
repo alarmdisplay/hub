@@ -1,51 +1,40 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    ":dependencyDashboard",
-    ":semanticCommits",
-    ":semanticPrefixFixDepsChoreOthers",
-    ":ignoreModulesAndTests",
-    ":autodetectRangeStrategy",
-    ":prHourlyLimit2",
-    ":prConcurrentLimit10",
-    "group:monorepos",
-    "group:nodeJs",
-    "group:jsTest",
-    "group:fortawesome",
-    "group:jestPlusTSJest",
-    "group:jestPlusTypes",
-    "group:jwtFramework",
-    "group:socketio",
+    "config:best-practices",
     "group:allNonMajor",
-    "workarounds:all",
-    ":pinAllExceptPeerDependencies",
+    "group:linters",
+    "group:test",
     "npm:unpublishSafe",
     "schedule:automergeNonOfficeHours",
+    ":approveMajorUpdates",
     ":automergeLinters",
-    ":automergeTesters"
+    ":automergeTesters",
+    ":maintainLockFilesWeekly",
+    ":pinAllExceptPeerDependencies",
+    ":semanticCommits",
+    ":separateMultipleMajorReleases"
   ],
-  "major": {
-    "dependencyDashboardApproval": true
-  },
   "packageRules": [
     {
-      "matchPackageNames": ["vue", "vue-template-compiler"],
+      "matchPackageNames": [
+        "typescript"
+      ],
+      "groupName": "TypeScript",
+      "separateMultipleMinor": true
+    },
+    {
+      "matchPackageNames": [
+        "vue",
+        "vue-template-compiler"
+      ],
       "allowedVersions": "< 2.7"
     },
     {
-      "matchFileNames": ["Dockerfile*"],
-      "matchPackageNames": ["node"],
-      "allowedVersions": "/^[1-9][02468]$/"
-    },
-    {
-      "matchFileNames": ["Dockerfile*"],
-      "excludePackageNames": ["ubuntu"]
-    },
-    {
-      "matchFileNames": [".drone.yml"],
-      "matchPackageNames": ["node"],
-      "matchCurrentVersion": "< 20.0",
-      "enabled": false
+      "matchPackageNames": [
+        "node"
+      ],
+      "allowedVersions": "/^[1-9][02468]\\./"
     }
   ]
 }
