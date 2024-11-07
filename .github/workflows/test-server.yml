@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mariadb:11.5.2@sha256:4066f2d4805fef72a83cf4a62689a0aadb6e83a8c8a82b64431edd4b94f684f8
+        image: mariadb:11.5.2@sha256:4a1de8fa2a929944373d7421105500ff6f889ce90dcb883fbb2fdb070e4d427e
         env:
           MARIADB_USER: hub
           MARIADB_PASSWORD: hub
@@ -30,7 +30,7 @@ jobs:
         options: --health-cmd="mariadb-admin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
+    - uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
     - uses: actions/setup-node@0a44ba7841725637a19e28fa30b79a866c81b0a6 # v4.0.4
       with:
         node-version-file: '.nvmrc'
