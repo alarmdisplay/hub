@@ -1,4 +1,4 @@
-FROM node:20.18.1@sha256:f99a6bd6fb137cfc683e1ff60e7d67aa8d5fcf45a6a64c01c37b4f433a6238b6 as build-console
+FROM node:20.18.1@sha256:ae35d80b4f9b81b80749197117c2d94e8d5c74e0e2e3a389e66b6b31f3ac96cc as build-console
 
 WORKDIR /home/node/app/console
 COPY ./console/package.json ./console/package-lock.json /home/node/app/console/
@@ -6,7 +6,7 @@ RUN npm ci --no-audit
 COPY ./console /home/node/app/console
 RUN npm run build
 
-FROM node:20.18.1@sha256:f99a6bd6fb137cfc683e1ff60e7d67aa8d5fcf45a6a64c01c37b4f433a6238b6 as build-server
+FROM node:20.18.1@sha256:ae35d80b4f9b81b80749197117c2d94e8d5c74e0e2e3a389e66b6b31f3ac96cc as build-server
 
 WORKDIR /home/node/app
 COPY ./server/package.json ./server/package-lock.json /home/node/app/
