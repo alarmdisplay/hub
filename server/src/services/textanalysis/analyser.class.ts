@@ -242,7 +242,11 @@ export class Analyser {
     newMatches.forEach((value, key) => {
       if (this.multiValueKeys.includes(key)) {
         let array = (matches.get(key) || []) as string[];
-        Array.isArray(value) ? array = array.concat(value) : array.push(value);
+        if (Array.isArray(value)) {
+          array = array.concat(value);
+        } else {
+          array.push(value);
+        }
         matches.set(key, array);
         return;
       }

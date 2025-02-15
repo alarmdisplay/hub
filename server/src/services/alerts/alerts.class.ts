@@ -1,6 +1,7 @@
 import { AlertContext, Application, IncidentData, LocationData, RawLocation, ResourceData } from '../../declarations';
 import logger from '../../logger';
 import { ScheduledAlertData } from '../scheduled-alerts/scheduled-alerts.class';
+import { PaginationOptions } from '@feathersjs/feathers';
 
 export interface AlertData {
   sender?: string
@@ -15,7 +16,9 @@ export interface AlertData {
   context?: AlertContext
 }
 
-interface ServiceOptions {}
+interface ServiceOptions {
+  paginate: PaginationOptions
+}
 
 /**
  * The properties of an incident, that can be updated or filled by later alerts. Keyed by their AlertData counterpart
@@ -40,7 +43,7 @@ export class Alerts {
    */
   private readonly maxAge: number;
 
-  constructor (options: ServiceOptions = {}, app: Application) {
+  constructor (options: ServiceOptions, app: Application) {
     this.options = options;
     this.app = app;
 
