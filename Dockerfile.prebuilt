@@ -1,22 +1,20 @@
-FROM ubuntu:20.04
+FROM node:20.18.3-bookworm@sha256:bcf90f85634194bc51e92f8add1221c7fdeeff94b7f1ff360aeaa7498086d641
 
-RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -o "APT::Acquire::Retries=3" \
     git \
     imagemagick \
-    nodejs \
-    npm \
+    poppler-utils \
     tesseract-ocr-deu \
     && rm -rf /var/lib/apt/lists/*
 
 # allow ImageMagick to process PDFs
 RUN sed -i '$i\ \ <policy domain="coder" rights="read" pattern="PDF" />' /etc/ImageMagick-6/policy.xml
 
-RUN groupadd --gid 1000 node \
-  && useradd --uid 1000 --gid node -G dialout --shell /bin/bash --create-home node
+RUN adduser node dialout
 
 WORKDIR /home/node/app
 COPY ./build/package.json ./build/package-lock.json /home/node/app/
-RUN npm ci --only=production --no-audit
+RUN npm ci --omit=dev --no-audit
 
 COPY ./build /home/node/app
 

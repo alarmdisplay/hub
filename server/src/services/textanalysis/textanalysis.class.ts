@@ -9,24 +9,22 @@ import {
   TextAnalysisResult
 } from '../../declarations';
 import logger from '../../logger';
-import { Ocr } from './ocr.class';
 import configs from './configs';
 import { AlertSourceType } from '../incidents/incidents.service';
 import { Analyser } from './analyser.class';
 import { SequelizeServiceOptions, Service } from 'feathers-sequelize';
-import cp from 'child_process';
-import util from 'util';
+import { Extractor } from './extractor';
 
 export class TextAnalysis extends Service<TextAnalysisData> {
   app: Application;
   analyser: Analyser;
-  ocr: Ocr;
+  private extractor: Extractor;
 
   constructor (options: Partial<SequelizeServiceOptions>, app: Application) {
     super(options);
     this.app = app;
     this.analyser = new Analyser();
-    this.ocr = new Ocr(app);
+    this.extractor = new Extractor(app);
   }
 
   setup(app: Application): void {
@@ -111,21 +109,16 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       }
     };
 
+    // Try to get any text from the file
     try {
-      alertContext.rawContent = await this.getEmbeddedText(filePath);
-    } catch (error: any) {
-      logger.warn('Could not extract embedded text from file:', error.message);
-    }
-
-    if (!alertContext.rawContent) {
-      logger.debug('No embedded text found, continue with OCR...');
-      try {
-        alertContext.rawContent = await this.ocr.getTextFromFile(filePath, textAnalysisConfig);
+      const extractionResult = await this.extractor.getTextFromFile(filePath, textAnalysisConfig);
+      alertContext.rawContent = extractionResult.content;
+      if (extractionResult.method === 'ocr') {
         alertContext.source.type = AlertSourceType.OCR;
-      } catch (error: any) {
-        logger.error('Could not get text from file:', error.message);
-        return;
       }
+    } catch (e) {
+      logger.error('Could not extract text from file: ', e);
+      return;
     }
 
     let result;
@@ -163,8 +156,7 @@ export class TextAnalysis extends Service<TextAnalysisData> {
     // Compress multiple consecutive spaces into a single one
     const description = (result.description || '').replace(/\s{2,}/, ' ');
 
-    const IncidentsService = this.app.service('incidents');
-    await IncidentsService.processAlert({
+    await this.app.service('alerts').create({
       caller_name: result.caller.name,
       caller_number: result.caller.number,
       description: description,
@@ -173,25 +165,8 @@ export class TextAnalysis extends Service<TextAnalysisData> {
       reason: result.reason,
       ref: result.ref,
       resources: resources,
-      sender: result.sender
-    }, alertContext);
-  }
-
-  /**
-   * Try to extract embedded text from PDFs.
-   *
-   * @param filePath
-   * @private
-   */
-  private async getEmbeddedText(filePath: string): Promise<string> {
-    const exec = util.promisify(cp.exec);
-
-    // Check if pdftotext is installed, will throw on error
-    await exec('pdftotext -v');
-
-    // Try to extract the text while preserving the layout
-    const { stdout } = await exec(`pdftotext -layout "${filePath}" -`);
-
-    return (stdout || '').trim();
+      sender: result.sender,
+      context: alertContext
+    });
   }
 }

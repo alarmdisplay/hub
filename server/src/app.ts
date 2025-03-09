@@ -1,7 +1,6 @@
 import path from 'path';
 import favicon from 'serve-favicon';
 import compress from 'compression';
-import helmet from 'helmet';
 import cors from 'cors';
 
 import feathers from '@feathersjs/feathers';
@@ -24,6 +23,8 @@ import fs from 'fs';
 
 const app: Application = express(feathers());
 
+const productionMode = process.env.NODE_ENV === 'production';
+
 // Load app configuration
 app.configure(configuration());
 
@@ -36,7 +37,6 @@ if (['ALL', 'MARK', 'TRACE', 'DEBUG', 'INFO', 'WARN', 'ERROR', 'FATAL', 'OFF'].i
 logger.info('Logging level is \'%s\'', logger.level);
 
 // Enable security, CORS, compression, favicon and body parsing
-app.use(helmet({ contentSecurityPolicy: false }));
 app.use(cors<Request>());
 app.use(compress());
 app.use(express.json());
@@ -48,7 +48,7 @@ app.use('/', express.static(app.get('public')));
 // Serve the Console UI statically
 if (fs.existsSync('ext-console')) {
   app.use('/console', express.static('ext-console'));
-} else if (process.env.NODE_ENV === 'production') {
+} else if (productionMode) {
   logger.warn('The static files for the console UI could not be found, the path /console will not work');
 }
 

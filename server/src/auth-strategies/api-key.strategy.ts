@@ -1,6 +1,7 @@
 import {AuthenticationBaseStrategy, AuthenticationRequest, AuthenticationResult} from '@feathersjs/authentication';
-import {NotAuthenticated} from '@feathersjs/errors';
+import { FeathersError, NotAuthenticated } from '@feathersjs/errors';
 import bcrypt from 'bcryptjs';
+import logger from '../logger';
 
 export class ApiKeyStrategy extends AuthenticationBaseStrategy {
   /**
@@ -33,7 +34,11 @@ export class ApiKeyStrategy extends AuthenticationBaseStrategy {
     try {
       storedApiKey = await ApiKeyService.get(id);
     } catch (e) {
-      // No API key with that ID found
+      if (e instanceof FeathersError) {
+        logger.debug(`No API key with ID ${id} found: ${e.message}`);
+      } else {
+        logger.debug(`No API key with ID ${id} found: ${e}`);
+      }
       throw new NotAuthenticated('API key invalid');
     }
 

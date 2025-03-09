@@ -1,20 +1,39 @@
 <template>
-    <article class="message is-danger" v-if="formError">
-        <div class="message-header">
-            Fehler
-        </div>
-        <div class="message-body">
-            <ul>
-                <li v-for="[index, message] in messages.entries()" :key="index">
-                    {{ message }}
-                </li>
-            </ul>
-        </div>
-    </article>
+  <span
+    v-if="formError && short"
+    class="has-text-danger"
+  >
+    {{ messages[0] || 'Fehler' }}
+  </span>
+  <article
+    v-else-if="formError"
+    class="message is-danger"
+  >
+    <div class="message-header">
+      Fehler
+    </div>
+    <div class="message-body">
+      <ul>
+        <li
+          v-for="[index, message] in messages.entries()"
+          :key="index"
+        >
+          {{ message }}
+        </li>
+      </ul>
+    </div>
+  </article>
 </template>
 <script>
 export default {
   name: 'ErrorMessage',
+  props: {
+    formError: {
+      type: Object,
+      default: undefined
+    },
+    short: Boolean
+  },
   computed: {
     messages: function () {
       if (this.formError.type === 'FeathersError') {
@@ -27,9 +46,6 @@ export default {
 
       return [this.formError.toString()]
     }
-  },
-  props: {
-    formError: Object
   }
 }
 </script>

@@ -5,12 +5,10 @@ export default {
   async up(query: QueryInterface, app: Application): Promise<void> {
     const tableName = [app.get('db_prefix'), 'resource_identifiers'].join('_');
 
-    try {
-      await query.describeTable(tableName);
+    const tableExists = await query.tableExists(tableName);
+    if (tableExists) {
       // Exit early if the table exists
       return;
-    } catch (e) {
-      // The table does not exist, so we just continue
     }
 
     await query.createTable(tableName, {

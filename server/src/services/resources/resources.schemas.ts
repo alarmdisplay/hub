@@ -1,4 +1,4 @@
-import Joi from '@hapi/joi';
+import Joi from 'joi';
 
 export const createUpdateSchema = Joi.object({
   name: Joi.string().min(1).required(),

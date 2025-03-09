@@ -1,32 +1,37 @@
 <template>
-    <span>
-        <span class="clickable" title="Zum Bearbeiten klicken" v-show="!isEditing" @click.prevent="startEditing">{{ item[prop] || '' }}</span>
-        <FeathersVuexInputWrapper :item="item" :prop="prop">
-            <template #default="{ current, prop, createClone, handler }">
-                <input
-                        v-model="current[prop]"
-                        type="text"
-                        @focus="createClone"
-                        @blur="e => handler(e, save)"
-                        v-show="isEditing"
-                        ref="input"
-                        :class="['input', error ? 'is-danger' : '']"
-                />
-            </template>
-        </FeathersVuexInputWrapper>
-        <p class="help is-danger" v-if="error">{{ error.message || error.toString() }}</p>
-    </span>
+  <span>
+    <span
+      v-show="!isEditing"
+      class="clickable"
+      title="Zum Bearbeiten klicken"
+      @click.prevent="startEditing"
+    >{{ item[prop] || '' }}</span>
+    <FeathersVuexInputWrapper
+      :item="item"
+      :prop="prop"
+    >
+      <template #default="{ current, createClone, handler }">
+        <input
+          v-show="isEditing"
+          ref="input"
+          v-model="current[prop]"
+          type="text"
+          :class="['input', error ? 'is-danger' : '']"
+          @focus="createClone"
+          @blur="e => handler(e, save)"
+        >
+      </template>
+    </FeathersVuexInputWrapper>
+    <p
+      v-if="error"
+      class="help is-danger"
+    >{{ error.message || error.toString() }}</p>
+  </span>
 </template>
 
 <script>
 export default {
   name: "EditableText",
-  data: function () {
-    return {
-      error: null,
-      isEditing: false
-    }
-  },
   props: {
     item: {
       type: Object,
@@ -35,6 +40,12 @@ export default {
     prop: {
       type: String,
       required: true
+    }
+  },
+  data: function () {
+    return {
+      error: null,
+      isEditing: false
     }
   },
   methods: {

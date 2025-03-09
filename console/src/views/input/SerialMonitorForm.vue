@@ -1,39 +1,44 @@
 <template>
-    <section class="section">
-        <div class="container">
-            <h1 class="title">{{ id === 'new' ? 'Serielle Schnittstelle überwachen' : 'Überwachte serielle Schnittstelle bearbeiten' }}</h1>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">
+        {{ id === 'new' ? 'Serielle Schnittstelle überwachen' : 'Überwachte serielle Schnittstelle bearbeiten' }}
+      </h1>
 
-            <div class="buttons is-left">
-                <BackButton/>
-            </div>
+      <div class="buttons is-left">
+        <BackButton />
+      </div>
 
-            <ErrorMessage :form-error="formError"/>
+      <ErrorMessage :form-error="formError" />
 
-            <FeathersVuexFormWrapper :item="item" watch>
-                <template v-slot="{ clone, save, reset, remove }">
-                    <SerialMonitorEditor
-                        :item="clone"
-                        @save="
-                        () => {
-                          $data.formError = null
-                          save()
-                            .then(() => $router.push({name: 'input'}))
-                            .catch(reason => { $data.formError = reason })
-                        }"
-                        @reset="reset"
-                        @remove="
-                        () => {
-                            $data.formError = null
-                            remove()
-                              .then(() => $router.push({name: 'input'}))
-                              .catch(reason => { $data.formError = reason })
-                        }
-                        "
-                    ></SerialMonitorEditor>
-                </template>
-            </FeathersVuexFormWrapper>
-        </div>
-    </section>
+      <FeathersVuexFormWrapper
+        :item="item"
+        watch
+      >
+        <template #default="{ clone, save, reset, remove }">
+          <SerialMonitorEditor
+            :item="clone"
+            @save="
+              () => {
+                $data.formError = null
+                save()
+                  .then(() => $router.push({name: 'input'}))
+                  .catch(reason => { $data.formError = reason })
+              }"
+            @reset="reset"
+            @remove="
+              () => {
+                $data.formError = null
+                remove()
+                  .then(() => $router.push({name: 'input'}))
+                  .catch(reason => { $data.formError = reason })
+              }
+            "
+          />
+        </template>
+      </FeathersVuexFormWrapper>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -41,8 +46,13 @@ import BackButton from '@/components/BackButton'
 import ErrorMessage from '@/components/ErrorMessage'
 import SerialMonitorEditor from '@/components/SerialMonitorEditor'
 export default {
-name: 'SerialMonitorForm',
+  name: 'SerialMonitorForm',
   components: { BackButton, ErrorMessage, SerialMonitorEditor },
+  data: function () {
+    return {
+      formError: null
+    }
+  },
   computed: {
     id() {
       return this.$route.params.id
@@ -52,11 +62,6 @@ name: 'SerialMonitorForm',
       // Get the serial monitor for the given ID or create a new one if the ID is 'new'
       return this.id === 'new' ? new SerialMonitor() : SerialMonitor.getFromStore(this.id)
     },
-  },
-  data: function () {
-    return {
-      formError: null
-    }
   },
   watch: {
     id: {

@@ -4,11 +4,17 @@
     "node": true
   },
   "extends": [
-    "plugin:vue/essential",
+    "plugin:vue/recommended",
     "eslint:recommended"
   ],
   "parserOptions": {
-    "parser": "babel-eslint"
+    "parser": "@babel/eslint-parser"
   },
-  "rules": {}
+  "reportUnusedDisableDirectives": true,
+  "rules": {
+    "vue/html-indent": "error",
+    "vue/html-comment-indent": "error",
+    "vue/no-mutating-props": "off",
+    "vue/script-indent": "error"
+  }
 }

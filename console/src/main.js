@@ -13,7 +13,7 @@ Vue.use(VueMoment, { moment })
 
 // Load Font Awesome
 import FontAwesomeIcon from './font-awesome'
-Vue.component('font-awesome-icon', FontAwesomeIcon)
+Vue.component('FontAwesomeIcon', FontAwesomeIcon)
 
 Vue.config.productionTip = false
 
