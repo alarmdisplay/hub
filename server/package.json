@@ -65,7 +65,7 @@
     "uuid": "11.1.0"
   },
   "devDependencies": {
-    "@faker-js/faker": "8.4.1",
+    "@faker-js/faker": "9.6.0",
     "@types/bcryptjs": "2.4.6",
     "@types/bluebird": "3.5.42",
     "@types/compression": "1.7.5",
