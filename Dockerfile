@@ -1,4 +1,4 @@
-FROM node:20.18.3@sha256:bcf90f85634194bc51e92f8add1221c7fdeeff94b7f1ff360aeaa7498086d641 as build-console
+FROM node:20.19.0@sha256:a2cc2512d230a0b40f0445086f82c0e720edf34ff6520221b2c649c1f2268d0e as build-console
 
 WORKDIR /home/node/app/console
 COPY ./console/package.json ./console/package-lock.json /home/node/app/console/
@@ -6,7 +6,7 @@ RUN npm ci --no-audit
 COPY ./console /home/node/app/console
 RUN npm run build
 
-FROM node:20.18.3@sha256:bcf90f85634194bc51e92f8add1221c7fdeeff94b7f1ff360aeaa7498086d641 as build-server
+FROM node:20.19.0@sha256:a2cc2512d230a0b40f0445086f82c0e720edf34ff6520221b2c649c1f2268d0e as build-server
 
 WORKDIR /home/node/app
 COPY ./server/package.json ./server/package-lock.json /home/node/app/
@@ -14,7 +14,7 @@ RUN npm ci --no-audit
 COPY ./server /home/node/app
 RUN npm run compile
 
-FROM node:20.18.3-bookworm@sha256:bcf90f85634194bc51e92f8add1221c7fdeeff94b7f1ff360aeaa7498086d641
+FROM node:20.19.0-bookworm@sha256:a2cc2512d230a0b40f0445086f82c0e720edf34ff6520221b2c649c1f2268d0e
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -o "APT::Acquire::Retries=3" \
     git \
