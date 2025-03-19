@@ -32,7 +32,7 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'serial_monitors'].join('_')
+    tableName: 'serial_monitors'
   });
   return SerialMonitor;
 }

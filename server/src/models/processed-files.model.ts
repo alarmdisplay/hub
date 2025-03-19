@@ -18,7 +18,7 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'processed_files'].join('_'),
+    tableName: 'processed_files',
     updatedAt: false
   });
 

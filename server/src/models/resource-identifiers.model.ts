@@ -20,7 +20,7 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'resource_identifiers'].join('_')
+    tableName: 'resource_identifiers'
   });
 
   (ResourceIdentifier as any).associate = function (models: any): void {

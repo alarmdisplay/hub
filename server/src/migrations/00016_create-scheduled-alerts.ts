@@ -1,9 +1,8 @@
 import Sequelize, {DataTypes, QueryInterface} from 'sequelize';
-import {Application} from '../declarations';
 
 export default {
-  async up(query: QueryInterface, app: Application): Promise<void> {
-    const tableName = [app.get('db_prefix'), 'scheduled_alerts'].join('_');
+  async up(query: QueryInterface): Promise<void> {
+    const tableName = 'scheduled_alerts';
 
     await query.createTable(tableName, {
       id: { type: Sequelize.INTEGER, allowNull: false, autoIncrement: true, primaryKey: true },
@@ -22,12 +21,12 @@ export default {
       name: `${tableName}_ibfk_1`,
       type: 'foreign key',
       fields: ['incidentId'],
-      references: { table: [app.get('db_prefix'), 'incidents'].join('_'), field: 'id' },
+      references: { table: 'incidents', field: 'id' },
       onDelete: 'SET NULL',
       onUpdate: 'CASCADE'
     });
   },
-  async down(query: QueryInterface, app: Application): Promise<void> {
-    await query.dropTable([app.get('db_prefix'), 'scheduled_alerts'].join('_'));
+  async down(query: QueryInterface): Promise<void> {
+    await query.dropTable('scheduled_alerts');
   }
 };

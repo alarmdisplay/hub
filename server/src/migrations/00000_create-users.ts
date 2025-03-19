@@ -1,9 +1,8 @@
 import Sequelize, {QueryInterface} from 'sequelize';
-import {Application} from '../declarations';
 
 export default {
-  async up(query: QueryInterface, app: Application): Promise<void> {
-    await query.createTable([app.get('db_prefix'), 'users'].join('_'), {
+  async up(query: QueryInterface): Promise<void> {
+    await query.createTable('users', {
       id: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -34,7 +33,7 @@ export default {
       }
     });
   },
-  async down(query: QueryInterface, app: Application): Promise<void> {
-    await query.dropTable([app.get('db_prefix'), 'users'].join('_'));
+  async down(query: QueryInterface): Promise<void> {
+    await query.dropTable('users');
   }
 };

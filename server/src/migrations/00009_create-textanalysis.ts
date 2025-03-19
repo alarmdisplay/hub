@@ -1,9 +1,8 @@
 import Sequelize, {QueryInterface} from 'sequelize';
-import {Application} from '../declarations';
 
 export default {
-  async up(query: QueryInterface, app: Application): Promise<void> {
-    const tableName = [app.get('db_prefix'), 'textanalysis'].join('_');
+  async up(query: QueryInterface): Promise<void> {
+    const tableName = 'textanalysis';
 
     const tableExists = await query.tableExists(tableName);
     if (tableExists) {
@@ -46,12 +45,12 @@ export default {
       name: `${tableName}_ibfk_1`,
       type: 'foreign key',
       fields: ['watchedFolderId'],
-      references: { table: [app.get('db_prefix'), 'watched_folders'].join('_'), field: 'id' },
+      references: { table: 'watched_folders', field: 'id' },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     });
   },
-  async down(query: QueryInterface, app: Application): Promise<void> {
-    await query.dropTable([app.get('db_prefix'), 'textanalysis'].join('_'));
+  async down(query: QueryInterface): Promise<void> {
+    await query.dropTable('textanalysis');
   }
 };

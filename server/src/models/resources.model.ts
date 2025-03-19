@@ -19,7 +19,7 @@ export default function (app: Application) {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'resources'].join('_')
+    tableName: 'resources'
   });
 
   (resources as any).associate = function (models: any) {
@@ -27,7 +27,7 @@ export default function (app: Application) {
       foreignKey: { allowNull: false },
       as: 'identifiers'
     });
-    models.resource.belongsToMany(models.incident, { through: [app.get('db_prefix'), 'dispatched_resources'].join('_') });
+    models.resource.belongsToMany(models.incident, { through: 'dispatched_resources' });
   };
 
   return resources;

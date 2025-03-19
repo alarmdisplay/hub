@@ -1,9 +1,8 @@
 import Sequelize, {QueryInterface} from 'sequelize';
-import {Application} from '../declarations';
 
 export default {
-  async up(query: QueryInterface, app: Application): Promise<void> {
-    const tableName = [app.get('db_prefix'), 'resource_identifiers'].join('_');
+  async up(query: QueryInterface): Promise<void> {
+    const tableName = 'resource_identifiers';
 
     const tableExists = await query.tableExists(tableName);
     if (tableExists) {
@@ -50,12 +49,12 @@ export default {
       name: `${tableName}_ibfk_1`,
       type: 'foreign key',
       fields: ['resourceId'],
-      references: { table: [app.get('db_prefix'), 'resources'].join('_'), field: 'id' },
+      references: { table: 'resources', field: 'id' },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     });
   },
-  async down(query: QueryInterface, app: Application): Promise<void> {
-    await query.dropTable([app.get('db_prefix'), 'resource_identifiers'].join('_'));
+  async down(query: QueryInterface): Promise<void> {
+    await query.dropTable('resource_identifiers');
   }
 };

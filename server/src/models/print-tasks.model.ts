@@ -29,7 +29,7 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'print_tasks'].join('_'),
+    tableName: 'print_tasks',
   });
   return PrintTask;
 }

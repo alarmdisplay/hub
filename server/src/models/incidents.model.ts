@@ -63,12 +63,12 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'incidents'].join('_')
+    tableName: 'incidents'
   });
 
   (Incident as any).associate = function (models: any): void {
     models.incident.belongsToMany(models.resource, {
-      through: [app.get('db_prefix'), 'dispatched_resources'].join('_'),
+      through: 'dispatched_resources',
       as: 'resources'
     });
     models.incident.hasOne(models.locations);

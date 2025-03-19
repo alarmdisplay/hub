@@ -25,7 +25,7 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'textanalysis'].join('_')
+    tableName: 'textanalysis'
   });
   return TextAnalysis;
 }

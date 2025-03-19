@@ -1,9 +1,8 @@
 import Sequelize, {QueryInterface} from 'sequelize';
-import {Application} from '../declarations';
 
 export default {
-  async up(query: QueryInterface, app: Application): Promise<void> {
-    const tableName = [app.get('db_prefix'), 'dispatched_resources'].join('_');
+  async up(query: QueryInterface): Promise<void> {
+    const tableName = 'dispatched_resources';
 
     const tableExists = await query.tableExists(tableName);
     if (tableExists) {
@@ -41,7 +40,7 @@ export default {
       name: `${tableName}_ibfk_1`,
       type: 'foreign key',
       fields: ['resourceId'],
-      references: { table: [app.get('db_prefix'), 'resources'].join('_'), field: 'id' },
+      references: { table: 'resources', field: 'id' },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     });
@@ -50,12 +49,12 @@ export default {
       name: `${tableName}_ibfk_2`,
       type: 'foreign key',
       fields: ['incidentId'],
-      references: { table: [app.get('db_prefix'), 'incidents'].join('_'), field: 'id' },
+      references: { table: 'incidents', field: 'id' },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     });
   },
-  async down(query: QueryInterface, app: Application): Promise<void> {
-    await query.dropTable([app.get('db_prefix'), 'dispatched_resources'].join('_'));
+  async down(query: QueryInterface): Promise<void> {
+    await query.dropTable('dispatched_resources');
   }
 };
