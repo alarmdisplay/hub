@@ -27,7 +27,7 @@ const populateOptions : PopulateOptions = {
 
       // Find out, which resources are dispatched for this incident
       const sequelizeClient: Sequelize = context.app.get('sequelizeClient');
-      const tableName = [context.app.get('db_prefix'), 'dispatched_resources'].join('_');
+      const tableName = 'dispatched_resources';
       const relations = await sequelizeClient.getQueryInterface().select(null, tableName, {
         where: {
           incidentId: (this as unknown as IncidentData).id // TypeScript assumes the wrong type for 'this'
@@ -105,7 +105,7 @@ async function updateDispatchedResources(context: HookContext) {
   }
 
   const sequelizeClient: Sequelize = context.app.get('sequelizeClient');
-  const modelName = [context.app.get('db_prefix'), 'dispatched_resources'].join('_');
+  const modelName = 'dispatched_resources';
   const model = sequelizeClient.model(modelName);
 
   // If the update data did not contain resources, remove all associated resources

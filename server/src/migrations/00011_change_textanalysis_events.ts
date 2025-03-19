@@ -3,7 +3,7 @@ import {Application} from '../declarations';
 
 export default {
   async up(query: QueryInterface, app: Application): Promise<void> {
-    const tableName = [app.get('db_prefix'), 'textanalysis'].join('_');
+    const tableName = 'textanalysis';
 
     // Add the new event column and automatically fill it with the default value
     await query.addColumn(tableName, 'event', {
@@ -22,7 +22,7 @@ export default {
     await query.renameColumn(tableName, 'watchedFolderId', 'sourceId');
   },
   async down(query: QueryInterface, app: Application): Promise<void> {
-    const tableName = [app.get('db_prefix'), 'textanalysis'].join('_');
+    const tableName = 'textanalysis';
 
     // Transform general sourceId column back to watchedFolderId column
     await query.renameColumn(tableName, 'sourceId', 'watchedFolderId');
@@ -35,7 +35,7 @@ export default {
       name: `${tableName}_ibfk_1`,
       type: 'foreign key',
       fields: ['watchedFolderId'],
-      references: { table: [app.get('db_prefix'), 'watched_folders'].join('_'), field: 'id' },
+      references: { table: 'watched_folders', field: 'id' },
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE'
     });

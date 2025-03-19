@@ -3,7 +3,7 @@ import {Application} from '../declarations';
 
 export default {
   async up(query: QueryInterface, app: Application): Promise<void> {
-    const tableName = [app.get('db_prefix'), 'processed_files'].join('_');
+    const tableName = 'processed_files';
 
     const tableExists = await query.tableExists(tableName);
     if (tableExists) {
@@ -24,6 +24,6 @@ export default {
     });
   },
   async down(query: QueryInterface, app: Application): Promise<void> {
-    await query.dropTable([app.get('db_prefix'), 'processed_files'].join('_'));
+    await query.dropTable('processed_files');
   }
 };

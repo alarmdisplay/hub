@@ -3,7 +3,7 @@ import {Application} from '../declarations';
 
 export default {
   async up(query: QueryInterface, app: Application): Promise<void> {
-    const tableName = [app.get('db_prefix'), 'locations'].join('_');
+    const tableName = 'locations';
 
     await query.renameColumn(tableName, 'locality', 'municipality');
     await query.addColumn(tableName, 'district', {
@@ -13,7 +13,7 @@ export default {
     });
   },
   async down(query: QueryInterface, app: Application): Promise<void> {
-    const tableName = [app.get('db_prefix'), 'locations'].join('_');
+    const tableName = 'locations';
     await query.removeColumn(tableName, 'district');
     await query.renameColumn(tableName, 'municipality', 'locality');
   }

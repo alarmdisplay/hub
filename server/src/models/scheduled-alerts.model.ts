@@ -16,7 +16,7 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'scheduled_alerts'].join('_')
+    tableName: 'scheduled_alerts'
   });
 
   (ScheduledAlert as any).associate = function (models: any): void {

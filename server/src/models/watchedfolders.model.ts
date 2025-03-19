@@ -26,6 +26,6 @@ export default function (app: Application) {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'watched_folders'].join('_')
+    tableName: 'watched_folders'
   });
 }

@@ -35,6 +35,5 @@
   },
   "mysql": "",
   "dbMaxRetries": 5,
-  "db_prefix": "hub",
   "validate_location": false
 }

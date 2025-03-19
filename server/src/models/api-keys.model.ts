@@ -21,7 +21,7 @@ export default function (app: Application): typeof Model {
         options.raw = true;
       }
     },
-    tableName: [app.get('db_prefix'), 'api_keys'].join('_')
+    tableName: 'api_keys'
   });
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
