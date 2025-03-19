@@ -1,8 +1,7 @@
 import Sequelize, {DataTypes, QueryInterface} from 'sequelize';
-import {Application} from '../declarations';
 
 export default {
-  async up(query: QueryInterface, app: Application): Promise<void> {
+  async up(query: QueryInterface): Promise<void> {
     const tableName = 'processed_files';
 
     const tableExists = await query.tableExists(tableName);
@@ -23,7 +22,7 @@ export default {
       }
     });
   },
-  async down(query: QueryInterface, app: Application): Promise<void> {
+  async down(query: QueryInterface): Promise<void> {
     await query.dropTable('processed_files');
   }
 };

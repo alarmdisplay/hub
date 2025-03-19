@@ -1,8 +1,7 @@
 import {DataTypes, QueryInterface} from 'sequelize';
-import {Application} from '../declarations';
 
 export default {
-  async up(query: QueryInterface, app: Application): Promise<void> {
+  async up(query: QueryInterface): Promise<void> {
     const tableName = 'locations';
 
     await query.renameColumn(tableName, 'locality', 'municipality');
@@ -12,7 +11,7 @@ export default {
       defaultValue: ''
     });
   },
-  async down(query: QueryInterface, app: Application): Promise<void> {
+  async down(query: QueryInterface): Promise<void> {
     const tableName = 'locations';
     await query.removeColumn(tableName, 'district');
     await query.renameColumn(tableName, 'municipality', 'locality');

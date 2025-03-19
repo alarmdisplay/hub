@@ -1,8 +1,7 @@
 import Sequelize, {DataTypes, QueryInterface} from 'sequelize';
-import {Application} from '../declarations';
 
 export default {
-  async up(query: QueryInterface, app: Application): Promise<void> {
+  async up(query: QueryInterface): Promise<void> {
     const tableName = 'scheduled_alerts';
 
     await query.createTable(tableName, {
@@ -27,7 +26,7 @@ export default {
       onUpdate: 'CASCADE'
     });
   },
-  async down(query: QueryInterface, app: Application): Promise<void> {
+  async down(query: QueryInterface): Promise<void> {
     await query.dropTable('scheduled_alerts');
   }
 };

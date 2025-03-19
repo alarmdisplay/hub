@@ -1,8 +1,7 @@
 import Sequelize, {QueryInterface} from 'sequelize';
-import {Application} from '../declarations';
 
 export default {
-  async up(query: QueryInterface, app: Application): Promise<void> {
+  async up(query: QueryInterface): Promise<void> {
     const tableName = 'locations';
 
     const tableExists = await query.tableExists(tableName);
@@ -93,7 +92,7 @@ export default {
       onUpdate: 'CASCADE'
     });
   },
-  async down(query: QueryInterface, app: Application): Promise<void> {
+  async down(query: QueryInterface): Promise<void> {
     await query.dropTable('locations');
   }
 };

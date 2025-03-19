@@ -1,8 +1,7 @@
 import Sequelize, {QueryInterface} from 'sequelize';
-import {Application} from '../declarations';
 
 export default {
-  async up(query: QueryInterface, app: Application): Promise<void> {
+  async up(query: QueryInterface): Promise<void> {
     const tableName = 'textanalysis';
 
     // Add the new event column and automatically fill it with the default value
@@ -21,7 +20,7 @@ export default {
     });
     await query.renameColumn(tableName, 'watchedFolderId', 'sourceId');
   },
-  async down(query: QueryInterface, app: Application): Promise<void> {
+  async down(query: QueryInterface): Promise<void> {
     const tableName = 'textanalysis';
 
     // Transform general sourceId column back to watchedFolderId column

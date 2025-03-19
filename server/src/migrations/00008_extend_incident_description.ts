@@ -1,15 +1,14 @@
 import Sequelize, {QueryInterface} from 'sequelize';
-import {Application} from '../declarations';
 
 export default {
-  async up(query: QueryInterface, app: Application): Promise<void> {
+  async up(query: QueryInterface): Promise<void> {
     await query.changeColumn('incidents', 'description', {
       type: Sequelize.TEXT,
       allowNull: false,
       defaultValue: ''
     });
   },
-  async down(query: QueryInterface, app: Application): Promise<void> {
+  async down(query: QueryInterface): Promise<void> {
     await query.changeColumn('incidents', 'description', {
       type: Sequelize.STRING,
       allowNull: false,
