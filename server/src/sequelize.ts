@@ -1,4 +1,4 @@
-import { Sequelize, ConnectionError, QueryInterface } from 'sequelize';
+import { Sequelize, ConnectionError, Dialect, QueryInterface } from 'sequelize';
 import { Application } from './declarations';
 import { MigrationParams, SequelizeStorage, Umzug } from 'umzug';
 import logger from './logger';
@@ -6,15 +6,13 @@ import logger from './logger';
 export type Migration = (params: MigrationParams<{ query: QueryInterface, app: Application }>) => Promise<void>;
 
 export default function (app: Application): void {
-  const dialect = process.env.NODE_ENV === 'test' ? 'sqlite' : 'mysql';
-  const connectionString = app.get(dialect);
+  const { dialect, connection: connectionString } = app.get('dbConfig') as { dialect: Dialect, connection: string };
   if (!connectionString || connectionString === '') {
     throw new Error(`The config '${dialect}' has not been set`);
   }
   if (connectionString === 'MYSQL_URI') {
     throw new Error('The environment variable MYSQL_URI has not been set');
   }
-
   const sequelize = new Sequelize(connectionString, {
     dialect: dialect,
     logging: false,
@@ -83,6 +81,12 @@ export default function (app: Application): void {
     // Migrate and sync to the database
     app.set('sequelizeSync', sequelize.authenticate({ retry: retryOptions }).then(() => {
       logger.info('Connected to database');
+      // Tear down the existing tables for testing
+      if (process.env.NODE_ENV === 'test') {
+        logger.debug('Tearing down tables for testing ...');
+        return umzug.down();
+      }
+    }).then(() => {
       return umzug.up();
     }, (reason: Error) => {
       logger.error('Database connection failed:', reason.message);

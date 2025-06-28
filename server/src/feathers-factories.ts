@@ -3,7 +3,7 @@ import { Factory } from 'feathers-factory';
 import { faker } from '@faker-js/faker/locale/de';
 
 export const IncidentFactory = new Factory(FeathersApp.service('incidents'), {
-  id: () => faker.number.int(),
+  id: () => faker.number.int({ min:1, max: 2147483647 }),
   time: () => new Date(),
   status: () => faker.helpers.arrayElement<'Actual' | 'Exercise' | 'Test'>(['Actual', 'Exercise', 'Test']),
   category: () => faker.helpers.arrayElement<'Geo' | 'Met' | 'Safety' | 'Security' | 'Rescue' | 'Fire' | 'Health' | 'Env' | 'Transport' | 'Infra' | 'CBRNE' | 'Other'>(['Geo', 'Met', 'Safety', 'Security', 'Rescue', 'Fire', 'Health', 'Env', 'Transport', 'Infra', 'CBRNE', 'Other']),

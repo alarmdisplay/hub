@@ -1,10 +1,11 @@
 {
+  "logging": {
+    "level": "info"
+  },
+  "port": 8999,
   "dbConfig": {
     "dialect": "mysql",
     "connection": "MYSQL_URI"
   },
-  "validate_location": false,
-  "logging": {
-    "level": "LOG_LEVEL"
-  }
+  "dbMaxRetries": 10
 }

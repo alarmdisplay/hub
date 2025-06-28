@@ -27,7 +27,7 @@ jobs:
           TZ: Europe/Berlin
         ports:
           - 3306/tcp
-        options: --health-cmd="mariadb-admin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --health-cmd="mariadb-admin -u root --password=$MARIADB_ROOT_PASSWORD ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -41,6 +41,7 @@ jobs:
     - run: npm run compile
     - run: npm run jest -- --coverage
       env:
+        NODE_CONFIG_ENV: ci
         MYSQL_URI: mysql://hub:hub@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/hub
     - name: Upload code coverage to Code Climate
       uses: paambaati/codeclimate-action@7c100bd1ed15de0bdee476b38ca759d8c94207b5 # v8.0.0
