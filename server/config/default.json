@@ -30,10 +30,13 @@
   "incidents": {
     "minutesBeforeNewIncident": 15
   },
+  "dbConfig": {
+    "dialect": "mysql",
+    "connection": "MYSQL_URI"
+  },
   "logging": {
     "level": "info"
   },
-  "mysql": "",
   "dbMaxRetries": 5,
   "validate_location": false
 }
