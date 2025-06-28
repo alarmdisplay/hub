@@ -27,7 +27,7 @@ jobs:
           TZ: Europe/Berlin
         ports:
           - 3306/tcp
-        options: --health-cmd="mariadb-admin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+        options: --health-cmd="mariadb-admin -u root --password=$MARIADB_ROOT_PASSWORD ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
