@@ -14,7 +14,7 @@ RUN npm ci --no-audit
 COPY ./server /home/node/app
 RUN npm run compile
 
-FROM node:20.19.2-bookworm@sha256:34ebf3e5d4a51d4b1af4b78188f9b0ad0daf1d763395e2390ab935f910350b78
+FROM node:20.19.2-bookworm@sha256:ba077fe891ce516b24bdbbd66d27d1e8e8c5a6e6b31ec7e7e559b45c3fca0643
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -o "APT::Acquire::Retries=3" \
     git \
