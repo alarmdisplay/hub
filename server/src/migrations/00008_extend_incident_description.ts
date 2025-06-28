@@ -1,18 +1,18 @@
-import Sequelize, {QueryInterface} from 'sequelize';
+import Sequelize from 'sequelize';
+import { Migration } from '../sequelize';
 
-export default {
-  async up(query: QueryInterface): Promise<void> {
-    await query.changeColumn('incidents', 'description', {
-      type: Sequelize.TEXT,
-      allowNull: false,
-      defaultValue: ''
-    });
-  },
-  async down(query: QueryInterface): Promise<void> {
-    await query.changeColumn('incidents', 'description', {
-      type: Sequelize.STRING,
-      allowNull: false,
-      defaultValue: ''
-    });
-  }
+export const up: Migration = async ({context: {query}}) => {
+  await query.changeColumn('incidents', 'description', {
+    type: Sequelize.TEXT,
+    allowNull: false,
+    defaultValue: ''
+  });
+};
+
+export const down: Migration = async ({context: {query}}) => {
+  await query.changeColumn('incidents', 'description', {
+    type: Sequelize.STRING,
+    allowNull: false,
+    defaultValue: ''
+  });
 };
