@@ -1,6 +1,6 @@
 {
   "logging": {
-    "level": "error"
+    "level": "info"
   },
   "port": 8999,
   "dbConfig": {
