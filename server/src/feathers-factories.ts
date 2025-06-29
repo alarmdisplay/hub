@@ -1,6 +1,6 @@
 import FeathersApp from './app';
 import { Factory } from 'feathers-factory';
-import { faker } from '@faker-js/faker/locale/de';
+import { fakerDE as faker } from '@faker-js/faker';
 
 export const IncidentFactory = new Factory(FeathersApp.service('incidents'), {
   id: () => faker.number.int({ min:1, max: 2147483647 }),
