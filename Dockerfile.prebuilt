@@ -1,4 +1,4 @@
-FROM node:20.19.5-bookworm@sha256:66006a83d1aa3d7b062704a3da5f9af83207977a493b18583d5d453f3e2188dd
+FROM node:20.19.5-bookworm@sha256:abcf9c98af22ea2c5d33435143d9d8a5f6f191e1e1938a7650fc8b78c382b5a9
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y -o "APT::Acquire::Retries=3" \
     git \
