@@ -6,6 +6,7 @@
     "group:linters",
     "group:test",
     "npm:unpublishSafe",
+    "schedule:weekends",
     "schedule:automergeNonOfficeHours",
     ":approveMajorUpdates",
     ":automergeLinters",
