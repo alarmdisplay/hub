@@ -40,7 +40,6 @@
   "dependencies": {
     "@feathersjs/authentication": "4.5.19",
     "@feathersjs/authentication-local": "4.5.19",
-    "@feathersjs/authentication-oauth": "4.5.19",
     "@feathersjs/configuration": "4.5.19",
     "@feathersjs/errors": "4.5.19",
     "@feathersjs/express": "4.5.19",
@@ -73,7 +72,6 @@
     "@types/jest": "29.5.14",
     "@types/jsonwebtoken": "9.0.10",
     "@types/ms": "2.1.0",
-    "@types/serialport": "8.0.5",
     "@types/serve-favicon": "2.5.7",
     "@types/umzug": "2.3.9",
     "@types/uuid": "10.0.0",
