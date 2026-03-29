@@ -46,6 +46,7 @@
     "@feathersjs/feathers": "4.5.19",
     "@feathersjs/socketio": "4.5.19",
     "@feathersjs/transport-commons": "4.5.19",
+    "@types/node": "20.14.8",
     "axios": "1.13.6",
     "bcryptjs": "2.4.3",
     "compression": "1.8.1",
